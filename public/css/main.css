@@ -1,0 +1,15 @@
+dt{
+  border-width: 1px 1px 0;
+  border-color: red;
+  border-style: solid;
+  text-decoration: underline;
+  padding: 1em 1em 0;
+}
+
+dd{
+  border-width: 0 1px 1px;
+  border-color: red;
+  border-style: solid;
+  margin: 0 0 10px 0;
+  padding: 1em;
+}
