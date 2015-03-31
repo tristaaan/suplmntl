@@ -1,9 +1,43 @@
+#list{
+  text-align: center;
+  display: block;
+  margin: 0px auto;
+}
+
+form{
+  display: inline-block;
+}
+
+input, textarea{
+  width: 400px;
+}
+
+input{
+  display: block;
+}
+
+textarea{
+  display: block;
+  height: 100px;
+}
+
+button{
+  text-align: center;
+  margin-top: 15px;
+}
+
+dl{
+  width: 400px;
+  margin: 0 auto; 
+}
+
 dt{
   border-width: 1px 1px 0;
   border-color: red;
   border-style: solid;
   text-decoration: underline;
   padding: 1em 1em 0;
+  text-align: left;
 }
 
 dd{
@@ -12,4 +46,5 @@ dd{
   border-style: solid;
   margin: 0 0 10px 0;
   padding: 1em;
+  text-align: left;
 }

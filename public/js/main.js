@@ -54,7 +54,7 @@ var AddLinkForm = React.createClass({
       <form onSubmit={this.handleSubmit}>
         <input type="text" name="title" placeholder="link" 
           onBlur={this.fetchTitle} onChange={this.updateTitle} value={this.state.title}/>
-        <input type="text" name="link" value={this.state.link} hidden/> <br />
+        <input type="hidden" name="link" value={this.state.link} hidden/> <br />
         <textarea name="description" placeholder="description" onChange={this.updateDescription} value={this.state.description}/>
         <button>Save</button>
       </form>
@@ -72,7 +72,7 @@ var LinkList = React.createClass({
   },
   render: function() {
     return (
-      <section>
+      <section id="list">
         <LinksBox links={this.state.links} />
         <AddLinkForm onLinkSubmit={this.handleSubmit} />
       </section>
