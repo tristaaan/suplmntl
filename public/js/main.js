@@ -23,7 +23,10 @@ var AddLinkForm = React.createClass({
 
     this.props.onLinkSubmit(this.state);
     this.setState(this.getInitialState());
+    this.refs.submitButton.getDOMNode().blur();
+    this.refs.titleInput.getDOMNode().focus();
   },
+  //in larger forms avoid having an update function for everything.
   updateTitle: function(e){
     this.setState({title: e.target.value});
   },
@@ -53,10 +56,13 @@ var AddLinkForm = React.createClass({
     return (
       <form onSubmit={this.handleSubmit}>
         <input type="text" name="title" placeholder="link" 
-          onBlur={this.fetchTitle} onChange={this.updateTitle} value={this.state.title}/>
-        <input type="hidden" name="link" value={this.state.link} hidden/> <br />
+          ref="titleInput"
+          onBlur={this.fetchTitle} 
+          onChange={this.updateTitle} 
+          value={this.state.title}
+          autofocus/>
         <textarea name="description" placeholder="description" onChange={this.updateDescription} value={this.state.description}/>
-        <button>Save</button>
+        <button ref="submitButton">Save</button>
       </form>
     );
   }
