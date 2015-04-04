@@ -1,7 +1,22 @@
-#list{
+#linkList, #collectionList{
   text-align: center;
   display: block;
   margin: 0px auto;
+}
+
+#collectionList ul{
+  text-align: center;
+  display: block;
+  margin: 0px auto;
+  width: 400px;
+}
+
+#collectionList ul li{
+  text-align: left;
+}
+
+#collectionList input{
+  display: inline-block;
 }
 
 form{
