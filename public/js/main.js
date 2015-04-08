@@ -219,6 +219,9 @@ var CollectionList = React.createClass({
     this.setState({cols: newCols});
   },
   handleDelete: function(index){
+    if(!confirm('Are you sure you want to delete "'+this.state.cols[index].title+'"?')){
+      return;
+    }
     var id = this.state.cols[index].id;
     $.ajax({
       url: '/api/collection',
