@@ -17,7 +17,9 @@ var LinksBox = React.createClass({
     return <dl>{this.props.links.map(createItem, this)}</dl>;
   },
   deleteItem: function(e){
-    this.props.deleteItem(e.target.value);
+    if (confirm('Are you sure you want to remove this item?')){
+      this.props.deleteItem(e.target.value);
+    }
   }
 });
 
@@ -276,6 +278,7 @@ var CollectionList = React.createClass({
     return (
       <section id="collectionList">
         <RouteHandler/>
+        <h1>Collections</h1>
         <ColsBox links={this.state.cols} deleteItem={this.handleDelete} />
         { this.state.colFormVis ? <AddCollectionForm onLinkSubmit={this.handleSubmit} toggler={this.toggleForm} /> : null }
         { !this.state.colFormVis ? <button onClick={this.toggleForm}>+</button> : null }
@@ -297,8 +300,10 @@ var App = React.createClass({
     return (
       <div>
         <header>
+          <h1>Tengla</h1>
           <ul>
-            <li><Link to="collections">Collections</Link></li>
+            <li><Link className="headerLink" to="collections">Collections</Link></li>
+            <li><Link className="headerLink" to="collections">Login</Link></li>
           </ul>
         </header>
 
