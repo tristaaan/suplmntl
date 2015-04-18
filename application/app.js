@@ -1,8 +1,11 @@
 var express = require('express');
 var request = require('request');
 var bodyParser = require('body-parser');
+var lessMiddleware = require('less-middleware');
+
 var app = express();
 
+app.use(lessMiddleware(__dirname + '/../public'));
 app.use(express.static(__dirname + '/../public'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));

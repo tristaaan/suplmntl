@@ -1,0 +1,43 @@
+#collectionList {
+  text-align: center;
+  display: block;
+  margin: 0px auto;
+  input{
+    display: inline-block;
+  }
+}
+
+#collectionList ul{
+  text-align: center;
+  list-style-type: none;
+  display: block;
+  margin: 0px auto;
+  padding: 0;
+  width: @content-width;
+
+  li{
+    text-align: left;
+    border: @collection-list-border-width solid @collection-list-border-color;
+    padding: .95em 1.5em;
+    margin: -@collection-list-border-width 0;
+    color: @title-text-color;
+
+    button{
+      display: none;
+      margin: 0;
+      float: right;
+    }
+
+    &:hover button{
+      display: inline-block;
+    }
+  }
+}
+
+.collectionForm{
+  width: @content-width;
+}
+
+.collectionForm input{
+  width: @content-width - 100px;
+}

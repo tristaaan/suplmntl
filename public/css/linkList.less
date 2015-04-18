@@ -1,0 +1,43 @@
+#linkList{
+  text-align: center;
+  display: block;
+  margin: 0px auto;
+}
+
+dl{
+  width: @content-width;
+  margin: 0 auto; 
+}
+
+dt{
+  border-width: @link-list-border-width @link-list-border-width 0;
+  border-color: @link-list-border-color;
+  border-style: solid;
+  text-decoration: underline;
+  padding: 1em 2em 0;
+  text-align: left;
+  font-size: 1.1em;
+}
+
+dd{
+  border-width: 0 @link-list-border-width @link-list-border-width;
+  border-color: @link-list-border-color;
+  border-style: solid;
+  margin: 0 0 15px 0;
+  padding: 1em 2em 1.4em;
+  text-align: left;
+  color: @content-text-color;
+  p {
+    margin: 0;
+  }
+}
+
+.linkItem > dt > button{
+  display: none;
+  float: right;
+  margin: -5px -5px 0 0;
+
+  &:hover{
+    display: inline-block;
+  }
+}
