@@ -1,15 +1,18 @@
+//links
 var LinksBox = React.createClass({
   render: function() {
     var createItem = function(item, index) {
-      return [
-        (<dt><a href={item.link} target="_blank">{item.title}</a></dt>),
-        (
+      return (
+        <div className="linkItem">
+          <dt>
+            <a href={item.link} target="_blank">{item.title}</a>
+            <button onClick={this.deleteItem} value={index}>x</button>
+          </dt>
           <dd>
             <p>{item.description}</p>
-            <button onClick={this.deleteItem} value={index}>x</button>
           </dd>
-        )
-      ];
+        </div>
+      );
     };
     return <dl>{this.props.links.map(createItem, this)}</dl>;
   },
@@ -50,7 +53,7 @@ var AddLinkForm = React.createClass({
     $.ajax({
       url: '/api/title',
       dataType: 'json',
-      type: 'POST',
+      type: 'PUT',
       data: {url: link}, //problem here?
       success: function(data) {
         this.setState({title: data.title, link:link});
@@ -103,7 +106,7 @@ var LinkList = React.createClass({
     $.ajax({
       url: '/api/link',
       dataType: 'json',
-      type: 'POST',
+      type: 'PUT',
       data: {id: id, item: newLink},
       error: function(xhr, status, err) {
         console.error(err.toString());
@@ -111,6 +114,21 @@ var LinkList = React.createClass({
     });
     var nextLinks = this.state.links.concat([newLink]);
     this.setState({links: nextLinks});
+  },
+  handleUpdate: function(index){
+    var id = this.state.id;
+    $.ajax({
+      url: '/api/collection',
+      dataType: 'json',
+      type: 'POST',
+      data: {id: id},
+      error: function(xhr, status, err) {
+        console.error(err.toString());
+      }.bind(this)
+    });
+    var newLinks = this.state.links;
+    newLinks.splice(index, 1);
+    this.setState({links: newLinks});
   },
   handleDelete: function(index){
     var id = this.state.id;
@@ -179,7 +197,7 @@ var AddCollectionForm = React.createClass({
   },
   render: function(){
     return (
-      <form onSubmit={this.handleSubmit}>
+      <form className="collectionForm" onSubmit={this.handleSubmit}>
         <input onChange={this.handleChange} value={this.state.title} ref="titleInput"/>
         <button>Add</button>
         <button onClick={this.props.toggler}>Cancel</button>
@@ -209,13 +227,28 @@ var CollectionList = React.createClass({
     $.ajax({
       url: '/api/collection',
       dataType: 'json',
-      type: 'POST',
+      type: 'PUT',
       data: {newId: newCol.id, title: newCol.title},
       error: function(xhr, status, err) {
         console.error(err.toString());
       }.bind(this)
     });
     var newCols = this.state.cols.concat([newCol]);
+    this.setState({cols: newCols});
+  },
+  handleUpdate: function(index){
+    var id = this.state.cols[index].id;
+    $.ajax({
+      url: '/api/collection',
+      dataType: 'json',
+      type: 'POST',
+      data: {id: id},
+      error: function(xhr, status, err) {
+        console.error(err.toString());
+      }.bind(this)
+    });
+    var newCols = this.state.cols;
+    newCols.splice(index, 1);
     this.setState({cols: newCols});
   },
   handleDelete: function(index){

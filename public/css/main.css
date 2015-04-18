@@ -1,3 +1,7 @@
+body{
+  font-family: 'PT Serif', serif;
+}
+
 #linkList, #collectionList{
   text-align: center;
   display: block;
@@ -6,17 +10,40 @@
 
 #collectionList ul{
   text-align: center;
+  list-style-type: none;
   display: block;
   margin: 0px auto;
+  padding: 0;
   width: 400px;
 }
 
 #collectionList ul li{
   text-align: left;
+  border: 1px solid red;
+  padding: 0.5em 1.5em;
+  margin: 1em 0;
+}
+
+#collectionList ul li button{
+  display: none;
+  margin: 0;
+  float: right;
+}
+
+#collectionList ul li:hover button{
+  display: inline-block;
 }
 
 #collectionList input{
   display: inline-block;
+}
+
+.collectionForm{
+  width: 400px;
+}
+
+.collectionForm input{
+  width: 300px;
 }
 
 form{
@@ -44,6 +71,16 @@ button{
 dl{
   width: 400px;
   margin: 0 auto; 
+}
+
+.linkItem > dt > button{
+  display: none;
+  float: right;
+  margin: -5px -5px 0 0;
+}
+
+.linkItem:hover > dt > button{
+  display: inline-block;
 }
 
 dt{
