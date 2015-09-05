@@ -3,7 +3,7 @@ var LinksBox = React.createClass({
   render: function() {
     var createItem = function(item, index) {
       return (
-        <div className="linkItem">
+        <div className="linkItem" key={index}>
           <dt>
             <a href={item.link} target="_blank">{item.title}</a>
             <button onClick={this.deleteItem} value={index}>x</button>
@@ -164,7 +164,7 @@ var ColsBox = React.createClass({
   render: function() {
     var createItem = function(item, index) {
       return (
-        <li>
+        <li key={item.id}>
           <Link to="list" params={{id: item.id}}>{item.title}</Link>
           <button onClick={this.deleteItem} value={index}>x</button>
         </li>

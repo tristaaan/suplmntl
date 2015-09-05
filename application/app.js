@@ -26,11 +26,14 @@ var collections = {'12345':
   }
 };
 
-app.get('/', function(req, res){
-  res.sendFile('index.html');
-});
+app.get('/', homeRoute);
+app.get('/#*', homeRoute);
 
-app.post('/api/title', function(req, res){
+function homeRoute(req, res) {
+  res.sendFile('index.html');
+}
+
+app.put('/api/title', function(req, res){
   var url = req.body.url;
   request(url, function (err, resquest, body) {
     if (!err && res.statusCode == 200) {
