@@ -3,13 +3,10 @@ var React = require('react');
 
 export default React.createClass({
   getInitialState() {
-    return {id: this.genId(), title:''};
+    return {title:''};
   },
   componentDidMount() {
     this.refs.titleInput.getDOMNode().focus(); 
-  },
-  genId() {
-    return Math.floor(Math.random()*0xaabbcc);
   },
   handleChange(e) {
     this.setState({title: e.target.value});

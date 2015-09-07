@@ -8,7 +8,7 @@ import {ajax} from 'jquery';
 
 export default React.createClass({
   getInitialState() {
-    return {cols: [], colFormVis: false};
+    return {cols: [], colFormVisible: false};
   },
   componentDidMount() {
     ajax({
@@ -28,13 +28,16 @@ export default React.createClass({
       url: '/api/collection',
       dataType: 'json',
       type: 'PUT',
-      data: {newId: newCol.id, title: newCol.title},
+      data: {title: newCol.title},
+      success: (data) => {
+        newCol['id'] = data.newId;
+        var newCols = this.state.cols.concat([newCol]);
+        this.setState({cols: newCols});
+      },
       error: function(xhr, status, err) {
         console.error(err.toString());
       }.bind(this)
     });
-    var newCols = this.state.cols.concat([newCol]);
-    this.setState({cols: newCols});
   },
   handleUpdate(index){
     var id = this.state.cols[index].id;
@@ -70,7 +73,7 @@ export default React.createClass({
     this.setState({cols: newCols});
   },
   toggleForm() {
-    this.setState({colFormVis: !this.state.colFormVis});
+    this.setState({colFormVisible: !this.state.colFormVisible});
   },
   render() {
     return (
@@ -78,8 +81,8 @@ export default React.createClass({
         <RouteHandler/>
         <h1>Collections</h1>
         <CollectionBox links={this.state.cols} deleteItem={this.handleDelete} />
-        { this.state.colFormVis ? <AddCollectionForm onLinkSubmit={this.handleSubmit} toggler={this.toggleForm} /> : null }
-        { !this.state.colFormVis ? <button onClick={this.toggleForm}>+</button> : null }
+        { this.state.colFormVisible ? <AddCollectionForm onLinkSubmit={this.handleSubmit} toggler={this.toggleForm} /> : null }
+        { !this.state.colFormVisible ? <button onClick={this.toggleForm}>+</button> : null }
       </section>
     );
   }

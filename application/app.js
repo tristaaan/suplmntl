@@ -59,7 +59,9 @@ app.route('/api/collections')
 
 app.route('/api/collection')
   .put(function(req, res){
-    collections[req.body.newId] = {title: req.body.title, links: []};
+    var newId = Math.floor(Math.random()*0xaabbcc);
+    collections[newId] = {title: req.body.title, links: []};
+    res.send({newId: newId});
   })
   .get(function(req, res){
     res.send(collections[req.query.id]);
