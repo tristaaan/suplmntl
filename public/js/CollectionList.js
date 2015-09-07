@@ -1,10 +1,10 @@
 //CollectionList 
 var React = require('react'),
-  ajax = require('jquery').ajax,
   CollectionBox = require('./CollectionBox'),
   AddCollectionForm = require('./AddCollectionForm');
 
 import {RouteHandler} from 'react-router';
+import {ajax} from 'jquery';
 
 export default React.createClass({
   getInitialState() {

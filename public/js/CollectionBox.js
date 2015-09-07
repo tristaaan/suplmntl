@@ -4,7 +4,10 @@ var React = require('react');
 import {Link} from 'react-router';
 
 export default React.createClass({
-  render: function() {
+  deleteItem(e) {
+    this.props.deleteItem(e.target.value);
+  },
+  render() {
     var createItem = function(item, index) {
       return (
         <li key={item.id}>
@@ -14,8 +17,5 @@ export default React.createClass({
       );
     };
     return (<ul>{this.props.links.map(createItem, this)}</ul>);
-  },
-  deleteItem: function(e){
-    this.props.deleteItem(e.target.value);
   }
 });

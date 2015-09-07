@@ -9,7 +9,16 @@ export default React.createClass({
   handleSubmit(e) {
     e.preventDefault();
 
-    if (!this.state.title || !this.state.link || !this.state.description) {
+    if (!this.state.title) {
+      console.log('there is no value for title');
+      return;
+    }
+    else if (!this.state.link) {
+      console.log('there is no value for link');
+      return;
+    }
+    else if (!this.state.description) {
+      console.log('there is no value for description');
       return;
     }
 
@@ -20,7 +29,11 @@ export default React.createClass({
   },
   //in larger forms avoid having an update function for everything.
   updateTitle(e) {
-    this.setState({title: e.target.value});
+    var newState = {title: e.target.value};
+    if (e.target.value === '') {
+      newState['link'] = '';
+    }
+    this.setState(newState);
   },
   updateDescription(e) {
     this.setState({description: e.target.value});
@@ -28,6 +41,7 @@ export default React.createClass({
   fetchTitle(e) {
     var link = e.target.value;
     if (link.length == 0){
+      this.setState({link: ''});
       return;
     }
     this.setState({title: link});
@@ -46,11 +60,11 @@ export default React.createClass({
   },
   render() {
     return (
-      <form onSubmit={this.handleSubmit}>
+      <form onSubmit={this.handleSubmit} className="linkForm">
         <input type="text" name="title" placeholder="link" 
           ref="titleInput"
-          onBlur={this.fetchTitle} 
           onChange={this.updateTitle} 
+          onBlur={this.fetchTitle} 
           value={this.state.title}
           autofocus/>
         <textarea name="description" placeholder="description" onChange={this.updateDescription} value={this.state.description}/>

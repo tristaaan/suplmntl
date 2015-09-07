@@ -25,8 +25,8 @@ export default React.createClass({
     return (
       <form className="collectionForm" onSubmit={this.handleSubmit}>
         <input onChange={this.handleChange} value={this.state.title} ref="titleInput"/>
-        <button>Add</button>
-        <button onClick={this.props.toggler}>Cancel</button>
+        <button>+</button>
+        <button onClick={this.props.toggler}>x</button>
       </form>
     );
   }
