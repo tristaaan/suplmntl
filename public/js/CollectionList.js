@@ -31,6 +31,7 @@ export default React.createClass({
       data: {title: newCol.title},
       success: (data) => {
         newCol['id'] = data.newId;
+        newCol['size'] = data.size;
         var newCols = this.state.cols.concat([newCol]);
         this.setState({cols: newCols});
       },

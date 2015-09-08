@@ -52,7 +52,7 @@ app.route('/api/collections')
   .get(function(req, res){
     var objs = [];
     Object.keys(collections).forEach(function(el){
-      objs.push({id: el, title: collections[el].title});
+      objs.push({id: el, title: collections[el].title, size: collections[el].links.length});
     });
     res.send(objs);
   });
@@ -61,7 +61,7 @@ app.route('/api/collection')
   .put(function(req, res){
     var newId = Math.floor(Math.random()*0xaabbcc);
     collections[newId] = {title: req.body.title, links: []};
-    res.send({newId: newId});
+    res.send({newId: newId, size: 0});
   })
   .get(function(req, res){
     res.send(collections[req.query.id]);

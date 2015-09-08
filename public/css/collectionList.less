@@ -16,20 +16,21 @@
   width: @content-width;
 
   li{
-    text-align: left;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     border: @collection-list-border-width solid @collection-list-border-color;
     padding: .95em 1.5em;
     margin: -@collection-list-border-width 0;
     color: @title-text-color;
 
-    button{
-      display: none;
-      margin: 0;
-      float: right;
+    .title {
+      text-align: left;
     }
 
-    &:hover button{
-      display: inline-block;
+    span {
+      text-align: right;
+      font-size: 0.8em;
     }
   }
 }

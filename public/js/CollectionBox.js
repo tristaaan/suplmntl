@@ -11,11 +11,13 @@ export default React.createClass({
     var createItem = function(item, index) {
       return (
         <li key={item.id}>
-          <Link to="list" params={{id: item.id}}>{item.title}</Link>
-          <button onClick={this.deleteItem} value={index}>x</button>
+          <Link to="list" params={{id: item.id}} className="title">{item.title}</Link>
+          <span>{item.size === 1 ? item.size + ' link' : item.size + ' links'}</span>
         </li>
       );
     };
     return (<ul>{this.props.links.map(createItem, this)}</ul>);
   }
 });
+
+// <button onClick={this.deleteItem} value={index}>x</button>
