@@ -5,12 +5,17 @@ export default React.createClass({
     return {toggled: false};
   },
   componentDidUpdate(prevState) {
-      if(this.state.toggled && !prevState.toggled) {
-        window.addEventListener('click', this.handleClickOutside);
-      } else if(!this.state.toggled && prevState.toggled) {
-        window.removeEventListener('click', this.handleClickOutside);
-      }   
-    },
+    if(this.state.toggled && !prevState.toggled) {
+      window.addEventListener('click', this.handleClickOutside);
+    } else if(!this.state.toggled && prevState.toggled) {
+      window.removeEventListener('click', this.handleClickOutside);
+    }   
+  },
+  componentWillUnmount() {
+    if(this.state.toggled) {
+      window.removeEventListener('click', this.handleClickOutside);
+    }
+  },
   handleClickOutside(e) {
     var children = this.getDOMNode().getElementsByTagName('*');
     for(var x in children) {

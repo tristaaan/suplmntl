@@ -1,5 +1,6 @@
 //LinkList
 var React = require('react'),
+  Navigation = require('react-router').Navigation,
   ajax = require('jquery').ajax,
   Dropdown = require('./Dropdown'),
   LinksBox = require('./LinkBox'),
@@ -11,6 +12,7 @@ export default React.createClass({
   contextTypes: {
     router: React.PropTypes.func
   },
+  mixins: [Navigation],
   getInitialState() {
     return {links: [], title: ''};
   },
@@ -79,6 +81,27 @@ export default React.createClass({
       }.bind(this)
     });
   },
+  deleteList() {
+    if(!confirm('Are you sure you want to delete "'+this.state.title+'"?')){
+      return;
+    }
+    var id = this.state.id;
+    ajax({
+      url: '/api/collection',
+      dataType: 'json',
+      type: 'DELETE',
+      data: {id: id},
+      complete: function(){ //run this regardless if success or error
+        this.goBack();
+      }.bind(this),
+      error: function(xhr, status, err) {
+        console.error(err.toString());
+      }.bind(this)
+    });
+  },
+  renameList() {
+    console.log('rename me!');
+  },
   render() {
     return (
       <section id="linkList">
@@ -87,8 +110,8 @@ export default React.createClass({
           <h1>{this.state.title}</h1>
           <Dropdown buttonText="#">
             <ul className="dropdown-list">
-              <li>Delete list</li>
-              <li>Rename list</li>
+              <li onClick={this.deleteList}>Delete list</li>
+              <li onClick={this.renameList}>Rename list</li>
             </ul>
           </Dropdown>
         </div>

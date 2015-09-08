@@ -47,31 +47,15 @@ export default React.createClass({
       dataType: 'json',
       type: 'POST',
       data: {id: id},
+      success: function() {
+        var newCols = this.state.cols;
+        newCols.splice(index, 1);
+        this.setState({cols: newCols});
+      }.bind(this),
       error: function(xhr, status, err) {
         console.error(err.toString());
       }.bind(this)
     });
-    var newCols = this.state.cols;
-    newCols.splice(index, 1);
-    this.setState({cols: newCols});
-  },
-  handleDelete(index){
-    if(!confirm('Are you sure you want to delete "'+this.state.cols[index].title+'"?')){
-      return;
-    }
-    var id = this.state.cols[index].id;
-    ajax({
-      url: '/api/collection',
-      dataType: 'json',
-      type: 'DELETE',
-      data: {id: id},
-      error: function(xhr, status, err) {
-        console.error(err.toString());
-      }.bind(this)
-    });
-    var newCols = this.state.cols;
-    newCols.splice(index, 1);
-    this.setState({cols: newCols});
   },
   toggleForm() {
     this.setState({colFormVisible: !this.state.colFormVisible});
