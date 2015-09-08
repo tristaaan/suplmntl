@@ -29,15 +29,15 @@ export default React.createClass({
       dataType: 'json',
       type: 'PUT',
       data: {title: newCol.title},
-      success: (data) => {
+      success: function(data) {
         newCol['id'] = data.newId;
         newCol['size'] = data.size;
         var newCols = this.state.cols.concat([newCol]);
         this.setState({cols: newCols});
-      },
+      }.bind(this),
       error: function(xhr, status, err) {
         console.error(err.toString());
-      }.bind(this)
+      }
     });
   },
   handleUpdate(index){

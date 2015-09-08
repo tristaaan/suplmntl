@@ -1,6 +1,7 @@
 //LinkList
 var React = require('react'),
   ajax = require('jquery').ajax,
+  Dropdown = require('./Dropdown'),
   LinksBox = require('./LinkBox'),
   AddLinkForm = require('./AddLinkForm');
 
@@ -35,12 +36,14 @@ export default React.createClass({
       dataType: 'json',
       type: 'PUT',
       data: {id: id, item: newLink},
+      success: function() {
+        var nextLinks = this.state.links.concat([newLink]);
+        this.setState({links: nextLinks});
+      }.bind(this),
       error: function(xhr, status, err) {
         console.error(err.toString());
       }.bind(this)
     });
-    var nextLinks = this.state.links.concat([newLink]);
-    this.setState({links: nextLinks});
   },
   handleUpdate(index) {
     var id = this.state.id;
@@ -49,13 +52,15 @@ export default React.createClass({
       dataType: 'json',
       type: 'POST',
       data: {id: id},
+      success: function(data) {
+        var newLinks = this.state.links;
+        newLinks.splice(index, 1);
+        this.setState({links: newLinks});
+      }.bind(this),
       error: function(xhr, status, err) {
         console.error(err.toString());
       }.bind(this)
     });
-    var newLinks = this.state.links;
-    newLinks.splice(index, 1);
-    this.setState({links: newLinks});
   },
   handleDelete(index) {
     var id = this.state.id;
@@ -64,19 +69,29 @@ export default React.createClass({
       dataType: 'json',
       type: 'DELETE',
       data: {colId: id, index: index},
+      success: function(data){
+        var newLinks = this.state.links;
+        newLinks.splice(index, 1);
+        this.setState({links: newLinks});
+      }.bind(this),
       error: function(xhr, status, err) {
         console.error(err.toString());
       }.bind(this)
     });
-    var newLinks = this.state.links;
-    newLinks.splice(index, 1);
-    this.setState({links: newLinks});
   },
   render() {
     return (
       <section id="linkList">
         <RouteHandler/>
-        <h1>{this.state.title}</h1>
+        <div className="linkListHeader">
+          <h1>{this.state.title}</h1>
+          <Dropdown buttonText="#">
+            <ul className="dropdown-list">
+              <li>Delete list</li>
+              <li>Rename list</li>
+            </ul>
+          </Dropdown>
+        </div>
         <LinksBox links={this.state.links} deleteItem={this.handleDelete} />
         <AddLinkForm onLinkSubmit={this.handleSubmit} />
       </section>

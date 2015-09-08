@@ -1,0 +1,36 @@
+.dropdown{
+}
+
+.dropdown-button {
+  padding: 6px 12px;
+  font-size: 1em;
+  background-color: white;
+  border: 1px solid grey;
+  border-radius: 4px;
+}
+
+.dropdown-content {
+  min-width: 150px;
+  max-width: 200px;
+  position: absolute;
+  margin-top: 1px;
+  border: 1px solid grey;
+  border-radius: 3px;
+  font-family: sans-serif;
+  box-shadow: 0px 2px 5px grey;
+  background-color: white;
+}
+
+.dropdown-list {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  text-align: left;
+  li {
+    padding: 6px 12px;
+    &:hover {
+      cursor: pointer;
+      background-color: @header-background-color;
+    }
+  }
+}
