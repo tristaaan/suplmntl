@@ -5,9 +5,9 @@ export default React.createClass({
     return {toggled: false};
   },
   componentDidUpdate(prevState) {
-    if(this.state.toggled && !prevState.toggled) {
+    if(this.state.toggled) {
       window.addEventListener('click', this.handleClickOutside);
-    } else if(!this.state.toggled && prevState.toggled) {
+    } else if(!this.state.toggled) {
       window.removeEventListener('click', this.handleClickOutside);
     }   
   },
@@ -25,8 +25,12 @@ export default React.createClass({
     }
     this.toggle();
   },
-  toggle(e) {
-    this.setState({toggled: !this.state.toggled})
+  toggle(newVal) {
+    var toggleValue = !this.state.toggled;
+    if (newVal === undefined) {
+      toggleValue = newVal;
+    }
+    this.setState({toggled: toggleValue});
   },
   render() {
     var isHidden = !this.state.toggled ? 'hidden' : '';

@@ -67,7 +67,7 @@ app.route('/api/collection')
     res.send(collections[req.query.id]);
   })
   .post(function(req, res){
-    console.log('there was a post, update me');
+    collections[req.body.id].title = req.body.title;
   })
   .delete(function(req, res){
     delete collections[req.body.id];

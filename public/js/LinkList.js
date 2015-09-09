@@ -14,7 +14,7 @@ export default React.createClass({
   },
   mixins: [Navigation],
   getInitialState() {
-    return {links: [], title: ''};
+    return {links: [], title: '', tmpTitle: '', renaming: false};
   },
   componentDidMount(){
     var id = this.context.router.getCurrentParams().id;
@@ -24,12 +24,26 @@ export default React.createClass({
       type: 'GET',
       data: {id: id},
       success: function(data) {
-        this.setState({id: id, title: data.title, links: data.links});
+        this.setState({id: id, title: data.title, tmpTitle: data.title, links: data.links});
       }.bind(this),
       error: function(xhr, status, err) {
         console.error(err.toString());
       }.bind(this)
     });
+  },
+  componentDidUpdate(prevState) {
+    if (this.state.renaming) {
+      this.getDOMNode().addEventListener('keyup', this.keyPressed);
+      this.refs.titleEditor.getDOMNode().focus();
+    }
+    else {
+      this.getDOMNode().removeEventListener('keyup', this.keyPressed);
+    }
+  },
+  componentWillUnmount() {
+    if (this.state.renaming) {
+      this.getDOMNode().removeEventListener('keyup', this.keyPressed);
+    }
   },
   handleSubmit(newLink) {
     var id = this.state.id;
@@ -99,19 +113,44 @@ export default React.createClass({
       }.bind(this)
     });
   },
+  keyPressed(e) {
+    if (e.keyCode === 27) {
+      this.setState({renaming: false});
+      this.refs.dropdown.toggle(false);
+    }
+    else if (e.keyCode == 13) {
+      this.setState({renaming: false, title: this.state.tmpTitle});
+      ajax({
+        url: '/api/collection',
+        dataType: 'json',
+        type: 'POST',
+        data: {id: this.state.id, title: this.state.tmpTitle},
+        error: function(xhr, status, err) {
+          console.error(err.toString());
+        }.bind(this)
+      });
+      this.refs.dropdown.toggle(false);
+    }
+  },
   renameList() {
-    console.log('rename me!');
+    this.setState({renaming: true});
+    this.refs.dropdown.toggle(false);
+  },
+  updateTmpTitle(e) {
+    this.setState({tmpTitle: e.target.value});
   },
   render() {
     return (
       <section id="linkList">
         <RouteHandler/>
         <div className="linkListHeader">
-          <h1>{this.state.title}</h1>
-          <Dropdown buttonText="#">
+          { this.state.renaming ? 
+            <input ref="titleEditor" onChange={this.updateTmpTitle} value={this.state.tmpTitle}></input> 
+            : <h1>{this.state.title}</h1>}
+          <Dropdown ref="dropdown" buttonText="#">
             <ul className="dropdown-list">
-              <li onClick={this.deleteList}>Delete list</li>
               <li onClick={this.renameList}>Rename list</li>
+              <li onClick={this.deleteList}>Delete list</li>
             </ul>
           </Dropdown>
         </div>
