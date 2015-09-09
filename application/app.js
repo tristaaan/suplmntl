@@ -71,11 +71,13 @@ app.route('/api/collection')
   })
   .delete(function(req, res){
     delete collections[req.body.id];
+    res.send({});
   });
 
 app.route('/api/link')
   .put(function(req, res){
     collections[req.body.id].links.push(req.body.item);
+    res.send({});
   })
   .get(function(req, res){
     console.log("nothing here");
@@ -89,6 +91,7 @@ app.route('/api/link')
     var col = collections[id];
     col.links.splice(index, 1);
     collections[id] = col;
+    res.send({});
   });
 
 module.exports = app;

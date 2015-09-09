@@ -52,7 +52,7 @@ export default React.createClass({
       dataType: 'json',
       type: 'PUT',
       data: {id: id, item: newLink},
-      success: function() {
+      success: function(data) {
         var nextLinks = this.state.links.concat([newLink]);
         this.setState({links: nextLinks});
       }.bind(this),
