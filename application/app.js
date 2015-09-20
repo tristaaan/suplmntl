@@ -1,7 +1,10 @@
 var express = require('express');
-var request = require('request');
-var bodyParser = require('body-parser');
-var lessMiddleware = require('less-middleware');
+  request = require('request'),
+  bodyParser = require('body-parser'),
+  cookieParser = require('cookie-parser'),
+  lessMiddleware = require('less-middleware'),
+  passport = require('passport'),
+  LocalStrategy = require('passport-local').Strategy;
 
 var app = express();
 
@@ -9,6 +12,37 @@ app.use(lessMiddleware(__dirname + '/../public'));
 app.use(express.static(__dirname + '/../public'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
+app.use(cookieParser());
+
+app.use(passport.initialize());
+app.use(passport.session());
+
+passport.use(new LocalStrategy(
+  function(username, password, done) {
+    return done(null, true);
+    // User.findOne({ username: username }, function(err, user) {
+    //   if (err) { return done(err); }
+    //   if (!user) {
+    //     return done(null, false, { message: 'Incorrect username.' });
+    //   }
+    //   if (!user.validPassword(password)) {
+    //     return done(null, false, { message: 'Incorrect password.' });
+    //   }
+    //   return done(null, user);
+    // });
+  }
+));
+
+passport.serializeUser(function(user, cb) {
+  cb(null, '0');
+});
+
+passport.deserializeUser(function(id, cb) {
+  // db.users.findById(id, function (err, user) {
+  //   if (err) { return cb(err); }
+    cb(null, user);
+  // });
+});
 
 var collections = {'12345': 
   {
@@ -26,12 +60,16 @@ var collections = {'12345':
   }
 };
 
-app.get('/', homeRoute);
-app.get('/#*', homeRoute);
+app.post('/login', 
+  passport.authenticate('local'), 
+  function(req, res) {
+    res.send({});
+});
 
-function homeRoute(req, res) {
-  res.sendFile('index.html');
-}
+app.get('/logout', function(req, res) {
+    req.logout();
+    res.redirect('/');
+});
 
 app.put('/api/title', function(req, res){
   var url = req.body.url;
@@ -93,5 +131,10 @@ app.route('/api/link')
     collections[id] = col;
     res.send({});
   });
+
+// app.get('/', homeRoute);
+app.get('*', function(req, res) {
+  res.sendFile('index.html');
+});
 
 module.exports = app;

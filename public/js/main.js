@@ -6,7 +6,9 @@ var React = require('react'),
   RouteHandler = Router.RouteHandler;
 
 var CollectionList = require('./CollectionList'),
-  LinkList = require('./LinkList');
+  LinkList = require('./LinkList'),
+  Login = require('./Login'),
+  SignUp = require('./SignUp');
 
 var App = React.createClass({
   render() {
@@ -16,7 +18,7 @@ var App = React.createClass({
           <h1>Tengla</h1>
           <ul>
             <li><Link className="headerLink" to="collections">Collections</Link></li>
-            <li><Link className="headerLink" to="collections">Login</Link></li>
+            <li><Link className="headerLink" to="login">Login</Link></li>
           </ul>
         </header>
 
@@ -28,8 +30,10 @@ var App = React.createClass({
 
 var routes = (
   <Route name="app" path="/" handler={App}>
-    <Route name="collections" handler={CollectionList}/>
-    <Route name="list" path="/list/:id" handler={LinkList}/>
+    <Route name="login" path="/login" handler={Login} />
+    <Route name="sign-up" path="/sign-up" handler={SignUp} />
+    <Route name="collections" handler={CollectionList} />
+    <Route name="list" path="/list/:id" handler={LinkList} />
   </Route>
 );
 
