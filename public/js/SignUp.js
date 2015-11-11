@@ -9,20 +9,21 @@ export default React.createClass({
     },
     sumbmitForm(e) {
       ajax({
-        url: '/login',
-        type: 'POST',
+        url: '/api/user',
+        type: 'PUT',
         data: {
           username: e.target[0].value,
-          password: e.target[1].value
+          email: e.target[1].value,
+          password: e.target[2].value
         },
         success: function(data) {
-          console.log('success?');
-          this.replaceWith('/collections'); //this will change with react-router 1.0.0!
+          this.replaceWith('/collections'); //this will change with react-router 1.0!
         }.bind(this),
         error: function(xhr, status, err) {
           console.error(err.toString());
         }.bind(this)
       });
+      e.preventDefault();
     },
     checkPasswords() {
       var pass = this.refs.password.getDOMNode().value,

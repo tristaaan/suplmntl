@@ -4,12 +4,14 @@ var express = require('express');
   cookieParser = require('cookie-parser'),
   lessMiddleware = require('less-middleware'),
   passport = require('passport'),
-  LocalStrategy = require('passport-local').Strategy;
+  LocalStrategy = require('passport-local').Strategy,
+  db = require('./database');
 
-var app = express();
+var app = express(),
+  rootpath = __dirname + '/../public';
 
-app.use(lessMiddleware(__dirname + '/../public'));
-app.use(express.static(__dirname + '/../public'));
+app.use(lessMiddleware(rootpath));
+app.use(express.static(rootpath));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(cookieParser());
@@ -20,28 +22,30 @@ app.use(passport.session());
 passport.use(new LocalStrategy(
   function(username, password, done) {
     return done(null, true);
-    // User.findOne({ username: username }, function(err, user) {
-    //   if (err) { return done(err); }
-    //   if (!user) {
-    //     return done(null, false, { message: 'Incorrect username.' });
-    //   }
-    //   if (!user.validPassword(password)) {
-    //     return done(null, false, { message: 'Incorrect password.' });
-    //   }
-    //   return done(null, user);
-    // });
+    db.findOne({ username: username }, function(err, user) {
+      if (err) { return done(err); }
+      if (!user) {
+        return done(null, false, { message: 'Incorrect username.' });
+      }
+      if (!user.password !== password) {
+        return done(null, false, { message: 'Incorrect password.' });
+      }
+      return done(null, user);
+    });
   }
 ));
 
 passport.serializeUser(function(user, cb) {
-  cb(null, '0');
+  cb(null, user.id);
 });
 
 passport.deserializeUser(function(id, cb) {
-  // db.users.findById(id, function (err, user) {
-  //   if (err) { return cb(err); }
+  db.users.findById(id, function (err, user) {
+    if (err) { 
+      return cb(err); 
+    }
     cb(null, user);
-  // });
+  });
 });
 
 var collections = {'12345': 
@@ -70,6 +74,19 @@ app.get('/logout', function(req, res) {
     req.logout();
     res.redirect('/');
 });
+
+app.route('/api/user')
+  .put(function(req, res) {
+    db.addUser({username: req.body.username, 
+      email: req.body.email, 
+      password: req.body.password}, function(err, result) {
+      if (err) {
+        res.send({error: err.message});
+      } else {
+        res.send({'success': result});
+      }
+    });
+  });
 
 app.put('/api/title', function(req, res){
   var url = req.body.url;
@@ -134,7 +151,7 @@ app.route('/api/link')
 
 // app.get('/', homeRoute);
 app.get('*', function(req, res) {
-  res.sendFile('index.html');
+  res.sendFile('index.html', {root: rootpath});
 });
 
 module.exports = app;

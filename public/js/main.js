@@ -15,7 +15,7 @@ var App = React.createClass({
     return (
       <div>
         <header>
-          <h1>Tengla</h1>
+          <h1><Link to="/">Tengla</Link></h1>
           <ul>
             <li><Link className="headerLink" to="collections">Collections</Link></li>
             <li><Link className="headerLink" to="login">Login</Link></li>
