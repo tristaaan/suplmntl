@@ -6,8 +6,15 @@ var client = new pg.Client(connectionString);
 client.connect();
 
 exports.findOne = function(name, cb) {
-  var q = client.query('select id, pw from users where name = ' +  name + ' limit 1;');
-  q.on('end', function(err, res) {
+  var query = 'select id, pw from users where name=\'' +  name + '\' limit 1;'
+  var q = client.query(query);
+  q.on('err', function(err) {
+    cb(new Error('fuck'));
+  });
+  q.on('row', function(row, results) {
+      results.addRow(row);
+  });
+  q.on('end', function(res) {
     if (res.rows.length > 0) {
       cb(null, res.rows[0]);
     } else {
@@ -17,7 +24,7 @@ exports.findOne = function(name, cb) {
 };
 
 exports.findById = function(id, cb) {
-  var q = client.query('select name from users where id = ' + id + ' limit to 1;' );
+  var q = client.query('select name from users where id = ' + id + ' limit 1;' );
   q.on('end', function(err, res) {
     if (res.rows.length > 0) {
       cb(null, res.rows[0]);

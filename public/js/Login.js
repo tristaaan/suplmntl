@@ -16,13 +16,13 @@ export default React.createClass({
           password: e.target[1].value
         },
         success: function(data) {
-          console.log('success?');
           this.replaceWith('/collections'); //this will change with react-router 1.0.0!
         }.bind(this),
         error: function(xhr, status, err) {
           console.error(err.toString());
         }.bind(this)
       });
+      e.preventDefault();
     },
     gotoSignUp() {
       this.replaceWith('/sign-up');

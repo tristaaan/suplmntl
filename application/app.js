@@ -21,13 +21,12 @@ app.use(passport.session());
 
 passport.use(new LocalStrategy(
   function(username, password, done) {
-    return done(null, true);
-    db.findOne({ username: username }, function(err, user) {
+    db.findOne(username, function(err, user) {
       if (err) { return done(err); }
       if (!user) {
         return done(null, false, { message: 'Incorrect username.' });
       }
-      if (!user.password !== password) {
+      if (user.pw !== password) {
         return done(null, false, { message: 'Incorrect password.' });
       }
       return done(null, user);
@@ -40,7 +39,7 @@ passport.serializeUser(function(user, cb) {
 });
 
 passport.deserializeUser(function(id, cb) {
-  db.users.findById(id, function (err, user) {
+  db.findById(id, function (err, user) {
     if (err) { 
       return cb(err); 
     }
@@ -67,7 +66,7 @@ var collections = {'12345':
 app.post('/login', 
   passport.authenticate('local'), 
   function(req, res) {
-    res.send({});
+    res.send(res.user);
 });
 
 app.get('/logout', function(req, res) {
