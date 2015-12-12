@@ -11,7 +11,7 @@ export default React.createClass({
     var createItem = function(item, index) {
       return (
         <li key={item.id}>
-          <Link to="list" params={{id: item.id}} className="title">{item.title}</Link>
+          <Link to={`/list/${item.id}`} className="title">{item.title}</Link>
           <span>{item.size === 1 ? item.size + ' link' : item.size + ' links'}</span>
         </li>
       );

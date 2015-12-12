@@ -1,4 +1,5 @@
 var React = require('react'),
+    ReactDOM = require('react-dom'),
     ajax = require('jquery').ajax,
     Navigation = require('react-router').Navigation;
 
@@ -26,8 +27,8 @@ export default React.createClass({
       e.preventDefault();
     },
     checkPasswords() {
-      var pass = this.refs.password.getDOMNode().value,
-        conf = this.refs.confirmPassword.getDOMNode().value,
+      var pass = this.refs.password.value,
+        conf = this.refs.confirmPassword.value,
         message = '',
         bad = false; 
 

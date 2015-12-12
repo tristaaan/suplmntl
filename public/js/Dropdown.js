@@ -17,7 +17,7 @@ export default React.createClass({
     }
   },
   handleClickOutside(e) {
-    var children = this.getDOMNode().getElementsByTagName('*');
+    var children = ReactDOM.findDOMNode().getElementsByTagName('*');
     for(var x in children) {
       if(children[x] == e.target) { 
         return; 

@@ -1,12 +1,11 @@
 //LinkList
 var React = require('react'),
+  ReactDOM = require('react-dom'),
   Navigation = require('react-router').Navigation,
   ajax = require('jquery').ajax,
   Dropdown = require('./Dropdown'),
   LinksBox = require('./LinkBox'),
   AddLinkForm = require('./AddLinkForm');
-
-import {RouteHandler} from 'react-router';
 
 export default React.createClass({
   contextTypes: {
@@ -17,7 +16,7 @@ export default React.createClass({
     return {links: [], title: '', tmpTitle: '', renaming: false};
   },
   componentDidMount(){
-    var id = this.context.router.getCurrentParams().id;
+    var id = this.props.routeParams.id;
     ajax({
       url: '/api/collection',
       dataType: 'json',
@@ -33,16 +32,16 @@ export default React.createClass({
   },
   componentDidUpdate(prevState) {
     if (this.state.renaming) {
-      this.getDOMNode().addEventListener('keyup', this.keyPressed);
-      this.refs.titleEditor.getDOMNode().focus();
+      ReactDOM.findDOMNode(this).addEventListener('keyup', this.keyPressed);
+      this.refs.titleEditor.focus();
     }
     else {
-      this.getDOMNode().removeEventListener('keyup', this.keyPressed);
+      ReactDOM.findDOMNode(this).removeEventListener('keyup', this.keyPressed);
     }
   },
   componentWillUnmount() {
     if (this.state.renaming) {
-      this.getDOMNode().removeEventListener('keyup', this.keyPressed);
+      ReactDOM.findDOMNode(this).removeEventListener('keyup', this.keyPressed);
     }
   },
   handleSubmit(newLink) {
@@ -142,7 +141,6 @@ export default React.createClass({
   render() {
     return (
       <section id="linkList">
-        <RouteHandler/>
         <div className="linkListHeader">
           { this.state.renaming ? 
             <input ref="titleEditor" onChange={this.updateTmpTitle} value={this.state.tmpTitle}></input> 

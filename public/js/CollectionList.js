@@ -3,7 +3,6 @@ var React = require('react'),
   CollectionBox = require('./CollectionBox'),
   AddCollectionForm = require('./AddCollectionForm');
 
-import {RouteHandler} from 'react-router';
 import {ajax} from 'jquery';
 
 export default React.createClass({
@@ -63,7 +62,6 @@ export default React.createClass({
   render() {
     return (
       <section id="collectionList">
-        <RouteHandler/>
         <h1>Collections</h1>
         <CollectionBox links={this.state.cols} deleteItem={this.handleDelete} />
         { this.state.colFormVisible ? <AddCollectionForm onLinkSubmit={this.handleSubmit} toggler={this.toggleForm} /> : null }

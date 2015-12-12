@@ -1,12 +1,13 @@
 //AddCollectionForm
-var React = require('react');
+var React = require('react'),
+  ReactDOM = require('react-dom');
 
 export default React.createClass({
   getInitialState() {
     return {title:''};
   },
   componentDidMount() {
-    this.refs.titleInput.getDOMNode().focus(); 
+    this.refs.titleInput.focus(); 
   },
   handleChange(e) {
     this.setState({title: e.target.value});

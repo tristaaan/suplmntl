@@ -1,5 +1,6 @@
 //AddLinkForm
 var React = require('react'),
+  ReactDOM = require('react-dom'),
   ajax = require('jquery').ajax;
 
 export default React.createClass({
@@ -24,8 +25,8 @@ export default React.createClass({
 
     this.props.onLinkSubmit(this.state);
     this.setState(this.getInitialState());
-    this.refs.submitButton.getDOMNode().blur();
-    this.refs.titleInput.getDOMNode().focus();
+    this.refs.submitButton.blur();
+    this.refs.titleInput.focus();
   },
   //in larger forms avoid having an update function for everything.
   updateTitle(e) {

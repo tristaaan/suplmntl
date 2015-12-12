@@ -1,10 +1,12 @@
-//router
+// libs
 var React = require('react'),
-  Router = require('react-router'),
-  Link = Router.Link,
-  Route = Router.Route,
-  RouteHandler = Router.RouteHandler;
+  ReactDOM = require('react-dom'),
+  ReactRouter = require('react-router'),
+  Router = ReactRouter.Router,
+  Route = ReactRouter.Route,
+  Link = ReactRouter.Link;
 
+// componenets
 var CollectionList = require('./CollectionList'),
   LinkList = require('./LinkList'),
   Login = require('./Login'),
@@ -21,22 +23,21 @@ var App = React.createClass({
             <li><Link className="headerLink" to="login">Login</Link></li>
           </ul>
         </header>
-
-        <RouteHandler/>
+        <div>
+          {this.props.children}
+        </div>
       </div>
     );
   }
 });
 
 var routes = (
-  <Route name="app" path="/" handler={App}>
-    <Route name="login" path="/login" handler={Login} />
-    <Route name="sign-up" path="/sign-up" handler={SignUp} />
-    <Route name="collections" handler={CollectionList} />
-    <Route name="list" path="/list/:id" handler={LinkList} />
-  </Route>
+  <Router  path="/" component={App}>
+    <Route  path="/login" component={Login} />
+    <Route  path="/sign-up" component={SignUp} />
+    <Route  path="/collections" component={CollectionList} />
+    <Route  path="/list/:id" component={LinkList} />
+  </Router>
 );
 
-Router.run(routes, function (Handler) {
-  React.render(<Handler/>, document.getElementById('content'));
-});
+ReactDOM.render(<Router routes={routes} />, document.getElementById('content'));
