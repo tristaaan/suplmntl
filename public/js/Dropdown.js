@@ -1,4 +1,5 @@
-var React = require('react');
+var React = require('react'),
+  ReactDOM = require('react-dom');
 
 export default React.createClass({
   getInitialState() {
@@ -17,7 +18,7 @@ export default React.createClass({
     }
   },
   handleClickOutside(e) {
-    var children = ReactDOM.findDOMNode().getElementsByTagName('*');
+    var children = ReactDOM.findDOMNode(this).getElementsByTagName('*');
     for(var x in children) {
       if(children[x] == e.target) { 
         return; 
