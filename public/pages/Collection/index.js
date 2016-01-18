@@ -56,7 +56,8 @@ export default React.createClass({
       }.bind(this)
     });
   },
-  toggleForm() {
+  toggleForm(e) {
+    e.preventDefault();
     this.setState({colFormVisible: !this.state.colFormVisible});
   },
   render() {

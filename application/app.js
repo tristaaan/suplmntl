@@ -87,20 +87,20 @@ app.route('/api/user')
     });
   });
 
-app.put('/api/title', function(req, res){
-  var url = req.body.url;
-  request(url, function (err, resquest, body) {
-    if (!err && res.statusCode == 200) {
-      var title = 'no title found';
-      body = body.replace(/\n/g,'');
-      var match=body.match(/<title>(.*)<\/title>/im);
-      if (match && match.length>1){
-        title= (''+match[1]).trim();
-      }
-      res.send({title: title}); 
-    }
-  });
-});
+// app.put('/api/title', function(req, res){
+//   var url = req.body.url;
+//   request(url, function (err, resquest, body) {
+//     if (!err && res.statusCode == 200) {
+//       var title = 'no title found';
+//       body = body.replace(/\n/g,'');
+//       var match=body.match(/<title>(.*)<\/title>/im);
+//       if (match && match.length>1){
+//         title= (''+match[1]).trim();
+//       }
+//       res.send({title: title}); 
+//     }
+//   });
+// });
 
 app.route('/api/collections')
   .get(function(req, res){

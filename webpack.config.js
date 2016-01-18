@@ -2,7 +2,7 @@ var webpack = require('webpack');
 
 module.exports = {
   plugins: [],
-  entry: './public/js/main.js',
+  entry: './public/pages/main.js',
   output: {
     path: './public/dist',
     filename: 'index.js',

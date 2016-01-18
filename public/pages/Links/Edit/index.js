@@ -1,19 +1,17 @@
 //LinkList
 var React = require('react'),
   ReactDOM = require('react-dom'),
-  Navigation = require('react-router').Navigation,
   ajax = require('jquery').ajax,
-  Dropdown = require('./Dropdown'),
+  Dropdown = require('../../Dropdown'),
   LinksBox = require('./LinkBox'),
   AddLinkForm = require('./AddLinkForm');
 
 export default React.createClass({
-  contextTypes: {
-    router: React.PropTypes.func
-  },
-  mixins: [Navigation],
   getInitialState() {
     return {links: [], title: '', tmpTitle: '', renaming: false};
+  },
+  contextTypes: {
+    router: React.PropTypes.object,
   },
   componentDidMount(){
     var id = this.props.routeParams.id;
@@ -135,6 +133,9 @@ export default React.createClass({
     this.setState({renaming: true});
     this.refs.dropdown.toggle(false);
   },
+  viewList() {
+    this.context.router.push(`/list/${this.state.id}/view`);
+  },
   updateTmpTitle(e) {
     this.setState({tmpTitle: e.target.value});
   },
@@ -147,6 +148,7 @@ export default React.createClass({
             : <h1>{this.state.title}</h1>}
           <Dropdown ref="dropdown" buttonText="#">
             <ul className="dropdown-list">
+              <li onClick={this.viewList}>Preview list</li>
               <li onClick={this.renameList}>Rename list</li>
               <li onClick={this.deleteList}>Delete list</li>
             </ul>

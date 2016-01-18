@@ -13,7 +13,7 @@ export default React.createClass({
     this.setState({title: e.target.value});
   },
   handleSubmit(e) {
-    if (!/\S/.test(this.state.title)){
+    if (!/\S/.test(this.state.title) || this.state.title.length === 0){
       return;
     }
     this.props.onLinkSubmit(this.state);

@@ -1,10 +1,8 @@
 var React = require('react'),
     ReactDOM = require('react-dom'),
-    ajax = require('jquery').ajax,
-    Navigation = require('react-router').Navigation;
+    ajax = require('jquery').ajax;
 
 export default React.createClass({
-    mixins: [Navigation],
     getInitialState() {
       return {error: false, badPass: false, errorMessage: false};
     },
