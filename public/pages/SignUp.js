@@ -1,28 +1,25 @@
 var React = require('react'),
     ReactDOM = require('react-dom'),
-    ajax = require('jquery').ajax;
+    service = require('../service');
 
 export default React.createClass({
     getInitialState() {
       return {error: false, badPass: false, errorMessage: false};
     },
     sumbmitForm(e) {
-      ajax({
-        url: '/api/user',
-        type: 'PUT',
-        data: {
-          username: e.target[0].value,
-          email: e.target[1].value,
-          password: e.target[2].value
-        },
-        success: function(data) {
-          this.replaceWith('/collections'); //this will change with react-router 1.0!
-        }.bind(this),
-        error: function(xhr, status, err) {
-          console.error(err.toString());
-        }.bind(this)
-      });
       e.preventDefault();
+      const user = {
+        username: e.target[0].value,
+        email: e.target[1].value,
+        password: e.target[2].value
+      };
+      service.signup(user)
+        .then((response) => {
+          this.context.replaceWith('/collections');
+        })
+        .catch((error) => {
+          console.error(error.message);
+        });
     },
     checkPasswords() {
       var pass = this.refs.password.value,

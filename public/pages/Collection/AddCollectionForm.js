@@ -13,11 +13,12 @@ export default React.createClass({
     this.setState({title: e.target.value});
   },
   handleSubmit(e) {
+    e.preventDefault();
     if (!/\S/.test(this.state.title) || this.state.title.length === 0){
       return;
     }
     this.props.onLinkSubmit(this.state);
-    this.props.toggler();
+    this.props.toggler(e);
   },
   render() {
     return (

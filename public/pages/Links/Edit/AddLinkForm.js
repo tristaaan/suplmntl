@@ -1,6 +1,5 @@
 var React = require('react'),
-  ReactDOM = require('react-dom'),
-  ajax = require('jquery').ajax;
+  ReactDOM = require('react-dom');
 
 export default React.createClass({
   getInitialState() {
@@ -34,26 +33,6 @@ export default React.createClass({
     newState[key] = e.target.value;
     this.setState(newState);
   },
-  // fetchTitle(e) {
-  //   var link = e.target.value;
-  //   if (link.length == 0){
-  //     this.setState({link: ''});
-  //     return;
-  //   }
-  //   this.setState({title: link});
-  //   ajax({
-  //     url: '/api/title',
-  //     dataType: 'json',
-  //     type: 'PUT',
-  //     data: {url: link}, //problem here?
-  //     success: function(data) {
-  //       this.setState({title: data.title, link:link});
-  //     }.bind(this),
-  //     error: function(xhr, status, err) {
-  //       console.error(err.toString());
-  //     }.bind(this)
-  //   });
-  // },
   render() {
     return (
       <form onSubmit={this.handleSubmit} className="linkForm">

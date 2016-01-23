@@ -87,21 +87,6 @@ app.route('/api/user')
     });
   });
 
-// app.put('/api/title', function(req, res){
-//   var url = req.body.url;
-//   request(url, function (err, resquest, body) {
-//     if (!err && res.statusCode == 200) {
-//       var title = 'no title found';
-//       body = body.replace(/\n/g,'');
-//       var match=body.match(/<title>(.*)<\/title>/im);
-//       if (match && match.length>1){
-//         title= (''+match[1]).trim();
-//       }
-//       res.send({title: title}); 
-//     }
-//   });
-// });
-
 app.route('/api/collections')
   .get(function(req, res){
     var objs = [];
@@ -117,14 +102,16 @@ app.route('/api/collection')
     collections[newId] = {title: req.body.title, links: []};
     res.send({newId: newId, size: 0});
   })
-  .get(function(req, res){
-    res.send(collections[req.query.id]);
-  })
   .post(function(req, res){
     collections[req.body.id].title = req.body.title;
+  });
+  
+app.route('/api/collection/:id')
+  .get(function(req, res){
+    res.send(collections[req.params.id]);
   })
   .delete(function(req, res){
-    delete collections[req.body.id];
+    delete collections[req.params.id];
     res.send({});
   });
 
@@ -133,11 +120,9 @@ app.route('/api/link')
     collections[req.body.id].links.push(req.body.item);
     res.send({});
   })
-  .get(function(req, res){
-    console.log("nothing here");
-  })
   .post(function(req, res){
-    console.log('there was a post, update me');
+    collections[req.body.id].links[req.body.index] = req.body.newLink;
+    res.send({});
   })
   .delete(function(req, res){
     var index = req.body.index;

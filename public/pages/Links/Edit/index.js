@@ -1,32 +1,33 @@
 //LinkList
 var React = require('react'),
   ReactDOM = require('react-dom'),
-  ajax = require('jquery').ajax,
   Dropdown = require('../../Dropdown'),
   LinksBox = require('./LinkBox'),
-  AddLinkForm = require('./AddLinkForm');
+  AddLinkForm = require('./AddLinkForm'),
+  service = require('../../../service');
 
 export default React.createClass({
   getInitialState() {
-    return {links: [], title: '', tmpTitle: '', renaming: false};
+    return {links: [], 
+      title: '', 
+      tmpTitle: '', 
+      renaming: false};
   },
   contextTypes: {
     router: React.PropTypes.object,
   },
   componentDidMount(){
     var id = this.props.routeParams.id;
-    ajax({
-      url: '/api/collection',
-      dataType: 'json',
-      type: 'GET',
-      data: {id: id},
-      success: function(data) {
-        this.setState({id: id, title: data.title, tmpTitle: data.title, links: data.links});
-      }.bind(this),
-      error: function(xhr, status, err) {
-        console.error(err.toString());
-      }.bind(this)
-    });
+    service.getLinks({id})
+      .then((response) => {
+        this.setState({id: id, 
+          title: response.data.title, 
+          tmpTitle: response.data.title, 
+          links: response.data.links});
+      })
+      .catch((error) => {
+        console.error(error.message);
+      });
   },
   componentDidUpdate(prevState) {
     if (this.state.renaming) {
@@ -44,71 +45,39 @@ export default React.createClass({
   },
   handleSubmit(newLink) {
     var id = this.state.id;
-    ajax({
-      url: '/api/link',
-      dataType: 'json',
-      type: 'PUT',
-      data: {id: id, item: newLink},
-      success: function(data) {
+    service.createLink({id: id, item: newLink})
+      .then((response) => {
         var nextLinks = this.state.links.concat([newLink]);
         this.setState({links: nextLinks});
-      }.bind(this),
-      error: function(xhr, status, err) {
-        console.error(err.toString());
-      }.bind(this)
-    });
-  },
-  handleUpdate(index) {
-    var id = this.state.id;
-    ajax({
-      url: '/api/collection',
-      dataType: 'json',
-      type: 'POST',
-      data: {id: id},
-      success: function(data) {
-        var newLinks = this.state.links;
-        newLinks.splice(index, 1);
-        this.setState({links: newLinks});
-      }.bind(this),
-      error: function(xhr, status, err) {
-        console.error(err.toString());
-      }.bind(this)
-    });
+      })
+      .catch((error) => {
+        console.error(error.message());
+      });
   },
   handleDelete(index) {
     var id = this.state.id;
-    ajax({
-      url: '/api/link',
-      dataType: 'json',
-      type: 'DELETE',
-      data: {colId: id, index: index},
-      success: function(data){
+    service.deleteLink({colId: id, index: index})
+      .then((response) => {
         var newLinks = this.state.links;
         newLinks.splice(index, 1);
         this.setState({links: newLinks});
-      }.bind(this),
-      error: function(xhr, status, err) {
-        console.error(err.toString());
-      }.bind(this)
-    });
+      })
+      .catch((error) => {
+        console.error(error.message);
+      });
   },
   deleteList() {
     if(!confirm('Are you sure you want to delete "'+this.state.title+'"?')){
       return;
     }
     var id = this.state.id;
-    ajax({
-      url: '/api/collection',
-      dataType: 'json',
-      type: 'DELETE',
-      data: {id: id},
-      complete: function(){ //run this regardless if success or error
-        this.goBack();
-      }.bind(this),
-      error: function(xhr, status, err) {
-        console.error(err.toString());
-      }.bind(this)
-    });
+    service.deleteCollection({id})
+      .then((response) => {
+        this.context.router.replace('/collections');
+      })
+      .catch((error) => {
+        console.error(error.message);
+      });
   },
   keyPressed(e) {
     if (e.keyCode === 27) {
@@ -117,16 +86,10 @@ export default React.createClass({
     }
     else if (e.keyCode == 13) {
       this.setState({renaming: false, title: this.state.tmpTitle});
-      ajax({
-        url: '/api/collection',
-        dataType: 'json',
-        type: 'POST',
-        data: {id: this.state.id, title: this.state.tmpTitle},
-        error: function(xhr, status, err) {
-          console.error(err.toString());
-        }.bind(this)
-      });
-      this.refs.dropdown.toggle(false);
+      service.updateCollectionTitle({id: this.state.id, title: this.state.tmpTitle})
+        .catch((error) => {
+          console.error(error.message);
+        });
     }
   },
   renameList() {

@@ -1,9 +1,9 @@
 //LinkList
 var React = require('react'),
   ReactDOM = require('react-dom'),
-  ajax = require('jquery').ajax,
   Dropdown = require('../../Dropdown'),
-  LinksBox = require('./LinkBox');
+  LinksBox = require('./LinkBox'),
+  service = require('../../../service');
 
 export default React.createClass({
   getInitialState() {
@@ -14,18 +14,16 @@ export default React.createClass({
   },
   componentDidMount(){
     var id = this.props.routeParams.id;
-    ajax({
-      url: '/api/collection',
-      dataType: 'json',
-      type: 'GET',
-      data: {id: id},
-      success: function(data) {
-        this.setState({id: id, title: data.title, tmpTitle: data.title, links: data.links});
-      }.bind(this),
-      error: function(xhr, status, err) {
-        console.error(err.toString());
-      }.bind(this)
-    });
+    service.getLinks({id})
+      .then((response) => {
+        this.setState({id: id, 
+          title: response.data.title, 
+          tmpTitle: response.data.title, 
+          links: response.data.links});
+      })
+      .catch((error) => {
+        console.error(error.message);
+      });
   },
   editList() {
     this.context.router.push(`/list/${this.state.id}/edit`);

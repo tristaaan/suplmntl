@@ -1,5 +1,5 @@
 var React = require('react'),
-    ajax = require('jquery').ajax;
+  service = require('../service');
 
 export default React.createClass({
   getInitialState() {
@@ -9,21 +9,18 @@ export default React.createClass({
     router: React.PropTypes.object,
   },
   sumbmitForm(e) {
-    ajax({
-      url: '/login',
-      type: 'POST',
-      data: {
-        username: e.target[0].value,
-        password: e.target[1].value
-      },
-      success: function(data) {
-        this.replaceWith('/collections'); //this will change with react-router 1.0.0!
-      }.bind(this),
-      error: function(xhr, status, err) {
-        console.error(err.toString());
-      }.bind(this)
-    });
     e.preventDefault();
+    const user = {
+      username: e.target[0].value,
+      password: e.target[1].value
+    };
+    service.login(user)
+      .then((response) => {
+        this.context.router.replace('/collections');
+      })
+      .catch((error) => {
+        console.error(error.message);
+      });
   },
   gotoSignUp() {
     this.context.router.push(`/sign-up`);

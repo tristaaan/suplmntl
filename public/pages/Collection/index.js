@@ -1,63 +1,35 @@
 //CollectionList 
 var React = require('react'),
   CollectionBox = require('./CollectionBox'),
-  AddCollectionForm = require('./AddCollectionForm');
-
-import {ajax} from 'jquery';
+  AddCollectionForm = require('./AddCollectionForm'),
+  service = require('../../service');
 
 export default React.createClass({
   getInitialState() {
     return {cols: [], colFormVisible: false};
   },
   componentDidMount() {
-    ajax({
-      url: '/api/collections',
-      dataType: 'json',
-      type: 'GET',
-      success: function(data) {
-        this.setState({cols:data});
-      }.bind(this),
-      error: function(xhr, status, err) {
-        console.error(err.toString());
-      }.bind(this)
-    });
+    service.getCollections()
+      .then((response) => {
+        this.setState({cols: response.data});
+      })
+      .catch((error) => {
+        console.error(error.message);
+      });
   },
   handleSubmit(newCol) {
-    ajax({
-      url: '/api/collection',
-      dataType: 'json',
-      type: 'PUT',
-      data: {title: newCol.title},
-      success: function(data) {
-        newCol['id'] = data.newId;
-        newCol['size'] = data.size;
+    service.createCollection({title: newCol.title})
+      .then((response) => {
+        newCol['id'] = response.data.newId;
+        newCol['size'] = response.data.size;
         var newCols = this.state.cols.concat([newCol]);
         this.setState({cols: newCols});
-      }.bind(this),
-      error: function(xhr, status, err) {
-        console.error(err.toString());
-      }
-    });
-  },
-  handleUpdate(index){
-    var id = this.state.cols[index].id;
-    ajax({
-      url: '/api/collection',
-      dataType: 'json',
-      type: 'POST',
-      data: {id: id},
-      success: function() {
-        var newCols = this.state.cols;
-        newCols.splice(index, 1);
-        this.setState({cols: newCols});
-      }.bind(this),
-      error: function(xhr, status, err) {
-        console.error(err.toString());
-      }.bind(this)
-    });
+      })
+      .catch((error) => {
+        console.error(error.message);
+      });
   },
   toggleForm(e) {
-    e.preventDefault();
     this.setState({colFormVisible: !this.state.colFormVisible});
   },
   render() {
