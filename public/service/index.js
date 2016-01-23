@@ -1,6 +1,5 @@
 var axios = require('axios');
 
-
 //Collections
 export function getCollections() {
     return axios.get('/api/collections');

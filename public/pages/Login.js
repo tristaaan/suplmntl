@@ -16,6 +16,7 @@ export default React.createClass({
     };
     service.login(user)
       .then((response) => {
+        console.log(response.data);
         this.context.router.replace('/collections');
       })
       .catch((error) => {

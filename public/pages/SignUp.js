@@ -6,6 +6,9 @@ export default React.createClass({
     getInitialState() {
       return {error: false, badPass: false, errorMessage: false};
     },
+    contextTypes: {
+      router: React.PropTypes.object,
+    },
     sumbmitForm(e) {
       e.preventDefault();
       const user = {
@@ -15,7 +18,7 @@ export default React.createClass({
       };
       service.signup(user)
         .then((response) => {
-          this.context.replaceWith('/collections');
+          this.context.router.replaceWith('/collections');
         })
         .catch((error) => {
           console.error(error.message);

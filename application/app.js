@@ -1,8 +1,10 @@
-var express = require('express');
+var express = require('express'),
   request = require('request'),
+
   bodyParser = require('body-parser'),
   cookieParser = require('cookie-parser'),
   lessMiddleware = require('less-middleware'),
+
   passport = require('passport'),
   LocalStrategy = require('passport-local').Strategy,
   db = require('./database');
@@ -22,11 +24,13 @@ app.use(passport.session());
 passport.use(new LocalStrategy(
   function(username, password, done) {
     db.findOne(username, function(err, user) {
-      if (err) { return done(err); }
+      if (err) { 
+        return done(err); 
+      }
       if (!user) {
         return done(null, false, { message: 'Incorrect username.' });
       }
-      if (user.pw !== password) {
+      if (!db.validatePassword(password, user.pw)) {
         return done(null, false, { message: 'Incorrect password.' });
       }
       return done(null, user);
@@ -66,7 +70,7 @@ var collections = {'12345':
 app.post('/login', 
   passport.authenticate('local'), 
   function(req, res) {
-    res.send(res.user);
+    res.send({id: req.user.id});
 });
 
 app.get('/logout', function(req, res) {
@@ -82,7 +86,7 @@ app.route('/api/user')
       if (err) {
         res.send({error: err.message});
       } else {
-        res.send({'success': result});
+        res.send({success: result});
       }
     });
   });

@@ -1,6 +1,6 @@
 var pg = require('pg'),
 	connectionString = process.env.DATABASE_URL || 'postgres://localhost:5432/tengla',
-  crypto = require('crypto');
+  bcrypt = require('bcrypt');
 
 var client = new pg.Client(connectionString);
 client.connect();
@@ -45,12 +45,16 @@ exports.addUser = function(user, cb) {
   }); 
 };
 
+exports.validatePassword = function(password, dbpass) {
+  return bcrypt.compareSync(password, dbpass);
+}
+
 function normalizeUser(user) {
   var keys = ['username', 'email', 'password'],
     ret = [];
-  user.password = '17uTDIr5ITAaH63rt05hXA==';
+  user.password = bcrypt.hashSync(user.password, bcrypt.genSaltSync(8));
   keys.forEach(function(el) {
     ret.push('\'' + user[el] + '\'');
   });
   return ret.join(',');
-};
+}
