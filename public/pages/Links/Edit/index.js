@@ -21,9 +21,9 @@ export default React.createClass({
     service.getLinks({id})
       .then((response) => {
         this.setState({id: id, 
-          title: response.data.title, 
-          tmpTitle: response.data.title, 
-          links: response.data.links});
+          title: response.data.name, 
+          tmpTitle: response.data.name, 
+          links: response.data.items});
       })
       .catch((error) => {
         console.error(error.message);
@@ -108,7 +108,8 @@ export default React.createClass({
         <div className="linkListHeader">
           { this.state.renaming ? 
             <input ref="titleEditor" onChange={this.updateTmpTitle} value={this.state.tmpTitle}></input> 
-            : <h1>{this.state.title}</h1>}
+            : <h1>{this.state.title}</h1>
+          }
           <Dropdown ref="dropdown" buttonText="#">
             <ul className="dropdown-list">
               <li onClick={this.viewList}>Preview list</li>

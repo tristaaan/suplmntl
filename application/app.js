@@ -92,19 +92,38 @@ app.route('/api/user')
   });
 
 app.route('/api/collections')
-  .get(function(req, res){
-    var objs = [];
-    Object.keys(collections).forEach(function(el){
-      objs.push({id: el, title: collections[el].title, size: collections[el].links.length});
+  // .get(function(req, res){
+  //   var objs = [];
+  //   Object.keys(collections).forEach(function(el){
+  //     objs.push({id: el, title: collections[el].title, size: collections[el].links.length});
+  //   });
+  //   res.send(objs);
+  // });
+  .get(function(req, res) {
+    db.getCollections(1, function(error, result) {
+      if (error) {
+        res.send(error);
+        return;
+      } else {
+        res.send(result);
+      }
     });
-    res.send(objs);
   });
 
 app.route('/api/collection')
   .put(function(req, res){
-    var newId = Math.floor(Math.random()*0xaabbcc);
-    collections[newId] = {title: req.body.title, links: []};
-    res.send({newId: newId, size: 0});
+    // var newId = Math.floor(Math.random()*0xaabbcc);
+    // collections[newId] = {title: req.body.title, links: []};
+    // res.send({newId: newId, size: 0});
+    var entry = {name: req.body.name, items: [], owner: 1};
+    console.log(entry);
+    db.createCollection(entry, function(error, result) {
+      if (error) {
+        res.send(error);
+      } else {
+        res.send({success: result});
+      }
+    });
   })
   .post(function(req, res){
     collections[req.body.id].title = req.body.title;
@@ -112,7 +131,14 @@ app.route('/api/collection')
   
 app.route('/api/collection/:id')
   .get(function(req, res){
-    res.send(collections[req.params.id]);
+    db.getCollection(req.params.id, function(error, result) {
+      if (error) {
+        res.send(error);
+      } else {
+        res.send(result);
+      }
+    });
+    // res.send(collections[req.params.id]);
   })
   .delete(function(req, res){
     delete collections[req.params.id];

@@ -7,7 +7,7 @@ var React = require('react'),
 
 export default React.createClass({
   getInitialState() {
-    return {links: [], title: '', tmpTitle: '', renaming: false};
+    return {links: [], name: '', renaming: false};
   },
   contextTypes: {
     router: React.PropTypes.object,
@@ -17,9 +17,8 @@ export default React.createClass({
     service.getLinks({id})
       .then((response) => {
         this.setState({id: id, 
-          title: response.data.title, 
-          tmpTitle: response.data.title, 
-          links: response.data.links});
+          name: response.data.name,
+          links: response.data.items});
       })
       .catch((error) => {
         console.error(error.message);
@@ -32,7 +31,7 @@ export default React.createClass({
     return (
       <section id="linkList">
         <div className="linkListHeader">
-          <h1>{this.state.title}</h1>
+          <h1>{this.state.name}</h1>
           <Dropdown ref="dropdown" buttonText="#">
             <ul className="dropdown-list">
               { true ? <li onClick={this.editList}>Edit List</li> : <li onClick={() => {console.log('fork');}}>Fork List</li>}

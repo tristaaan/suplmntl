@@ -18,10 +18,9 @@ export default React.createClass({
       });
   },
   handleSubmit(newCol) {
-    service.createCollection({title: newCol.title})
+    service.createCollection({name: newCol.name})
       .then((response) => {
         newCol['id'] = response.data.newId;
-        newCol['size'] = response.data.size;
         var newCols = this.state.cols.concat([newCol]);
         this.setState({cols: newCols});
       })
