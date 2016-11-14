@@ -1,5 +1,5 @@
-var React = require('react'),
-  service = require('../service');
+import React from 'react';
+import * as service from '../service';
 
 export default React.createClass({
   getInitialState() {

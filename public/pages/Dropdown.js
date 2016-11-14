@@ -1,7 +1,10 @@
-var React = require('react'),
-  ReactDOM = require('react-dom');
+import React from 'react';
+import ReactDOM from 'react-dom';
 
 export default React.createClass({
+  propTypes: {
+    buttonText: React.PropTypes.string
+  },
   getInitialState() {
     return {toggled: false};
   },
@@ -37,8 +40,8 @@ export default React.createClass({
     var isHidden = !this.state.toggled ? 'hidden' : '';
     return (
       <div className="dropdown">
-        <button ref="dropdownButton" className="dropdown-button" onClick={this.toggle}>{this.props.buttonText}</button>
-        <section ref="dropdownContent" className={isHidden + ' dropdown-content'}>{this.props.children}</section>
+        <button className="dropdown-button" onClick={this.toggle}>{this.props.buttonText}</button>
+        <section className={isHidden + ' dropdown-content'}>{this.props.children}</section>
       </div>
     );
   }

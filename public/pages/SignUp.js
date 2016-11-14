@@ -1,6 +1,6 @@
-var React = require('react'),
-    ReactDOM = require('react-dom'),
-    service = require('../service');
+import React from 'react';
+import ReactDOM from 'react-dom';
+import * as service from '../service';
 
 export default React.createClass({
     getInitialState() {

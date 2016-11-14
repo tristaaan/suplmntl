@@ -1,5 +1,5 @@
-var React = require('react'),
-  ReactDOM = require('react-dom');
+import React from 'react';
+import ReactDOM from 'react-dom';
 
 export default React.createClass({
   getInitialState() {
@@ -41,7 +41,7 @@ export default React.createClass({
           data-key="title"
           onChange={this.updateStateFromForm} 
           value={this.state.title}
-          autofocus required/>
+          autoFocus required/>
         <input type="text" placeholder="url" 
           data-key="link" 
           onChange={this.updateStateFromForm}

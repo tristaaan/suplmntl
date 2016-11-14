@@ -1,8 +1,8 @@
 //CollectionList 
-var React = require('react'),
-  CollectionBox = require('./CollectionBox'),
-  AddCollectionForm = require('./AddCollectionForm'),
-  service = require('../../service');
+import React from 'react';
+import CollectionBox from './CollectionBox';
+import AddCollectionForm from './AddCollectionForm';
+import * as service from '../../service';
 
 export default React.createClass({
   getInitialState() {

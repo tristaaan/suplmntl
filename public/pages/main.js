@@ -1,18 +1,14 @@
 // libs
-var React = require('react'),
-  ReactDOM = require('react-dom'),
-  ReactRouter = require('react-router'),
-  Router = ReactRouter.Router,
-  Route = ReactRouter.Route,
-  Link = ReactRouter.Link,
-  hashHistory = ReactRouter.hashHistory;
+import React from 'react';
+import ReactDOM from 'react-dom';
+import { Router, Route, Link, hashHistory } from 'react-router';
 
 // componenets
-var CollectionList = require('./Collection'),
-  LinksEdit = require('./Links/Edit'),
-  LinksView = require('./Links/View'),
-  Login = require('./Login'),
-  SignUp = require('./SignUp');
+import CollectionList from './Collection';
+import LinksEdit from './Links/Edit';
+import LinksView from './Links/View';
+import Login from './Login';
+import SignUp from './SignUp';
 
 var App = React.createClass({
   render() {

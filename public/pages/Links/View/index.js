@@ -1,9 +1,9 @@
 //LinkList
-var React = require('react'),
-  ReactDOM = require('react-dom'),
-  Dropdown = require('../../Dropdown'),
-  LinksBox = require('./LinkBox'),
-  service = require('../../../service');
+import React from 'react';
+import ReactDOM from 'react-dom';
+import Dropdown from '../../Dropdown';
+import LinksBox from './LinkBox';
+import * as service from '../../../service';
 
 export default React.createClass({
   getInitialState() {
@@ -32,7 +32,7 @@ export default React.createClass({
       <section id="linkList">
         <div className="linkListHeader">
           <h1>{this.state.name}</h1>
-          <Dropdown ref="dropdown" buttonText="#">
+          <Dropdown buttonText="#">
             <ul className="dropdown-list">
               { true ? <li onClick={this.editList}>Edit List</li> : <li onClick={() => {console.log('fork');}}>Fork List</li>}
               <li onClick={() => {console.log('star');}}>Star List</li>

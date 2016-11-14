@@ -1,10 +1,10 @@
 //LinkList
-var React = require('react'),
-  ReactDOM = require('react-dom'),
-  Dropdown = require('../../Dropdown'),
-  LinksBox = require('./LinkBox'),
-  AddLinkForm = require('./AddLinkForm'),
-  service = require('../../../service');
+import React from 'react';
+import ReactDOM from 'react-dom';
+import Dropdown from '../../Dropdown';
+import LinksBox from './LinkBox';
+import AddLinkForm from './AddLinkForm';
+import * as service from '../../../service';
 
 export default React.createClass({
   getInitialState() {

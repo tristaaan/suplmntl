@@ -8,18 +8,12 @@ module.exports = {
     filename: 'index.js',
   },
   module: {
-    preLoaders: [
-      {
-          test: /\.js$/,
-          exclude: /node_modules/,
-          loader: "babel"
-      }
-    ],
     loaders: [
-      { 
-        test: './public/js/',
-        loader: 'babel' 
-      }
+      {
+        test: /\.jsx?$/,
+        exclude: /node_modules/,
+        loaders: ['babel?presets[]=es2015&presets[]=react']
+      },
     ]
   }
 };
