@@ -13,12 +13,12 @@ export default React.createClass({
     router: React.PropTypes.object,
   },
   componentDidMount(){
-    var id = this.props.routeParams.id;
+    var id = this.props.params.id;
     service.getLinks({id})
-      .then((response) => {
+      .then((resp) => {
         this.setState({id: id, 
-          name: response.data.name,
-          links: response.data.items});
+          name: resp.data.name,
+          links: resp.data.items});
       })
       .catch((error) => {
         console.error(error.message);

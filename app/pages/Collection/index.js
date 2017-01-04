@@ -4,14 +4,20 @@ import CollectionBox from './CollectionBox';
 import AddCollectionForm from './AddCollectionForm';
 import * as service from '../../service';
 
-export default React.createClass({
+import { connect } from 'react-redux';
+
+const Collections = React.createClass({
   getInitialState() {
     return {cols: [], colFormVisible: false};
   },
   componentDidMount() {
-    service.getCollections()
-      .then((response) => {
-        this.setState({cols: response.data});
+    service.getCollections(this.props.params.user)
+      .then((resp) => {
+        if (Object.keys(resp.data).length) {
+          this.setState({cols: resp.data});
+        } else {
+          this.setState({cols: []});
+        }
       })
       .catch((error) => {
         console.error(error.message);
@@ -19,9 +25,9 @@ export default React.createClass({
   },
   handleSubmit(newCol) {
     service.createCollection({name: newCol.name})
-      .then((response) => {
-        newCol['id'] = response.data.newId;
-        var newCols = this.state.cols.concat([newCol]);
+      .then((resp) => {
+        newCol['id'] = resp.data.newId;
+        var newCols = this.state.cols.concat([ newCol ]);
         this.setState({cols: newCols});
       })
       .catch((error) => {
@@ -32,13 +38,20 @@ export default React.createClass({
     this.setState({colFormVisible: !this.state.colFormVisible});
   },
   render() {
+    var showAddButton = this.props.user && this.props.user.username === this.props.params.user;
     return (
       <section id="collectionList">
         <h1>Collections</h1>
         <CollectionBox links={this.state.cols} deleteItem={this.handleDelete} />
         { this.state.colFormVisible ? <AddCollectionForm onLinkSubmit={this.handleSubmit} toggler={this.toggleForm} /> : null }
-        { !this.state.colFormVisible ? <button onClick={this.toggleForm}>+</button> : null }
+        { showAddButton && !this.state.colFormVisible ? <button onClick={this.toggleForm}>+</button> : null }
       </section>
     );
   }
 });
+
+export default connect(
+  state => ({
+    user: state.auth.user
+  })
+)(Collections)

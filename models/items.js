@@ -1,9 +1,12 @@
-var pg = require('pg'),
-  connectionString = process.env.DATABASE_URL || 'postgres://localhost:5432/tengla';
+var Sequelize = require('sequelize');
 
-var client = new pg.Client(connectionString);
-client.connect();
-var items = client.query('CREATE TABLE items(id SERIAL PRIMARY KEY, name VARCHAR(64) not null, private BOOLEAN DEFAULT false, items JSON, owner SERIAL REFERENCES users (id));');
-items.on('end', function() { 
-  client.end(); 
-});
+module.exports = {
+  id:   { type: Sequelize.INTEGER, autoIncrement: true,  primaryKey: true },
+  name: { type: Sequelize.STRING(64), allowNull: false },
+  link: { type: Sequelize.STRING(2048), allowNull: false },
+  description: { type: Sequelize.TEXT },
+  collection: { type: Sequelize.STRING, references: {
+    model: 'collections', 
+    key: 'id',
+  }}
+};

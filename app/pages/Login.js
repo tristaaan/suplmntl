@@ -1,7 +1,10 @@
 import React from 'react';
 import * as service from '../service';
 
-export default React.createClass({
+import { connect } from 'react-redux';
+import * as AuthActions from '../redux/actions/auth';
+
+const Login = React.createClass({
   getInitialState() {
     return {error: false};
   },
@@ -14,17 +17,10 @@ export default React.createClass({
       username: e.target[0].value,
       password: e.target[1].value
     };
-    service.login(user)
-      .then((response) => {
-        console.log(response.data);
-        this.context.router.replace('/collections');
-      })
-      .catch((error) => {
-        console.error(error.message);
-      });
+    this.props.dispatch(AuthActions.login(user));
   },
   gotoSignUp() {
-    this.context.router.push(`/sign-up`);
+    this.context.router.push('/sign-up');
   },
   render() {
     return (
@@ -42,3 +38,7 @@ export default React.createClass({
     );
   }
 });
+
+export default connect(
+  state => ({})
+)(Login)

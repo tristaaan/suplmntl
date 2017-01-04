@@ -2,9 +2,9 @@ var webpack = require('webpack');
 
 module.exports = {
   plugins: [],
-  entry: './public/pages/main.js',
+  entry: './app/index.js',
   output: {
-    path: './public/dist',
+    path: './dist',
     filename: 'index.js',
   },
   module: {
