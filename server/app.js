@@ -30,11 +30,11 @@ app.use(function(req, res, next) {
 
   if (req.isAuthenticated()) {
     var payload = req.isAuthenticated();
-      db.getUserById(payload.sub)
-        .then((resp) => {
-          req.user = resp.dataValues;
-          next();
-        });
+    db.getUserById(payload.sub)
+      .then((resp) => {
+        req.user = resp.dataValues;
+        next();
+      });
   } else {
     next();
   }
@@ -92,12 +92,17 @@ app.post('/api/login', function(req, res) {
     });
 });
 
-app.route('/me')
-  .get(function(req, res) {
-    console.log(req.user);
-  });
-
 app.route('/api/user')
+  .get(ensureAuthenticated, function(req, res) {
+    db.getUserById(req.user.id)
+      .then((resp) => {
+        delete resp.pw;
+        res.send(resp);
+      })
+      .catch((err) => {
+        res.send({ error: err.message });
+      })
+  })
   .put(function(req, res) {
     db.addUser({
       username: req.body.username, 

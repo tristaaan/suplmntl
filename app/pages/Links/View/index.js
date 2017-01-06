@@ -6,6 +6,7 @@ import LinksBox from './LinkBox';
 import * as service from '../../../service';
 
 export default React.createClass({
+  displayName: 'ViewLinks',
   getInitialState() {
     return {links: [], name: '', renaming: false};
   },
@@ -14,7 +15,7 @@ export default React.createClass({
   },
   componentDidMount(){
     var id = this.props.params.id;
-    service.getLinks({id})
+    service.getLinks(id)
       .then((resp) => {
         this.setState({id: id, 
           name: resp.data.name,

@@ -7,9 +7,15 @@ export const LOGIN_SUCCESS = 'LOGIN_SUCCESS';
 export const LOGIN_ERROR = 'LOGIN_ERROR';
 export const LOGOUT = 'LOGOUT';
 
-export function loggedIn(token, user) {
+export function loggedIn(token) {
   service.upadteAuthToken(token);
-  return { type: LOGIN_SUCCESS, token, user };
+  return (dispatch) => {
+    service.getUser()
+      .then((resp) => {
+        dispatch({ type: LOGIN_SUCCESS, token, user:resp.data });
+      })
+      .catch((err) => ({ type: LOGIN_ERROR }));
+  };
 }
 
 export function login(user) {

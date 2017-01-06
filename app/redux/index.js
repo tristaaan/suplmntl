@@ -7,7 +7,7 @@ import cookie from 'react-cookie';
 const store = createStore(reducers, applyMiddleware(thunk));
 
 if (cookie.load('token')) {
-  store.dispatch(loggedIn(cookie.load('token')))
+  store.dispatch(loggedIn(cookie.load('token')));
 }
 
 export default store;

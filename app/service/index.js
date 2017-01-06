@@ -49,6 +49,6 @@ export function login(user) {
     return axios.post('/login', user);
 }
 
-export function isLoggedIn() {
-    return axios.post('/me');
+export function getUser(token) {
+    return axios.get('user');
 }

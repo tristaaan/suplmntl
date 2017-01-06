@@ -3,6 +3,10 @@ import React from 'react';
 
 export default React.createClass({
   render() {
+    if (!this.props.links || !this.props.links.length) {
+      return (<p>There are no links in this collection</p>);
+    }
+
     var createItem = function(item, index) {
       return (
         <div className="linkItem" key={index}>
@@ -15,6 +19,6 @@ export default React.createClass({
         </div>
       );
     };
-    return <dl>{this.props.links.map(createItem, this)}</dl>;
+    return <dl>{this.props.links.map(createItem)}</dl>;
   }
 });
