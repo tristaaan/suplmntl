@@ -1,4 +1,6 @@
 .DS_Store
 node_modules/
 npm-debug.log
-public/dist/
+dist/index.js
+dist/css/main.css
+.env
