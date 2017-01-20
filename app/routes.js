@@ -24,11 +24,13 @@ export default function getRoutes(store) {
       type: 'CLEAR_MESSAGES'
     });
   };
-  return (<Router  path="/" component={App}>
-    <Route  path="/login" component={Login} onEnter={skipIfAuthenticated} onLeave={clearMessages}/>
-    <Route  path="/sign-up" component={SignUp} onEnter={skipIfAuthenticated} onLeave={clearMessages}/>
-    <Route  path="/:user/collections" component={CollectionList} onLeave={clearMessages}/>
-    <Route  path="/:user/:id/edit" component={LinksEdit} onEnter={ensureAuthenticated} onLeave={clearMessages} />
-    <Route  path="/:user/:id/view" component={LinksView} />
+  return (<Router path="/" component={App}>
+    <Route path="/login" component={Login} onEnter={skipIfAuthenticated} onLeave={clearMessages} />
+    <Route path="/sign-up" component={SignUp} onEnter={skipIfAuthenticated}
+      onLeave={clearMessages} />
+    <Route path="/:user/collections" component={CollectionList} onLeave={clearMessages} />
+    <Route path="/:user/:id/edit" component={LinksEdit} onEnter={ensureAuthenticated}
+      onLeave={clearMessages} />
+    <Route path="/:user/:id/view" component={LinksView} />
   </Router>);
 }

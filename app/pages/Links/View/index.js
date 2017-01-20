@@ -1,33 +1,30 @@
-//LinkList
+// LinkList
 import React from 'react';
-import ReactDOM from 'react-dom';
 import Dropdown from '../../Dropdown';
 import LinksBox from './LinkBox';
-import * as service from '../../../service';
 
-export default React.createClass({
+import * as Actions from '../../../redux/actions/collections';
+import { connect } from 'react-redux';
+
+const ViewLinks = React.createClass({
   displayName: 'ViewLinks',
-  getInitialState() {
-    return {links: [], name: '', renaming: false};
+
+  propTypes: {
+    params: React.PropTypes.object
   },
+
   contextTypes: {
     router: React.PropTypes.object,
   },
-  componentDidMount(){
-    var id = this.props.params.id;
-    service.getLinks(id)
-      .then((resp) => {
-        this.setState({id: id, 
-          name: resp.data.name,
-          links: resp.data.items});
-      })
-      .catch((error) => {
-        console.error(error.message);
-      });
+
+  getInitialState() {
+    return { links: [], name: '', renaming: false };
   },
+
   editList() {
     this.context.router.push(`/list/${this.state.id}/edit`);
   },
+
   render() {
     return (
       <section id="linkList">
@@ -45,3 +42,15 @@ export default React.createClass({
     );
   }
 });
+
+export default connect(
+  (state, props) => {
+    const links = state.collections;
+    return {
+      links
+    };
+  },
+  () => ({
+
+  })
+)(ViewLinks);

@@ -12,7 +12,7 @@ export function loggedIn(token) {
   return (dispatch) => {
     service.getUser()
       .then((resp) => {
-        dispatch({ type: LOGIN_SUCCESS, token, user:resp.data });
+        dispatch({ type: LOGIN_SUCCESS, token, user: resp.data });
       })
       .catch((err) => ({ type: LOGIN_ERROR }));
   };
@@ -36,7 +36,7 @@ export function signup(user) {
   return (dispatch) => {
     service.signup(user)
       .then((resp) => {
-        cookie.save('token', json.token, { expires: moment().add(1, 'hour').toDate() });
+        cookie.save('token', resp.data.token, { expires: moment().add(1, 'hour').toDate() });
         dispatch(loggedIn(resp.data.token, { id: resp.data.id, username: resp.data.username }));
         hashHistory.push(`/${resp.data.username}/collections`);
       })
@@ -48,6 +48,6 @@ export function signup(user) {
 
 export function logout() {
   cookie.remove('token');
-  browserHistory.push('/');
+  hashHistory.push('/');
   return { type: LOGOUT };
 }

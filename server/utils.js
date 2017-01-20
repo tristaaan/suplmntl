@@ -2,22 +2,22 @@ var randomBytes = require('crypto').randomBytes;
 var jwt = require('jsonwebtoken');
 var moment = require('moment');
 
-module.exports.randomString = function(size) {
+module.exports.randomString = (size) => {
   if (size === 0) {
     throw new Error('Zero-length randomString is useless.');
   }
-  let chars = ('ABCDEFGHIJKLMNOPQRSTUVWXYZ' +
-               'abcdefghijklmnopqrstuvwxyz' +
-               '0123456789');
+  const chars = ('ABCDEFGHIJKLMNOPQRSTUVWXYZ' +
+   'abcdefghijklmnopqrstuvwxyz' +
+   '0123456789');
   let objectId = '';
-  let bytes = randomBytes(size);
-  for (let i = 0; i < bytes.length; ++i) {
+  const bytes = randomBytes(size);
+  for (let i = 0; i < bytes.length; i += 1) {
     objectId += chars[bytes.readUInt8(i) % chars.length];
   }
   return objectId;
-}
+};
 
-module.exports.generateToken = function(user) {
+module.exports.generateToken = (user) => {
   var payload = {
     iss: 'localhost',
     sub: user.id,
@@ -25,4 +25,4 @@ module.exports.generateToken = function(user) {
     exp: moment().add(7, 'days').unix()
   };
   return jwt.sign(payload, process.env.TOKEN_SECRET);
-}
+};

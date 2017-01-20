@@ -4,3 +4,4 @@ npm-debug.log
 dist/index.js
 dist/css/main.css
 .env
+rethinkdb_data/

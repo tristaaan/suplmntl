@@ -1,14 +1,16 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 import * as service from '../service';
 
 export default React.createClass({
-  getInitialState() {
-    return {error: false, badPass: false, errorMessage: false};
-  },
+
   contextTypes: {
     router: React.PropTypes.object,
   },
+
+  getInitialState() {
+    return { error: false, badPass: false, errorMessage: false };
+  },
+
   sumbmitForm(e) {
     e.preventDefault();
     const user = {
@@ -17,41 +19,42 @@ export default React.createClass({
       password: e.target[2].value
     };
     service.signup(user)
-      .then((response) => {
-        this.context.router.replace('/collections');
+      .then((resp) => {
+        this.context.router.replace(`/${resp.username}/collections`);
       })
       .catch((error) => {
         console.error(error.message);
       });
   },
   checkPasswords() {
-    var pass = this.refs.password.value,
-      conf = this.refs.confirmPassword.value,
+    var pass = this.password.value,
+      conf = this.confirmPassword.value,
       message = '',
-      bad = false; 
+      bad = false;
 
-      if (pass !== conf) {
-        bad = true;
-        message = 'Passwords do not match';
-      }
-      else if (pass.length < 6) {
-        bad = true;
-        message = 'Password is too short';
-      }
+    if (pass !== conf) {
+      bad = true;
+      message = 'Passwords do not match';
+    } else if (pass.length < 6) {
+      bad = true;
+      message = 'Password is too short';
+    }
 
-      this.setState({badPass: bad, errorMessage: message});
+    this.setState({ badPass: bad, errorMessage: message });
   },
   render() {
     return (
       <div className="login-form">
-        <form ref="form" onSubmit={this.sumbmitForm}>
+        <form ref={(c) => {this.form = c;}} onSubmit={this.sumbmitForm}>
           <input type="text" name="username" placeholder="username" required />
           <input type="email" name="email" placeholder="email" required />
-          <input ref="password" type="password" name="password" placeholder="password" required onChange={this.checkPasswords}/> 
-          <input ref="confirmPassword" type="password" name="confirmPass" placeholder="confirm password" required onChange={this.checkPasswords}/> 
-          <button type="submit">Sign Up</button>    
+          <input ref={(c) => {this.password = c;}} type="password" name="password"
+            placeholder="password" required onChange={this.checkPasswords} />
+          <input ref={(c) => {this.confirmPassword = c;}} type="password" name="confirmPass"
+            placeholder="confirm password" required onChange={this.checkPasswords} />
+          <button type="submit">Sign Up</button>
         </form>
-        <div className={(this.state.badPass ? 'error-box' : 'hidden') + ' error-box'}>
+        <div className={[(this.state.badPass ? 'error-box' : 'hidden'), 'error-box'].join(' ')}>
           {this.state.errorMessage}
         </div>
         <div className={this.state.error ? 'error-box' : 'hidden'}>

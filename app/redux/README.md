@@ -2,7 +2,7 @@
 
 {
   auth: {
-    user: { username, id },
+    user: { username, email, id },
     token: ''
   },
   collections: {
@@ -11,12 +11,12 @@
       id: '',
       items: [
         { 
-          id,
           title,
           link,
           description,
         }
       ]
+      createdAt: date
     }
   }
 }

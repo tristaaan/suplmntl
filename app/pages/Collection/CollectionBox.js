@@ -1,24 +1,29 @@
-//Collection Box
+// Collection Box
 import React from 'react';
-import {Link} from 'react-router';
+import { Link } from 'react-router';
 
 export default React.createClass({
+  propTypes: {
+    collections: React.PropTypes.array,
+    deleteItem: React.PropTypes.func,
+  },
   getDefaultProps() {
-    return { links: [] };
+    return { collections: [] };
   },
   deleteItem(e) {
     this.props.deleteItem(e.target.value);
   },
   render() {
-    var createItem = function(item, index) {
+    console.log(this.props.collections);
+    const createItem = (col, index) => {
       return (
-        <li key={`${item.id}_${index}`}>
-          <Link to={`/list/${item.id}/view`} className="title">{item.name}</Link>
-          <span>{item.size === 1 ? item.size + ' link' : item.size + ' links'}</span>
+        <li key={`${col.id}_${index}`}>
+          <Link to={`/list/${col.id}/view`} className="title">{col.name}</Link>
+          <span>{col.items.length === 1 ? `${col.items.length} link` : `${col.items.length} links`}</span>
         </li>
       );
     };
-    return (<ul>{this.props.links.map(createItem)}</ul>);
+    return (<ul>{this.props.collections.map(createItem)}</ul>);
   }
 });
 

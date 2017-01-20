@@ -1,20 +1,24 @@
-//AddCollectionForm
+// AddCollectionForm
 import React from 'react';
-import ReactDOM from 'react-dom';
 
 export default React.createClass({
+  propTypes: {
+    toggler: React.PropTypes.func,
+    onLinkSubmit: React.PropTypes.func,
+  },
+
   getInitialState() {
-    return {name:''};
+    return { name: '' };
   },
   componentDidMount() {
-    this.refs.nameInput.focus(); 
+    this.nameInput.focus();
   },
   handleChange(e) {
-    this.setState({name: e.target.value});
+    this.setState({ name: e.target.value });
   },
   handleSubmit(e) {
     e.preventDefault();
-    if (!/\S/.test(this.state.name) || this.state.name.length === 0){
+    if (!/\S/.test(this.state.name) || this.state.name.length === 0) {
       return;
     }
     this.props.onLinkSubmit(this.state);
@@ -23,7 +27,8 @@ export default React.createClass({
   render() {
     return (
       <form className="collectionForm" onSubmit={this.handleSubmit}>
-        <input onChange={this.handleChange} value={this.state.name} ref="nameInput"/>
+        <input onChange={this.handleChange} value={this.state.name}
+          ref={(c) => {this.nameInput = c;} } />
         <button>+</button>
         <button onClick={this.props.toggler}>x</button>
       </form>

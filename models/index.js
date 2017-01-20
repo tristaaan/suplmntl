@@ -1,20 +1,21 @@
-var Sequelize = require('sequelize');
-var sequelize = new Sequelize(process.env.DATABASE_URL || 'postgres://localhost:5432/tengla');
+var dotenv = require('dotenv');
 
-const Users       = sequelize.define('users', require('./Users'));
-const Collections = sequelize.define('collections', require('./Collections'));
-const Items       = sequelize.define('items', require('./Items'));
+dotenv.load();
 
-module.exports.Users = Users;
-module.exports.Collections = Collections;
-module.exports.Items = Items;
+const thinky = require('thinky')({
+  host: process.env.DB_HOST,
+  port: process.env.DB_PORT,
+  db: process.env.DB_NAME
+});
 
-if (process.env.DB === 'init') {
-  sequelize.sync()
-    .then(() => {
-      console.log('Database init complete');
-    })
-    .catch((e) => {
-      console.log('There was an error', e);
-    });
-}
+const User = require('./User');
+const Collection = require('./Collection');
+
+const Users = thinky.createModel('User', User);
+const Collections = thinky.createModel('Collection', Collection);
+
+Users.hasMany(Collections, 'collections', 'id', 'ownerId');
+Collections.belongsTo(Users, 'owner', 'ownerId', 'id');
+
+module.exports.User = Users;
+module.exports.Collection = Collections;

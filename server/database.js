@@ -1,73 +1,77 @@
-var Sequelize = require('sequelize');
-var bcrypt    = require('bcryptjs');
-
+var bcrypt = require('bcryptjs');
 var randomString = require('./utils').randomString;
 var Models = require('../models');
-var Users       = Models.Users;
-var Collections = Models.Collections;
-var Items       = Models.Items;
 
-var sequelize = new Sequelize(process.env.DATABASE_URL || 'postgres://localhost:5432/tengla');
+var Users = Models.User;
+var Collections = Models.Collection;
 
 // collections
-exports.getCollections = function(username) {
-  return Users.findOne({
-    where: { username: username },
-  })
-  .then(user => {
-    return Collections.findAll({where: { owner: user.id }});
-  });
-}
+exports.getCollections = (username) => {
+  return Users.filter({ username }).getJoin({ collections: true }).run();
+};
 
-exports.getCollection = function(collectionId) {
-  return Collections.findOne({where: { id: collectionId }});
-}
+exports.getCollection = (id) => {
+  return Collections.get(id).run();
+};
 
-exports.createCollection = function (entry) {
-  return Collections.create({
+exports.createCollection = (entry) => {
+  return new Collections({
     id: randomString(8),
     name: entry.name,
     private: false,
-    owner: entry.owner
-  });
-}
+    ownerId: entry.owner
+  }).save();
+};
 
-exports.updateCollectionName = function(collectionId, name) {
-  return Collections.update({ name: name },
-    { where: { id: collectionId }
+exports.updateCollection = (id, newCol) => {
+  return Collections.get(id).run().then((col) => {
+    col = newCol;
+    return col.save();
   });
 };
 
-exports.deleteCollection = function(collectionId, cb) {
-  return Collections.destroy({
-    where: { id: collectionId }
-  });
+exports.deleteCollection = (collectionId, cb) => {
+  return Collections.get(collectionId).run().delete();
 };
 
 // // links
 
 // users
-exports.getUserById = function(id) {
-  return Users.findOne({
-    where: { id: id }
-  });
-}
-
-exports.getUserByName = function(username) {
-  return Users.findOne({
-    where: { username: username },
-  });
+exports.getUserById = (id) => {
+  return Users.get(id).run();
 };
 
-exports.addUser = function(user, cb) {
-  user.password = bcrypt.hashSync(user.password, bcrypt.genSaltSync(10));
-  return Users.create({
-    username: user.username,
-    email: user.email,
-    pw: user.password
-  });
+exports.getUserByName = (username) => {
+  return Users.filter({ username }).run()
+    .then((resp) => {
+      return resp[0];
+    })
+    .catch((err) => {
+      throw err;
+    });
 };
 
-exports.validatePassword = function(password, dbpass) {
+exports.addUser = (user, cb) => {
+  return Users.filter({ username: user.username }).run()
+    .then((resp) => {
+      if (resp.length) {
+        throw new Error('Username already exists');
+      }
+      return Users.filter({ email: user.email });
+    })
+    .then((resp) => {
+      if (resp.length) {
+        throw new Error('Email is already registered');
+      }
+      user.password = bcrypt.hashSync(user.password, bcrypt.genSaltSync(10));
+      return new Users({
+        username: user.username,
+        email: user.email,
+        pw: user.password
+      }).save();
+    });
+};
+
+exports.validatePassword = (password, dbpass) => {
   return bcrypt.compareSync(password, dbpass);
-}
+};
