@@ -5,6 +5,10 @@ var Models = require('../models');
 var Users = Models.User;
 var Collections = Models.Collection;
 
+function strId() {
+  return randomString(8);
+}
+
 // collections
 exports.getCollections = (username) => {
   return Users.filter({ username }).getJoin({ collections: true }).run();
@@ -16,7 +20,7 @@ exports.getCollection = (id) => {
 
 exports.createCollection = (entry) => {
   return new Collections({
-    id: randomString(8),
+    id: strId(),
     name: entry.name,
     private: false,
     links: [],
@@ -34,6 +38,20 @@ exports.deleteCollection = (collectionId) => {
   return Collections.get(collectionId).run()
     .then((col) => {
       return col.delete();
+    });
+};
+
+exports.forkCollection = (collectionId, ownerId) => {
+  return Collections.get(collectionId).run()
+    .then((col) => {
+      const newCol = new Collections({
+        id: strId(),
+        name: col.name,
+        private: col.private,
+        links: col.links,
+        ownerId,
+      });
+      return newCol.save();
     });
 };
 

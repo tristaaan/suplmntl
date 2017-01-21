@@ -27,6 +27,10 @@ export function deleteCollection(collectionId) {
   return axios.delete(`/collection/${collectionId}`);
 }
 
+export function forkCollection(id) {
+  return axios.post(`/collection/${id}/fork`, { id });
+}
+
 // Auth
 export function signup(newUser) {
   return axios.put('/user', newUser);

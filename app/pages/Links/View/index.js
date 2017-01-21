@@ -14,6 +14,7 @@ const ViewLinks = React.createClass({
     collection: React.PropTypes.object,
     user: React.PropTypes.object,
     getCollection: React.PropTypes.func,
+    forkCollection: React.PropTypes.func,
     deleteCollection: React.PropTypes.func,
     params: React.PropTypes.object
   },
@@ -36,6 +37,14 @@ const ViewLinks = React.createClass({
   componentDidMount() {
     if (!get(this.props, 'collection.name.length')) {
       this.props.getCollection(this.props.params.id);
+    }
+  },
+
+  forkList() {
+    if (this.props.user) {
+      this.props.forkCollection(this.props.collection.id, this.props.user);
+    } else {
+      this.context.router.push('/login');
     }
   },
 
@@ -62,7 +71,7 @@ const ViewLinks = React.createClass({
           <Dropdown buttonText="#">
             <ul className="dropdown-list">
               <li onClick={() => {console.log('star, wayyy unimplemented');}}>Star List</li>
-              <li onClick={() => {console.log('fork, unimplemented');}}>Fork List</li>
+              <li onClick={this.forkList}>Fork List</li>
               { isOwner ? <li onClick={this.editList}>Edit List</li> : null}
               { isOwner ? <li onClick={this.deleteList}>Delete list</li> : null}
             </ul>
@@ -87,6 +96,7 @@ export default connect(
   },
   dispatch => ({
     getCollection: id => dispatch(Actions.getCollection(id)),
+    forkCollection: (id, user) => dispatch(Actions.forkCollection(id, user)),
     deleteCollection: (id, loc) => dispatch(Actions.deleteCollection(id, loc))
   })
 )(ViewLinks);

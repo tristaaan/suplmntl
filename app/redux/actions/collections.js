@@ -3,6 +3,7 @@ import { hashHistory } from 'react-router';
 
 export const ADD_COLLECTION = 'ADD_COLLECTION';
 export const DELETE_COLLECTION = 'DELETE_COLLECTION';
+export const FORK_COLLECTION = 'FORK_COLLECTION';
 export const UPDATE_COLLECTION = 'UPDATE_COLLECTION';
 export const GET_COLLECTIONS = 'GET_COLLECTIONS';
 export const GET_COLLECTION = 'GET_COLLECTION';
@@ -69,3 +70,17 @@ export function getCollection(id) {
       });
   };
 }
+
+export function forkCollection(id, user) {
+  return (dispatch) => {
+    service.forkCollection(id)
+      .then((resp) => {
+        hashHistory.push(`/list/${resp.data.id}/view`);
+        dispatch({ type: FORK_COLLECTION, collection: resp.data });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+}
+

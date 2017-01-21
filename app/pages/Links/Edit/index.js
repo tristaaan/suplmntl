@@ -111,7 +111,7 @@ const EditLinks = React.createClass({
           }
           <Dropdown ref={(c) => {this.dropdown = c;}} buttonText="#">
             <ul className="dropdown-list">
-              <li onClick={this.viewList}>Preview list</li>
+              <li onClick={this.viewList}>Finish Editing</li>
               <li onClick={this.renameList}>Rename list</li>
               <li onClick={this.deleteList}>Delete list</li>
             </ul>

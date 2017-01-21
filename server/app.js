@@ -138,6 +138,17 @@ app.route('/api/collection')
       });
   });
 
+app.route('/api/collection/:id/fork')
+  .post(ensureAuthenticated, (req, res) => {
+    db.forkCollection(req.params.id, req.user.id)
+      .then((resp) => {
+        res.send(resp);
+      })
+      .catch((err) => {
+        res.send(err);
+      });
+  });
+
 app.route('/api/collection/:id')
   .get((req, res) => {
     db.getCollection(req.params.id)

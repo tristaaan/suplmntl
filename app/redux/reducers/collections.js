@@ -10,6 +10,7 @@ const sorter = (a, b) => a.createdAt - b.createdAt;
 export default function authReducer(state = initialState, action) {
   switch (action.type) {
     case Actions.UPDATE_COLLECTION:
+    case Actions.FORK_COLLECTION:
     case Actions.GET_COLLECTION:
     case Actions.ADD_COLLECTION: {
       const newList = state.list.concat([action.collection]).sort(sorter);
