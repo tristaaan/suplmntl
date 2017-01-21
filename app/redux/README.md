@@ -10,7 +10,7 @@
       name: '',
       id: '',
       items: [
-        { 
+        {
           title,
           link,
           description,

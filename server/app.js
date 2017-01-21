@@ -38,24 +38,6 @@ app.use((req, res, next) => {
   }
 });
 
-/* eslint-disable */
-const collections = { '12345':
-  {
-    title: 'Search Engines', links: [
-      {title:'Google', link:'http://google.com', description: 'This is the Googles, they track you.'},
-      {title:'DuckDuckGo', link:'http://duckduckgo.com', description: 'd.d.g. does not track you.'}
-    ]
-  },
-  '54321':
-  {
-    title: 'Swift', links: [
-      {title:'About', link:'https://developer.apple.com/library/prerelease/ios/documentation/Swift/Conceptual/Swift_Programming_Language/index.html', description: 'Intro page.'},
-      {title:'Collection Types', link:'https://developer.apple.com/library/prerelease/ios/documentation/Swift/Conceptual/Swift_Programming_Language/CollectionTypes.html#//apple_ref/doc/uid/TP40014097-CH8-ID105', description: 'Collection types are confusing as all get out, sometimes.'}
-    ]
-  }
-};
-/* eslint-enable */
-
 function generateToken(userId) {
   var payload = {
     sub: userId,
@@ -147,7 +129,7 @@ app.route('/api/collection')
       });
   })
   .post(ensureAuthenticated, (req, res) => {
-    db.updateCollection(req.body.id, req.body)
+    db.updateCollection(req.body.collection)
       .then((resp) => {
         res.send(resp);
       })
@@ -165,29 +147,15 @@ app.route('/api/collection/:id')
       .catch((err) => {
         res.send(err);
       });
-    // res.send(collections[req.query.id]);
   })
   .delete(ensureAuthenticated, (req, res) => {
-    delete collections[req.params.id];
-    res.send({});
-  });
-
-app.route('/api/link')
-  .put(ensureAuthenticated, (req, res) => {
-    collections[req.body.id].links.push(req.body.item);
-    res.send({});
-  })
-  .post(ensureAuthenticated, (req, res) => {
-    collections[req.body.id].links[req.body.index] = req.body.newLink;
-    res.send({});
-  })
-  .delete(ensureAuthenticated, (req, res) => {
-    var index = req.body.index;
-    var id = req.body.colId;
-    var col = collections[id];
-    col.links.splice(index, 1);
-    collections[id] = col;
-    res.send({});
+    db.deleteCollection(req.params.id)
+      .then((resp) => {
+        res.send({});
+      })
+      .catch((err) => {
+        res.send(err);
+      });
   });
 
 // app.get('/', homeRoute);

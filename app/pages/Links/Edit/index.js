@@ -10,6 +10,7 @@ import { connect } from 'react-redux';
 const EditLinks = React.createClass({
   propTypes: {
     collection: React.PropTypes.object,
+    username: React.PropTypes.string,
     deleteCollection: React.PropTypes.func,
     updateCollection: React.PropTypes.func,
   },
@@ -63,7 +64,8 @@ const EditLinks = React.createClass({
     if (!confirm(`Are you sure you want to delete ${this.state.title}?`)) {
       return;
     }
-    this.props.deleteCollection(this.props.collection.id, '/collections');
+    this.props.deleteCollection(this.props.collection.id,
+      `/${this.props.username}/collections`);
   },
 
   keyPressed(e) {
@@ -84,7 +86,7 @@ const EditLinks = React.createClass({
   },
 
   viewList() {
-    this.context.router.push(`/list/${this.state.id}/view`);
+    this.context.router.push(`/list/${this.props.collection.id}/view`);
   },
 
   updateTmpTitle(e) {
@@ -117,12 +119,14 @@ const EditLinks = React.createClass({
 
 export default connect(
   (state, props) => {
+    const nextProp = { collections: {}, username: '' };
     if (state.collections && state.collections.map) {
-      return {
-        collection: state.collections.map[props.params.id]
-      };
+      nextProp.collection = state.collections.map[props.params.id];
     }
-    return { collection: {} };
+    if (state.auth && state.auth.user && state.auth.user.username) {
+      nextProp.username = state.auth.user.username;
+    }
+    return nextProp;
   },
   dispatch => ({
     updateCollection: collection => dispatch(Actions.updateCollection(collection)),

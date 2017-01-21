@@ -6,7 +6,7 @@ module.exports = {
   id: type.string(),
   name: type.string(),
   private: type.boolean().default(false),
-  items: type.array().schema(
+  links: type.array().schema(
     type.object().schema(
       {
         title: type.string(),

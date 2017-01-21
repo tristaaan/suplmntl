@@ -27,6 +27,6 @@ export default React.createClass({
         </div>
       );
     };
-    return <dl>{this.props.links.map(createItem, this)}</dl>;
+    return <dl>{this.props.links.map(createItem)}</dl>;
   }
 });

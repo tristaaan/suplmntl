@@ -19,22 +19,23 @@ exports.createCollection = (entry) => {
     id: randomString(8),
     name: entry.name,
     private: false,
+    links: [],
     ownerId: entry.owner
   }).save();
 };
 
-exports.updateCollection = (id, newCol) => {
-  return Collections.get(id).run().then((col) => {
-    col = newCol;
-    return col.save();
+exports.updateCollection = (newCol) => {
+  return Collections.get(newCol.id).run().then((col) => {
+    return col.merge(newCol).save();
   });
 };
 
-exports.deleteCollection = (collectionId, cb) => {
-  return Collections.get(collectionId).run().delete();
+exports.deleteCollection = (collectionId) => {
+  return Collections.get(collectionId).run()
+    .then((col) => {
+      return col.delete();
+    });
 };
-
-// // links
 
 // users
 exports.getUserById = (id) => {

@@ -18,7 +18,7 @@ export default React.createClass({
       return (
         <li key={`${col.id}_${index}`}>
           <Link to={`/list/${col.id}/view`} className="title">{col.name}</Link>
-          <span>{col.items.length === 1 ? `${col.items.length} link` : `${col.items.length} links`}</span>
+          <span>{col.links.length === 1 ? `${col.links.length} link` : `${col.links.length} links`}</span>
         </li>
       );
     };

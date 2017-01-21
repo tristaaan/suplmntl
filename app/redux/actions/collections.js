@@ -11,7 +11,7 @@ export function addCollection(collection) {
   return (dispatch) => {
     service.createCollection(collection)
       .then((resp) => {
-        return { type: ADD_COLLECTION, collection: resp };
+        dispatch({ type: ADD_COLLECTION, collection: resp.data });
       })
       .catch((err) => {
         console.log(err);
@@ -24,9 +24,9 @@ export function deleteCollection(id, location = null) {
     service.deleteCollection(id)
       .then((resp) => {
         if (location) {
-          hashHistory.replace('/collections');
+          hashHistory.replace(location);
         }
-        return { type: DELETE_COLLECTION, id };
+        dispatch({ type: DELETE_COLLECTION, id });
       })
       .catch((err) => {
         console.log(err);

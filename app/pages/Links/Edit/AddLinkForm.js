@@ -12,18 +12,27 @@ export default React.createClass({
   handleSubmit(e) {
     e.preventDefault();
 
-    if (!this.state.title) {
+    let { title, link, description } = this.state;
+    title = title.trim();
+    link = link.trim();
+    description = description.trim();
+
+    if (!title) {
       console.log('there is no value for title');
       return;
-    } else if (!this.state.link) {
+    } else if (!link) {
       console.log('there is no value for link');
       return;
-    } else if (!this.state.description) {
+    } else if (!description) {
       console.log('there is no value for description');
       return;
     }
 
-    this.props.onLinkSubmit(this.state);
+    if (link.substring(0, 8) !== 'https://' && link.substring(0, 7) !== 'http://') {
+      link = `https://${link}`;
+    }
+
+    this.props.onLinkSubmit({ title, link, description });
     this.setState(this.getInitialState());
     this.submitButton.blur();
     this.titleInput.focus();

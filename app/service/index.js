@@ -20,7 +20,7 @@ export function createCollection(newCollection) {
 }
 
 export function updateCollection(collection) {
-  return axios.post('/collection', collection);
+  return axios.post('/collection', { collection });
 }
 
 export function deleteCollection(collectionId) {
