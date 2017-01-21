@@ -1,5 +1,4 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 
 export default React.createClass({
   propTypes: {
@@ -26,9 +25,9 @@ export default React.createClass({
   },
 
   handleClickOutside(e) {
-    const children = ReactDOM.findDOMNode(this).getElementsByTagName('*');
-    for (let x in children) {
-      if (children[x] === e.target) {
+    const children = this.el.getElementsByTagName('*');
+    for (let i = 0; i < children.length; i += 1) {
+      if (children[i] === e.target) {
         return;
       }
     }
@@ -46,7 +45,7 @@ export default React.createClass({
   render() {
     var isHidden = !this.state.toggled ? 'hidden' : '';
     return (
-      <div className="dropdown">
+      <div className="dropdown" ref={(c) => {this.el = c;}}>
         <button className="dropdown-button" onClick={this.toggle}>{this.props.buttonText}</button>
         <section className={[isHidden, 'dropdown-content'].join(' ')}>{this.props.children}</section>
       </div>

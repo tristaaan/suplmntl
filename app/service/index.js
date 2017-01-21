@@ -12,7 +12,7 @@ export function getCollections(username) {
 }
 
 export function getCollection(collectionId) {
-  return axios.get(`/collection/${collectionId.id}`);
+  return axios.get(`/collection/${collectionId}`);
 }
 
 export function createCollection(newCollection) {
@@ -24,7 +24,7 @@ export function updateCollection(collection) {
 }
 
 export function deleteCollection(collectionId) {
-  return axios.delete(`/collection/${collectionId.id}`);
+  return axios.delete(`/collection/${collectionId}`);
 }
 
 // Auth

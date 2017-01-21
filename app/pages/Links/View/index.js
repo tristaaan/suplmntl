@@ -10,6 +10,9 @@ const ViewLinks = React.createClass({
   displayName: 'ViewLinks',
 
   propTypes: {
+    name: React.PropTypes.string,
+    links: React.PropTypes.array,
+    getCollection: React.PropTypes.func,
     params: React.PropTypes.object
   },
 
@@ -17,27 +20,41 @@ const ViewLinks = React.createClass({
     router: React.PropTypes.object,
   },
 
+  getDefaultProps() {
+    return {
+      links: [],
+      name: ''
+    };
+  },
+
   getInitialState() {
-    return { links: [], name: '', renaming: false };
+    return { renaming: false };
+  },
+
+  componentDidMount() {
+    if (!this.props.name.length) {
+      this.props.getCollection(this.props.params.id);
+    }
   },
 
   editList() {
-    this.context.router.push(`/list/${this.state.id}/edit`);
+    this.context.router.push(`/list/${this.props.params.id}/edit`);
   },
 
   render() {
     return (
       <section id="linkList">
         <div className="linkListHeader">
-          <h1>{this.state.name}</h1>
+          <h1>{this.props.name}</h1>
           <Dropdown buttonText="#">
             <ul className="dropdown-list">
-              { true ? <li onClick={this.editList}>Edit List</li> : <li onClick={() => {console.log('fork');}}>Fork List</li>}
+              <li onClick={this.editList}>Edit List</li>
+              <li onClick={() => {console.log('fork');}}>Fork List</li>
               <li onClick={() => {console.log('star');}}>Star List</li>
             </ul>
           </Dropdown>
         </div>
-        <LinksBox links={this.state.links} />
+        <LinksBox links={this.props.links} />
       </section>
     );
   }
@@ -45,12 +62,13 @@ const ViewLinks = React.createClass({
 
 export default connect(
   (state, props) => {
-    const links = state.collections;
+    const collection = state.collections.map[props.params.id];
     return {
-      links
+      name: collection ? collection.name : '',
+      links: collection ? collection.links : []
     };
   },
-  () => ({
-
+  dispatch => ({
+    getCollection: id => dispatch(Actions.getCollection(id))
   })
 )(ViewLinks);

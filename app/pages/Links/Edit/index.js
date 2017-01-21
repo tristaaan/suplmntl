@@ -1,120 +1,99 @@
 // LinkList
 import React from 'react';
-import ReactDOM from 'react-dom';
 import Dropdown from '../../Dropdown';
 import LinksBox from './LinkBox';
 import AddLinkForm from './AddLinkForm';
-import * as service from '../../../service';
+import * as Actions from '../../../redux/actions/collections';
 
-export default React.createClass({
+import { connect } from 'react-redux';
+
+const EditLinks = React.createClass({
   propTypes: {
-    routeParams: React.PropTypes.object,
+    collection: React.PropTypes.object,
+    deleteCollection: React.PropTypes.func,
+    updateCollection: React.PropTypes.func,
   },
 
   contextTypes: {
     router: React.PropTypes.object,
   },
 
+  getDefaultProps() {
+    return {
+      collection: {}
+    };
+  },
+
   getInitialState() {
     return {
-      links: [],
-      title: '',
-      tmpTitle: '',
+      title: this.props.collection.name,
+      tmpTitle: this.props.collection.name,
       renaming: false
     };
   },
 
-  componentDidMount() {
-    var id = this.props.routeParams.id;
-    service.getLinks({ id })
-      .then((response) => {
-        this.setState({
-          id,
-          title: response.data.name,
-          tmpTitle: response.data.name,
-          links: response.data.items
-        });
-      })
-      .catch((error) => {
-        console.error(error.message);
-      });
-  },
-
   componentDidUpdate(prevState) {
     if (this.state.renaming) {
-      ReactDOM.findDOMNode(this).addEventListener('keyup', this.keyPressed);
+      this.el.addEventListener('keyup', this.keyPressed);
       this.titleEditor.focus();
     } else {
-      ReactDOM.findDOMNode(this).removeEventListener('keyup', this.keyPressed);
+      this.el.removeEventListener('keyup', this.keyPressed);
     }
   },
 
   componentWillUnmount() {
     if (this.state.renaming) {
-      ReactDOM.findDOMNode(this).removeEventListener('keyup', this.keyPressed);
+      this.el.removeEventListener('keyup', this.keyPressed);
     }
   },
+
   handleSubmit(newLink) {
-    var id = this.state.id;
-    service.createLink({ id, item: newLink })
-      .then((response) => {
-        var nextLinks = this.state.links.concat([newLink]);
-        this.setState({ links: nextLinks });
-      })
-      .catch((error) => {
-        console.error(error.message());
-      });
+    const newCol = Object.assign({}, this.props.collection);
+    newCol.links.push(newLink);
+    this.props.updateCollection(newCol);
   },
+
   handleDelete(index) {
-    var id = this.state.id;
-    service.deleteLink({ colId: id, index })
-      .then((response) => {
-        var newLinks = this.state.links;
-        newLinks.splice(index, 1);
-        this.setState({ links: newLinks });
-      })
-      .catch((error) => {
-        console.error(error.message);
-      });
+    const newCol = Object.assign({}, this.props.collection);
+    newCol.links.splice(index, 1);
+    this.props.updateCollection(newCol);
   },
+
   deleteList() {
     if (!confirm(`Are you sure you want to delete ${this.state.title}?`)) {
       return;
     }
-    const id = this.state.id;
-    service.deleteCollection({ id })
-      .then((response) => {
-        this.context.router.replace('/collections');
-      })
-      .catch((error) => {
-        console.error(error.message);
-      });
+    this.props.deleteCollection(this.props.collection.id, '/collections');
   },
+
   keyPressed(e) {
     if (e.keyCode === 27) {
       this.setState({ renaming: false });
       this.dropdown.toggle(false);
     } else if (e.keyCode === 13) {
       this.setState({ renaming: false, title: this.state.tmpTitle });
-      service.updateCollectionTitle({ id: this.state.id, title: this.state.tmpTitle })
-        .catch((error) => {
-          console.error(error.message);
-        });
+      const newCol = Object.assign({}, this.props.collection);
+      newCol.name = this.state.tmpTitle;
+      this.props.updateCollection(newCol);
     }
   },
+
   renameList() {
     this.setState({ renaming: true });
     this.dropdown.toggle(false);
   },
+
   viewList() {
     this.context.router.push(`/list/${this.state.id}/view`);
   },
+
   updateTmpTitle(e) {
     this.setState({ tmpTitle: e.target.value });
   },
+
   render() {
     return (
-      <section id="linkList">
+      <section id="linkList" ref={(c) => {this.el = c;}}>
         <div className="linkListHeader">
           { this.state.renaming ?
             <input ref={(c) => {this.titleEditor = c;}} onChange={this.updateTmpTitle}
@@ -129,9 +108,24 @@ export default React.createClass({
             </ul>
           </Dropdown>
         </div>
-        <LinksBox links={this.state.links} deleteItem={this.handleDelete} />
+        <LinksBox links={this.props.collection.links} deleteItem={this.handleDelete} />
         <AddLinkForm onLinkSubmit={this.handleSubmit} />
       </section>
     );
   }
 });
+
+export default connect(
+  (state, props) => {
+    if (state.collections && state.collections.map) {
+      return {
+        collection: state.collections.map[props.params.id]
+      };
+    }
+    return { collection: {} };
+  },
+  dispatch => ({
+    updateCollection: collection => dispatch(Actions.updateCollection(collection)),
+    deleteCollection: (id, loc) => dispatch(Actions.deleteCollection(id, loc))
+  })
+)(EditLinks);

@@ -14,7 +14,6 @@ export default React.createClass({
     this.props.deleteItem(e.target.value);
   },
   render() {
-    console.log(this.props.collections);
     const createItem = (col, index) => {
       return (
         <li key={`${col.id}_${index}`}>

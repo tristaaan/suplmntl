@@ -1,5 +1,6 @@
 module.exports = {
   extends: 'airbnb',
+  globals: {window: true, confirm: true, document: true},
   rules: {
     'no-console': 0,
     'no-alert': 0,
@@ -27,5 +28,6 @@ module.exports = {
     'react/jsx-filename-extension': 0,
     'react/forbid-prop-types': 0,
     'jsx-a11y/img-has-alt': 0,
+    'jsx-a11y/no-static-element-interactions': 0,
   }
 };

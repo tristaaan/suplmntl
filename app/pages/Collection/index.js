@@ -55,8 +55,8 @@ export default connect(
     user: state.auth.user,
     collections: state.collections.list
   }),
-  {
-    addCollection: Actions.addCollection,
-    getCollections: Actions.getCollections,
-  }
+  dispatch => ({
+    addCollection: collection => dispatch(Actions.addCollection(collection)),
+    getCollections: user => dispatch(Actions.getCollections(user)),
+  })
 )(Collections);

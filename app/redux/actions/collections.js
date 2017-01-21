@@ -1,4 +1,5 @@
 import * as service from '../../service';
+import { hashHistory } from 'react-router';
 
 export const ADD_COLLECTION = 'ADD_COLLECTION';
 export const DELETE_COLLECTION = 'DELETE_COLLECTION';
@@ -18,10 +19,13 @@ export function addCollection(collection) {
   };
 }
 
-export function deleteCollection(id) {
+export function deleteCollection(id, location = null) {
   return (dispatch) => {
     service.deleteCollection(id)
       .then((resp) => {
+        if (location) {
+          hashHistory.replace('/collections');
+        }
         return { type: DELETE_COLLECTION, id };
       })
       .catch((err) => {
@@ -34,7 +38,7 @@ export function updateCollection(collection) {
   return (dispatch) => {
     service.updateCollection(collection)
       .then((resp) => {
-        return { type: UPDATE_COLLECTION, collection: resp.data };
+        dispatch({ type: UPDATE_COLLECTION, collection: resp.data });
       })
       .catch((err) => {
         console.log(err);
@@ -58,7 +62,7 @@ export function getCollection(id) {
   return (dispatch) => {
     service.getCollection(id)
       .then((resp) => {
-        return { type: GET_COLLECTIONS, collection: resp.data };
+        dispatch({ type: GET_COLLECTION, collection: resp.data });
       })
       .catch((err) => {
         console.log(err);

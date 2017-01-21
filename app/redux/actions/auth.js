@@ -8,7 +8,6 @@ export const LOGIN_ERROR = 'LOGIN_ERROR';
 export const LOGOUT = 'LOGOUT';
 
 function loginSuccess(token, user) {
-  console.log(token, user);
   return { type: LOGIN_SUCCESS, token, user };
 }
 
@@ -19,7 +18,7 @@ export function loggedIn(token) {
       .then((resp) => {
         dispatch(loginSuccess(token, resp.data));
       })
-      .catch((err) => ({ type: LOGIN_ERROR, err }));
+      .catch(err => ({ type: LOGIN_ERROR, err }));
   };
 }
 

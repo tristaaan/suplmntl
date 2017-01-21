@@ -31,7 +31,7 @@ const App = React.createClass({
               : <li><Link className="headerLink" to="login">Login</Link></li>
             }
             { this.props.token ?
-              <li onClick={this.logout}>Sign Out</li>
+              <li><a href="/" className="headerLink" onClick={this.logout}>Sign Out</a></li>
               : <li><Link className="headerLink" to="sign-up">Sign Up</Link></li>
             }
           </ul>

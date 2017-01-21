@@ -158,7 +158,7 @@ app.route('/api/collection')
 
 app.route('/api/collection/:id')
   .get((req, res) => {
-    db.getCollection(req.query.id)
+    db.getCollection(req.params.id)
       .then((resp) => {
         res.send(resp);
       })
@@ -168,7 +168,7 @@ app.route('/api/collection/:id')
     // res.send(collections[req.query.id]);
   })
   .delete(ensureAuthenticated, (req, res) => {
-    delete collections[req.query.id];
+    delete collections[req.params.id];
     res.send({});
   });
 

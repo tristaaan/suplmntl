@@ -1,10 +1,10 @@
 import React from 'react';
-import * as service from '../service';
+import { signup } from '../redux/actions/auth';
 
 export default React.createClass({
 
-  contextTypes: {
-    router: React.PropTypes.object,
+  propTypes: {
+    dispatch: React.PropTypes.func,
   },
 
   getInitialState() {
@@ -18,14 +18,9 @@ export default React.createClass({
       email: e.target[1].value,
       password: e.target[2].value
     };
-    service.signup(user)
-      .then((resp) => {
-        this.context.router.replace(`/${resp.username}/collections`);
-      })
-      .catch((error) => {
-        console.error(error.message);
-      });
+    this.props.dispatch(signup(user));
   },
+
   checkPasswords() {
     var pass = this.password.value,
       conf = this.confirmPassword.value,
@@ -42,6 +37,7 @@ export default React.createClass({
 
     this.setState({ badPass: bad, errorMessage: message });
   },
+
   render() {
     return (
       <div className="login-form">
