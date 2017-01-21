@@ -3,6 +3,7 @@ import React from 'react';
 import Dropdown from '../../Dropdown';
 import LinksBox from './LinkBox';
 import AddLinkForm from './AddLinkForm';
+import get from '../../../utils/get';
 import * as Actions from '../../../redux/actions/collections';
 
 import { connect } from 'react-redux';
@@ -10,7 +11,7 @@ import { connect } from 'react-redux';
 const EditLinks = React.createClass({
   propTypes: {
     collection: React.PropTypes.object,
-    username: React.PropTypes.string,
+    user: React.PropTypes.object,
     deleteCollection: React.PropTypes.func,
     updateCollection: React.PropTypes.func,
   },
@@ -31,6 +32,12 @@ const EditLinks = React.createClass({
       tmpTitle: this.props.collection.name,
       renaming: false
     };
+  },
+
+  componentDidMount() {
+    if (this.props.user.id !== this.props.collection.ownerId) {
+      this.context.router.replace(`/list/${this.props.collection.id}/view`);
+    }
   },
 
   componentDidUpdate(prevState) {
@@ -65,7 +72,7 @@ const EditLinks = React.createClass({
       return;
     }
     this.props.deleteCollection(this.props.collection.id,
-      `/${this.props.username}/collections`);
+      `/${this.props.user.username}/collections`);
   },
 
   keyPressed(e) {
@@ -123,8 +130,8 @@ export default connect(
     if (state.collections && state.collections.map) {
       nextProp.collection = state.collections.map[props.params.id];
     }
-    if (state.auth && state.auth.user && state.auth.user.username) {
-      nextProp.username = state.auth.user.username;
+    if (get(state.auth, 'user.username')) {
+      nextProp.user = state.auth.user;
     }
     return nextProp;
   },

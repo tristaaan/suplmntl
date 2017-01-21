@@ -2,6 +2,7 @@
 import React from 'react';
 import Dropdown from '../../Dropdown';
 import LinksBox from './LinkBox';
+import get from '../../../utils/get';
 
 import * as Actions from '../../../redux/actions/collections';
 import { connect } from 'react-redux';
@@ -10,9 +11,10 @@ const ViewLinks = React.createClass({
   displayName: 'ViewLinks',
 
   propTypes: {
-    name: React.PropTypes.string,
-    links: React.PropTypes.array,
+    collection: React.PropTypes.object,
+    user: React.PropTypes.object,
     getCollection: React.PropTypes.func,
+    deleteCollection: React.PropTypes.func,
     params: React.PropTypes.object
   },
 
@@ -32,7 +34,7 @@ const ViewLinks = React.createClass({
   },
 
   componentDidMount() {
-    if (!this.props.name.length) {
+    if (!get(this.props, 'collection.name.length')) {
       this.props.getCollection(this.props.params.id);
     }
   },
@@ -41,20 +43,32 @@ const ViewLinks = React.createClass({
     this.context.router.push(`/list/${this.props.params.id}/edit`);
   },
 
+  deleteList() {
+    if (!confirm(`Are you sure you want to delete ${this.state.title}?`)) {
+      return;
+    }
+    this.props.deleteCollection(this.props.collection.id,
+      `/${this.props.user.username}/collections`);
+  },
+
   render() {
+    const user = get(this.props, 'user');
+    const isOwner = user && user.id === this.props.collection.ownerId;
+
     return (
       <section id="linkList">
         <div className="linkListHeader">
-          <h1>{this.props.name}</h1>
+          <h1>{this.props.collection.name}</h1>
           <Dropdown buttonText="#">
             <ul className="dropdown-list">
-              <li onClick={this.editList}>Edit List</li>
-              <li onClick={() => {console.log('fork');}}>Fork List</li>
-              <li onClick={() => {console.log('star');}}>Star List</li>
+              <li onClick={() => {console.log('star, wayyy unimplemented');}}>Star List</li>
+              <li onClick={() => {console.log('fork, unimplemented');}}>Fork List</li>
+              { isOwner ? <li onClick={this.editList}>Edit List</li> : null}
+              { isOwner ? <li onClick={this.deleteList}>Delete list</li> : null}
             </ul>
           </Dropdown>
         </div>
-        <LinksBox links={this.props.links} />
+        <LinksBox links={this.props.collection.links} />
       </section>
     );
   }
@@ -62,13 +76,17 @@ const ViewLinks = React.createClass({
 
 export default connect(
   (state, props) => {
-    const collection = state.collections.map[props.params.id];
+    let collection = {};
+    if (state.collections.map[props.params.id]) {
+      collection = state.collections.map[props.params.id];
+    }
     return {
-      name: collection ? collection.name : '',
-      links: collection ? collection.links : []
+      collection,
+      user: state.auth.user
     };
   },
   dispatch => ({
-    getCollection: id => dispatch(Actions.getCollection(id))
+    getCollection: id => dispatch(Actions.getCollection(id)),
+    deleteCollection: (id, loc) => dispatch(Actions.deleteCollection(id, loc))
   })
 )(ViewLinks);

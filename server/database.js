@@ -11,7 +11,7 @@ exports.getCollections = (username) => {
 };
 
 exports.getCollection = (id) => {
-  return Collections.get(id).run();
+  return Collections.get(id).getJoin({ owner: true }).run();
 };
 
 exports.createCollection = (entry) => {
