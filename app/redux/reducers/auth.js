@@ -18,6 +18,11 @@ export default function authReducer(state = initialState, action) {
       return initialState;
     }
 
+    case Actions.LOGIN_ERROR: {
+      console.error('There was an error logging in: ', action.err);
+      return state;
+    }
+
     default:
       return state;
   }

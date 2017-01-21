@@ -3,6 +3,6 @@ var dotenv = require('dotenv');
 
 dotenv.load();
 
-app.listen(process.env.PORT ? process.env.PORT : 8000 , function() {
-    console.log('Listening...');
+app.listen(process.env.PORT ? process.env.PORT : 8000, () => {
+  console.log('Listening...');
 });

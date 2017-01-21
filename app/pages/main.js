@@ -11,6 +11,10 @@ const App = React.createClass({
     dispatch: React.PropTypes.func
   },
 
+  logout() {
+    this.props.dispatch(logout);
+  },
+
   render() {
     return (
       <div>
@@ -27,7 +31,7 @@ const App = React.createClass({
               : <li><Link className="headerLink" to="login">Login</Link></li>
             }
             { this.props.token ?
-              <li onClick={this.props.dispatch(logout)}>Sign Out</li>
+              <li onClick={this.logout}>Sign Out</li>
               : <li><Link className="headerLink" to="sign-up">Sign Up</Link></li>
             }
           </ul>

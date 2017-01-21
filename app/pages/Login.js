@@ -1,15 +1,11 @@
 import React from 'react';
-
+import { hashHistory } from 'react-router';
 import { connect } from 'react-redux';
 import * as AuthActions from '../redux/actions/auth';
 
 const Login = React.createClass({
   propTypes: {
     dispatch: React.PropTypes.func,
-  },
-
-  contextTypes: {
-    router: React.PropTypes.object,
   },
 
   getInitialState() {
@@ -26,7 +22,7 @@ const Login = React.createClass({
   },
 
   gotoSignUp() {
-    this.context.router.push('/sign-up');
+    hashHistory.push('/sign-up');
   },
 
   render() {
