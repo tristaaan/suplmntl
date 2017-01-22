@@ -3,11 +3,12 @@ import { Router, Route, IndexRoute } from 'react-router';
 
 import App from './pages/main';
 import Home from './pages/Home';
+import Login from './pages/Login';
+import SignUp from './pages/SignUp';
+import Account from './pages/Account';
 import CollectionList from './pages/Collection';
 import LinksEdit from './pages/Links/Edit';
 import LinksView from './pages/Links/View';
-import Login from './pages/Login';
-import SignUp from './pages/SignUp';
 
 export default function getRoutes(store) {
   const ensureAuthenticated = (nextState, replace) => {
@@ -34,5 +35,6 @@ export default function getRoutes(store) {
     <Route path="/:user/:id/edit" component={LinksEdit} onEnter={ensureAuthenticated}
       onLeave={clearMessages} />
     <Route path="/:user/:id/view" component={LinksView} />
+    <Route path="/account" component={Account} />
   </Router>);
 }

@@ -25,7 +25,7 @@ const App = React.createClass({
           }
           <li className="spacer" />
           { this.props.token ?
-            <li>Account</li>
+            <li><Link className="headerLink" to="account">Account</Link></li>
             : <li><Link className="headerLink" to="login">Login</Link></li>
           }
           { this.props.token ?

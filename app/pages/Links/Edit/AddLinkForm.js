@@ -28,7 +28,8 @@ export default React.createClass({
       return;
     }
 
-    if (link.substring(0, 8) !== 'https://' && link.substring(0, 7) !== 'http://') {
+    if (link.substring(0, 8).toLowerCase() !== 'https://' &&
+      link.substring(0, 7).toLowerCase() !== 'http://') {
       link = `https://${link}`;
     }
 
