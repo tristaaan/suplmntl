@@ -1,7 +1,8 @@
 import React from 'react';
-import { Router, Route } from 'react-router';
+import { Router, Route, IndexRoute } from 'react-router';
 
 import App from './pages/main';
+import Home from './pages/Home';
 import CollectionList from './pages/Collection';
 import LinksEdit from './pages/Links/Edit';
 import LinksView from './pages/Links/View';
@@ -25,6 +26,7 @@ export default function getRoutes(store) {
     });
   };
   return (<Router path="/" component={App}>
+    <IndexRoute component={Home} onLeave={clearMessages} />
     <Route path="/login" component={Login} onEnter={skipIfAuthenticated} onLeave={clearMessages} />
     <Route path="/sign-up" component={SignUp} onEnter={skipIfAuthenticated}
       onLeave={clearMessages} />
