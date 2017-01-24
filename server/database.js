@@ -48,7 +48,15 @@ exports.updateCollection = (newCol) => {
 };
 
 exports.deleteCollection = (_id) => {
-  return Collections.findOneAndRemove({ _id }).exec();
+  return Collections.findOneAndRemove({ _id }).exec()
+    .then((resp) => {
+      return Collections.find({'forkOf._id': _id}).exec();
+    })
+    .then((resp) => {
+      return Promise.all(resp.map(col =>
+        Collections.update({ _id: col._id }, { forkOf: null }).exec()
+      ));
+    });
 };
 
 exports.forkCollection = (collectionId, owner) => {
@@ -59,7 +67,11 @@ exports.forkCollection = (collectionId, owner) => {
         postId: strId(),
         private: col.private,
         links: col.links,
-        forkOf: { owner: col.owner, postId: col.postId, name: col.name },
+        forkOf: { _id: col._id,
+          postId: col.postId,
+          owner: col.owner,
+          name: col.name
+        },
         owner
       });
       return newCol.save();
