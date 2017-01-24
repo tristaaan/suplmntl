@@ -1,10 +1,11 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import { signup } from '../redux/actions/auth';
 
-export default React.createClass({
+const SignUpForm = React.createClass({
 
   propTypes: {
-    dispatch: React.PropTypes.func,
+    signup: React.PropTypes.func,
   },
 
   getInitialState() {
@@ -18,7 +19,7 @@ export default React.createClass({
       email: e.target[1].value,
       password: e.target[2].value
     };
-    this.props.dispatch(signup(user));
+    this.props.signup(user);
   },
 
   checkPasswords() {
@@ -60,3 +61,10 @@ export default React.createClass({
     );
   }
 });
+
+export default connect(
+  () => ({}),
+  dispatch => ({
+    signup: user => dispatch(signup(user))
+  })
+)(SignUpForm);

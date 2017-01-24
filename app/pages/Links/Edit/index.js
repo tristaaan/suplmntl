@@ -36,7 +36,7 @@ const EditLinks = React.createClass({
 
   componentDidMount() {
     if (this.props.user.id !== this.props.collection.ownerId) {
-      this.context.router.replace(`/list/${this.props.collection.id}/view`);
+      this.context.router.replace(`/list/${this.props.collection.postId}/view`);
     }
   },
 
@@ -71,7 +71,7 @@ const EditLinks = React.createClass({
     if (!confirm(`Are you sure you want to delete ${this.state.title}?`)) {
       return;
     }
-    this.props.deleteCollection(this.props.collection.id,
+    this.props.deleteCollection(this.props.collection._id,
       `/${this.props.user.username}/collections`);
   },
 
@@ -93,7 +93,7 @@ const EditLinks = React.createClass({
   },
 
   viewList() {
-    this.context.router.push(`/list/${this.props.collection.id}/view`);
+    this.context.router.push(`/list/${this.props.collection.postId}/view`);
   },
 
   updateTmpTitle(e) {

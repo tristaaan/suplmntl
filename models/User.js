@@ -1,15 +1,13 @@
-var thinky = require('thinky');
-// var r = thinky.r;
-var type = thinky.type;
+var mongoose = require('mongoose');
 
+var Schema = mongoose.Schema;
 
-module.exports = {
-  id: type.id(),
-  username: type.string(),
-  email: type.string(),
-  pw: type.string(),
-  createdAt: Date,
-};
+module.exports = new Schema({
+  username: String,
+  email: String,
+  pw: String,
+  createdAt: { type: Date, default: Date.now },
+});
 
 // {
 //   id: { type: Sequelize.UUID, primaryKey: true, defaultValue: Sequelize.UUIDV4 },

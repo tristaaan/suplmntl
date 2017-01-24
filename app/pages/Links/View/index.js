@@ -1,5 +1,6 @@
 // LinkList
 import React from 'react';
+import { Link } from 'react-router';
 import Dropdown from '../../Dropdown';
 import LinksBox from './LinkBox';
 import get from '../../../utils/get';
@@ -34,7 +35,7 @@ const ViewLinks = React.createClass({
     return { renaming: false };
   },
 
-  componentDidMount() {
+  componentWillReceiveProps() {
     if (!get(this.props, 'collection.name.length')) {
       this.props.getCollection(this.props.params.id);
     }
@@ -42,7 +43,7 @@ const ViewLinks = React.createClass({
 
   forkList() {
     if (this.props.user) {
-      this.props.forkCollection(this.props.collection.id, this.props.user);
+      this.props.forkCollection(this.props.collection._id, this.props.user);
     } else {
       this.context.router.push('/login');
     }
@@ -56,18 +57,24 @@ const ViewLinks = React.createClass({
     if (!confirm(`Are you sure you want to delete ${this.state.title}?`)) {
       return;
     }
-    this.props.deleteCollection(this.props.collection.id,
+    this.props.deleteCollection(this.props.collection._id,
       `/${this.props.user.username}/collections`);
   },
 
   render() {
     const user = get(this.props, 'user');
+    const { name, forkOf } = this.props.collection;
     const isOwner = user && user.id === this.props.collection.ownerId;
-
     return (
       <section id="linkList">
         <div className="linkListHeader">
-          <h1>{this.props.collection.name}</h1>
+          <div className="linkListTitle">
+            <h1>{name}</h1>
+            { forkOf ? <small>fork of:
+              &nbsp;<Link to={`/list/${forkOf.postId}/view`}>{forkOf.owner.username}/{forkOf.name}</Link>
+            </small>
+              : null}
+          </div>
           <Dropdown buttonText="#">
             <ul className="dropdown-list">
               <li onClick={() => {console.log('star, wayyy unimplemented');}}>Star List</li>

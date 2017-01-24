@@ -56,6 +56,10 @@ function ensureAuthenticated(req, res, next) {
   }
 }
 
+function userResponse(user) {
+  return { username: user.username, email: user.email, _id: user._id };
+}
+
 app.post('/api/login', (req, res) => {
   db.getUserByName(req.body.username)
     .then((resp) => {
@@ -64,13 +68,13 @@ app.post('/api/login', (req, res) => {
       } else if (!db.validatePassword(req.body.password, resp.pw)) {
         res.status(401).send({ message: 'Incorrect password.' });
       } else {
-        const payload = resp;
-        payload.token = generateToken(payload.id);
+        const payload = userResponse(resp);
+        payload.token = generateToken(payload._id);
         res.status(200).send(payload);
       }
     })
     .catch((err) => {
-      console.log('there was some error', err);
+      console.log('There was some error', err);
     });
 });
 
@@ -80,10 +84,9 @@ app.post('/api/logout', (req, res) => {
 
 app.route('/api/user')
   .get(ensureAuthenticated, (req, res) => {
-    db.getUserById(req.user.id)
+    db.getUserById(req.user._id)
       .then((resp) => {
-        delete resp.pw;
-        res.send(resp);
+        res.send(userResponse(resp));
       })
       .catch((err) => {
         res.send({ error: err.message });
@@ -95,11 +98,11 @@ app.route('/api/user')
       email: req.body.email,
       password: req.body.password
     })
-    .then((result) => {
-      res.send(result);
+    .then((resp) => {
+      res.send(userResponse(resp));
     })
     .catch((err) => {
-      res.send(err);
+      res.status(500).send(err);
     });
   });
 
@@ -107,56 +110,53 @@ app.route('/api/collections')
   .get((req, res) => {
     db.getCollections(req.query.username)
       .then((resp) => {
-        res.send(resp[0].collections);
+        res.send(resp);
       })
       .catch((err) => {
-        res.send(err);
+        res.status(500).send(err);
       });
   });
 
 app.route('/api/collection')
   .put(ensureAuthenticated, (req, res) => {
-    // var newId = Math.floor(Math.random()*0xaabbcc);
-    // collections[newId] = {title: req.body.title, links: []};
-    // res.send({newId: newId, size: 0});
-    var entry = { name: req.body.name, owner: req.user.id };
+    var entry = { name: req.body.name, owner: { _id: req.user._id, username: req.user.username } };
     db.createCollection(entry)
       .then((resp) => {
         res.send(resp);
       })
       .catch((err) => {
-        res.send(err);
+        res.status(500).send(err);
       });
   })
   .post(ensureAuthenticated, (req, res) => {
     db.updateCollection(req.body.collection)
       .then((resp) => {
-        res.send(resp);
+        res.send(req.body.collection);
       })
       .catch((err) => {
-        res.send(err);
+        throw err;
       });
   });
 
 app.route('/api/collection/:id/fork')
   .post(ensureAuthenticated, (req, res) => {
-    db.forkCollection(req.params.id, req.user.id)
+    db.forkCollection(req.params.id, { _id: req.user._id, username: req.user.username })
       .then((resp) => {
         res.send(resp);
       })
       .catch((err) => {
-        res.send(err);
+        res.status(500).send(err);
       });
   });
 
 app.route('/api/collection/:id')
   .get((req, res) => {
-    db.getCollection(req.params.id)
+    db.getCollectionByPostId(req.params.id)
       .then((resp) => {
         res.send(resp);
       })
       .catch((err) => {
-        res.send(err);
+        res.status(500).send(err);
       });
   })
   .delete(ensureAuthenticated, (req, res) => {
@@ -165,7 +165,7 @@ app.route('/api/collection/:id')
         res.send({});
       })
       .catch((err) => {
-        res.send(err);
+        res.status(500).send(err);
       });
   });
 

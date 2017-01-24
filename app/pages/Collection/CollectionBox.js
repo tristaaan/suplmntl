@@ -16,8 +16,8 @@ export default React.createClass({
   render() {
     const createItem = (col, index) => {
       return (
-        <li key={`${col.id}_${index}`}>
-          <Link to={`/list/${col.id}/view`} className="title">{col.name}</Link>
+        <li key={`${col.postId}_${index}`}>
+          <Link to={`/list/${col.postId}/view`} className="title">{col.name}</Link>
           <span>{col.links.length === 1 ? `${col.links.length} link` : `${col.links.length} links`}</span>
         </li>
       );

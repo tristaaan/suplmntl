@@ -6,7 +6,7 @@
 
 dl{
   width: @content-width;
-  margin: 0 auto; 
+  margin: 0 auto;
 }
 
 dt{
@@ -58,6 +58,23 @@ dd{
 .linkListHeader {
   display: flex;
   justify-content: space-between;
+  align-items: center;
   width: @content-width;
-  margin: 0 auto;
+  margin: 0 auto 10px;
+}
+
+.linkListTitle {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: baseline;
+}
+
+.linkListTitle > h1 {
+  margin-bottom: 0;
+}
+
+.linkListTitle a {
+  cursor: pointer;
+  text-decoration: underline;
 }

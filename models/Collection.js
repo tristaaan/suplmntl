@@ -1,21 +1,24 @@
-var thinky = require('thinky');
-// var r = thinky.r;
-var type = thinky.type;
+var mongoose = require('mongoose');
+
+var Schema = mongoose.Schema;
+
+const linkSchema = new Schema({
+  title: String,
+  link: String,
+  description: String
+});
 
 module.exports = {
-  id: type.string(),
-  name: type.string(),
-  private: type.boolean().default(false),
-  links: type.array().schema(
-    type.object().schema(
-      {
-        title: type.string(),
-        link: type.string(),
-        description: type.string()
-      })
-    ).default([]),
-  ownerId: type.id(),
-  createdAt: Date, // type.date().default(r.now()),
+  postId: String,
+  name: String,
+  links: { type: [linkSchema], default: [] },
+  owner: {
+    _id: Schema.Types.ObjectId,
+    username: String,
+  },
+  forkOf: { type: Object, default: null },
+  private: { type: Boolean, default: false },
+  createdAt: { type: Date, default: Date.now }, // type.date().default(r.now()),
 };
 
 // {

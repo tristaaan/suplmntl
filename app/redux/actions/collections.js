@@ -39,7 +39,7 @@ export function updateCollection(collection) {
   return (dispatch) => {
     service.updateCollection(collection)
       .then((resp) => {
-        dispatch({ type: UPDATE_COLLECTION, collection: resp.data });
+        dispatch({ type: UPDATE_COLLECTION, collection });
       })
       .catch((err) => {
         console.log(err);
@@ -75,7 +75,7 @@ export function forkCollection(id, user) {
   return (dispatch) => {
     service.forkCollection(id)
       .then((resp) => {
-        hashHistory.push(`/list/${resp.data.id}/view`);
+        hashHistory.push(`/list/${resp.data.postId}/view`);
         dispatch({ type: FORK_COLLECTION, collection: resp.data });
       })
       .catch((err) => {

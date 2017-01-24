@@ -5,7 +5,7 @@ import App from './pages/main';
 import Home from './pages/Home';
 import Login from './pages/Login';
 import SignUp from './pages/SignUp';
-import Account from './pages/Account';
+import Account from './pages/Account'; // waterfall!!
 import CollectionList from './pages/Collection';
 import LinksEdit from './pages/Links/Edit';
 import LinksView from './pages/Links/View';
