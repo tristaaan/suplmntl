@@ -35,6 +35,10 @@ const ViewLinks = React.createClass({
     return { renaming: false };
   },
 
+  componentDidMount() {
+    this.props.getCollection(this.props.params.id);
+  },
+
   componentWillReceiveProps() {
     if (!get(this.props, 'collection.name.length')) {
       this.props.getCollection(this.props.params.id);
@@ -63,17 +67,24 @@ const ViewLinks = React.createClass({
 
   render() {
     const user = get(this.props, 'user');
-    const { name, forkOf } = this.props.collection;
+    const { name, forkOf, owner } = this.props.collection;
     const isOwner = user && user._id === get(this.props, 'collection.owner._id');
+
+    let sub = null;
+    if (forkOf) {
+      sub = (<small>by <Link to={`/${owner.username}/collections`}>{ owner.username }</Link>
+        &nbsp;- fork of: <Link to={`/list/${forkOf.postId}/view`}>{forkOf.owner.username}/{forkOf.name}</Link>
+        </small>);
+    } else if (owner) {
+      sub = (<small>by <Link to={`/${owner.username}/collections`}>{ owner.username }</Link></small>);
+    }
+
     return (
       <section id="linkList">
         <div className="linkListHeader">
           <div className="linkListTitle">
             <h1>{name}</h1>
-            { forkOf ? <small>fork of:
-              &nbsp;<Link to={`/list/${forkOf.postId}/view`}>{forkOf.owner.username}/{forkOf.name}</Link>
-            </small>
-              : null}
+            { sub }
           </div>
           <Dropdown buttonText="#">
             <ul className="dropdown-list">
