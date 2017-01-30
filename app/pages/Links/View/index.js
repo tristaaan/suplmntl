@@ -64,7 +64,7 @@ const ViewLinks = React.createClass({
   render() {
     const user = get(this.props, 'user');
     const { name, forkOf } = this.props.collection;
-    const isOwner = user && user.id === this.props.collection.ownerId;
+    const isOwner = user && user._id === get(this.props, 'collection.owner._id');
     return (
       <section id="linkList">
         <div className="linkListHeader">

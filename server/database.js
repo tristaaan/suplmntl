@@ -41,16 +41,28 @@ exports.createCollection = (entry) => {
   }).save();
 };
 
-exports.updateCollection = (newCol) => {
+exports.updateCollection = (newCol, userId) => {
   var _id = newCol._id;
   delete newCol._id;
-  return Collections.findOneAndUpdate({ _id }, newCol).exec();
+  return Collections.findOne({ _id }).lean().exec()
+    .then((resp) => {
+      if (resp.owner._id.toString() !== userId.toString()) {
+        throw new Error('unauthorized');
+      }
+      return Collections.findOneAndUpdate({ _id }, newCol).exec();
+    });
 };
 
-exports.deleteCollection = (_id) => {
-  return Collections.findOneAndRemove({ _id }).exec()
+exports.deleteCollection = (_id, userId) => {
+  return Collections.findOne({ _id }).lean().exec()
     .then((resp) => {
-      return Collections.find({'forkOf._id': _id}).exec();
+      if (resp.owner._id.toString() !== userId.toString()) {
+        throw new Error('unauthorized');
+      }
+      return resp.remove().exec();
+    })
+    .then((resp) => {
+      return Collections.find({ 'forkOf._id': _id }).exec();
     })
     .then((resp) => {
       return Promise.all(resp.map(col =>
@@ -60,7 +72,7 @@ exports.deleteCollection = (_id) => {
 };
 
 exports.forkCollection = (collectionId, owner) => {
-  return Collections.findOne({ _id: collectionId }).exec()
+  return Collections.findOne({ _id: collectionId }).lean().exec()
     .then((col) => {
       const newCol = new Collections({
         name: col.name,
@@ -84,10 +96,7 @@ exports.getUserById = (_id) => {
 };
 
 exports.getUserByName = (username) => {
-  return Users.findOne({ username }).exec()
-    .then((resp) => {
-      return resp._doc;
-    });
+  return Users.findOne({ username }).lean().exec();
 };
 
 exports.addUser = (user, cb) => {

@@ -129,18 +129,23 @@ app.route('/api/collection')
       });
   })
   .post(ensureAuthenticated, (req, res) => {
-    db.updateCollection(req.body.collection)
+    db.updateCollection(req.body.collection, req.user._id)
       .then((resp) => {
-        res.send(req.body.collection);
+        res.send(resp);
       })
       .catch((err) => {
-        throw err;
+        if (err.message === 'unauthorized') {
+          res.status(401).send(err);
+        } else {
+          res.status(500).send(err);
+        }
       });
   });
 
 app.route('/api/collection/:id/fork')
   .post(ensureAuthenticated, (req, res) => {
-    db.forkCollection(req.params.id, { _id: req.user._id, username: req.user.username })
+    db.forkCollection(req.params.id, { _id: req.user._id,
+      username: req.user.username })
       .then((resp) => {
         res.send(resp);
       })
@@ -160,12 +165,16 @@ app.route('/api/collection/:id')
       });
   })
   .delete(ensureAuthenticated, (req, res) => {
-    db.deleteCollection(req.params.id)
+    db.deleteCollection(req.params.id, req.user._id)
       .then((resp) => {
         res.send({});
       })
       .catch((err) => {
-        res.status(500).send(err);
+        if (err.message === 'unauthorized') {
+          res.status(401).send(err);
+        } else {
+          res.status(500).send(err);
+        }
       });
   });
 

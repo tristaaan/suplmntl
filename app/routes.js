@@ -1,5 +1,6 @@
 import React from 'react';
 import { Router, Route, IndexRoute } from 'react-router';
+import cookie from 'react-cookie';
 
 import App from './pages/main';
 import Home from './pages/Home';
@@ -12,13 +13,13 @@ import LinksView from './pages/Links/View';
 
 export default function getRoutes(store) {
   const ensureAuthenticated = (nextState, replace) => {
-    if (!store.getState().auth.token) {
+    if (!store.getState().auth.token && !cookie.load('token')) {
       replace('/login');
     }
   };
   const skipIfAuthenticated = (nextState, replace) => {
     if (store.getState().auth.token) {
-      replace('/');
+      replace(`/${store.getState.auth.user.username}/collections`);
     }
   };
   const clearMessages = () => {
@@ -35,6 +36,6 @@ export default function getRoutes(store) {
     <Route path="/:user/:id/edit" component={LinksEdit} onEnter={ensureAuthenticated}
       onLeave={clearMessages} />
     <Route path="/:user/:id/view" component={LinksView} />
-    <Route path="/account" component={Account} />
+    <Route path="/account" component={Account} onEnter={ensureAuthenticated} />
   </Router>);
 }
