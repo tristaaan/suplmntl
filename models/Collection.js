@@ -21,6 +21,15 @@ module.exports = {
   createdAt: { type: Date, default: Date.now }, // type.date().default(r.now()),
 };
 
+// forkOf {
+//   "_id": String,
+//   "postId": String,
+//   "owner":{
+//     "username": String,
+//     "_id": String
+//   }
+// }
+
 // {
 //   id:   { type: Sequelize.STRING, primaryKey: true, allowNull: false },
 //   name: { type: Sequelize.STRING, allowNull: false },
