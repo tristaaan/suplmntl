@@ -39,7 +39,7 @@ const Collections = React.createClass({
     var showAddButton = this.props.user && this.props.user.username === this.props.params.user;
     return (
       <section id="collectionList">
-        <h1>Collections</h1>
+        <h1>{this.props.params.user}&apos;s Collections</h1>
         <CollectionBox collections={this.props.collections} deleteItem={this.handleDelete} />
         { this.state.colFormVisible ?
           <AddCollectionForm onLinkSubmit={this.handleSubmit} toggler={this.toggleForm} /> : null }
