@@ -54,12 +54,12 @@ exports.updateCollection = (newCol, userId) => {
 };
 
 exports.deleteCollection = (_id, userId) => {
-  return Collections.findOne({ _id }).lean().exec()
+  return Collections.findOne({ _id }).exec()
     .then((resp) => {
-      if (resp.owner._id.toString() !== userId.toString()) {
+      if (resp.toObject().owner._id.toString() !== userId.toString()) {
         throw new Error('unauthorized');
       }
-      return resp.remove().exec();
+      return resp.remove();
     })
     .then((resp) => {
       return Collections.find({ 'forkOf._id': _id }).exec();

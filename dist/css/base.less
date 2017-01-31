@@ -31,7 +31,6 @@ textarea{
 
 button{
   text-align: center;
-  margin-top: 15px;
   cursor: pointer;
   border: 1px solid grey;
   border-radius: 4px;
@@ -39,9 +38,12 @@ button{
   background-color: white;
   color: @title-text-color;
   font-size: 1em;
+  &.addItemButton {
+    margin-top: 15px;
+  }
 }
 
-a, a:visited { 
+a, a:visited {
   color: @title-text-color;
   text-decoration: none;
 }
@@ -51,6 +53,6 @@ a:hover {
   text-decoration: none;
 }
 
-.hidden { 
+.hidden {
   display: none !important;
 }

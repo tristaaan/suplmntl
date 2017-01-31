@@ -44,7 +44,7 @@ const Collections = React.createClass({
         { this.state.colFormVisible ?
           <AddCollectionForm onLinkSubmit={this.handleSubmit} toggler={this.toggleForm} /> : null }
         { showAddButton && !this.state.colFormVisible ?
-          <button onClick={this.toggleForm}>+</button> : null }
+          <button className="addItemButton" onClick={this.toggleForm}>+</button> : null }
       </section>
     );
   }

@@ -1,6 +1,5 @@
 // LinkList
 import React from 'react';
-import Dropdown from '../../Dropdown';
 import LinksBox from './LinkBox';
 import AddLinkForm from './AddLinkForm';
 import get from '../../../utils/get';
@@ -12,8 +11,9 @@ const EditLinks = React.createClass({
   propTypes: {
     collection: React.PropTypes.object,
     user: React.PropTypes.object,
-    deleteCollection: React.PropTypes.func,
+    getCollection: React.PropTypes.func,
     updateCollection: React.PropTypes.func,
+    params: React.PropTypes.object,
   },
 
   contextTypes: {
@@ -22,14 +22,15 @@ const EditLinks = React.createClass({
 
   getDefaultProps() {
     return {
-      collection: {}
+      user: {},
+      collection: { links: [] }
     };
   },
 
   getInitialState() {
     return {
-      title: this.props.collection.name,
-      tmpTitle: this.props.collection.name,
+      tmpCol: this.props.collection,
+      changes: false,
       renaming: false
     };
   },
@@ -37,87 +38,59 @@ const EditLinks = React.createClass({
   componentDidMount() {
     if (this.props.user.id !== this.props.collection.ownerId) {
       this.context.router.replace(`/list/${this.props.collection.postId}/view`);
+      return;
+    }
+
+    if (!this.props.collection.name) {
+      this.props.getCollection(this.props.params.id);
     }
   },
 
-  componentDidUpdate(prevState) {
-    if (this.state.renaming) {
-      this.el.addEventListener('keyup', this.keyPressed);
-      this.titleEditor.focus();
-    } else {
-      this.el.removeEventListener('keyup', this.keyPressed);
-    }
-  },
-
-  componentWillUnmount() {
-    if (this.state.renaming) {
-      this.el.removeEventListener('keyup', this.keyPressed);
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.collection.name.length && !this.state.tmpCol.name) {
+      this.setState({ tmpCol: nextProps.collection });
     }
   },
 
   handleSubmit(newLink) {
     const newCol = Object.assign({}, this.props.collection);
     newCol.links.push(newLink);
-    this.props.updateCollection(newCol);
+    this.setState({ tmpCol: newCol, changes: true });
   },
 
   handleDelete(index) {
     const newCol = Object.assign({}, this.props.collection);
     newCol.links.splice(index, 1);
-    this.props.updateCollection(newCol);
+    this.setState({ tmpCol: newCol, changes: true });
   },
 
-  deleteList() {
-    if (!confirm(`Are you sure you want to delete ${this.state.title}?`)) {
-      return;
+  cancel() {
+    this.context.router.push(`/list/${this.props.collection.postId}/view`);
+  },
+
+  done() {
+    if (this.state.changes) {
+      this.props.updateCollection(this.state.tmpCol);
     }
-    this.props.deleteCollection(this.props.collection._id,
-      `/${this.props.user.username}/collections`);
-  },
-
-  keyPressed(e) {
-    if (e.keyCode === 27) {
-      this.setState({ renaming: false });
-      this.dropdown.toggle(false);
-    } else if (e.keyCode === 13) {
-      this.setState({ renaming: false, title: this.state.tmpTitle });
-      const newCol = Object.assign({}, this.props.collection);
-      newCol.name = this.state.tmpTitle;
-      this.props.updateCollection(newCol);
-    }
-  },
-
-  renameList() {
-    this.setState({ renaming: true });
-    this.dropdown.toggle(false);
-  },
-
-  viewList() {
     this.context.router.push(`/list/${this.props.collection.postId}/view`);
   },
 
   updateTmpTitle(e) {
-    this.setState({ tmpTitle: e.target.value });
+    const tmpCol = Object.assign({}, this.state.tmpCol);
+    tmpCol.name = e.target.value;
+    this.setState({ tmpCol, changes: true });
   },
 
   render() {
     return (
       <section id="linkList" ref={(c) => {this.el = c;}}>
         <div className="linkListHeader">
-          { this.state.renaming ?
-            <input ref={(c) => {this.titleEditor = c;}} onChange={this.updateTmpTitle}
-              value={this.state.tmpTitle} />
-            : <h1>{this.state.title}</h1>
-          }
-          <Dropdown ref={(c) => {this.dropdown = c;}} buttonText="#">
-            <ul className="dropdown-list">
-              <li onClick={this.viewList}>Finish Editing</li>
-              <li onClick={this.renameList}>Rename list</li>
-              <li onClick={this.deleteList}>Delete list</li>
-            </ul>
-          </Dropdown>
+          <input ref={(c) => {this.titleEditor = c;}} onChange={this.updateTmpTitle}
+            value={this.state.tmpCol.name} />
+          <button onClick={this.cancel}>Cancel</button>
+          <button onClick={this.done}>Done</button>
         </div>
-        <LinksBox links={this.props.collection.links} deleteItem={this.handleDelete} />
+        <LinksBox links={this.state.tmpCol.links} deleteItem={this.handleDelete} />
         <AddLinkForm onLinkSubmit={this.handleSubmit} />
       </section>
     );
@@ -137,6 +110,7 @@ export default connect(
   },
   dispatch => ({
     updateCollection: collection => dispatch(Actions.updateCollection(collection)),
+    getCollection: id => dispatch(Actions.getCollection(id)),
     deleteCollection: (id, loc) => dispatch(Actions.deleteCollection(id, loc))
   })
 )(EditLinks);

@@ -173,6 +173,7 @@ app.route('/api/collection/:id')
         if (err.message === 'unauthorized') {
           res.status(401).send(err);
         } else {
+          console.log(err);
           res.status(500).send(err);
         }
       });

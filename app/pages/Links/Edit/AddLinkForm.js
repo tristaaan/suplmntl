@@ -66,7 +66,7 @@ export default React.createClass({
           onChange={this.updateStateFromForm}
           value={this.state.description}
           required />
-        <button ref={(c) => { this.submitButton = c; }}>Save</button>
+        <button className="addItemButton" ref={(c) => { this.submitButton = c; }}>Add Link</button>
       </form>
     );
   }
