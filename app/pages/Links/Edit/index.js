@@ -65,7 +65,10 @@ const EditLinks = React.createClass({
   },
 
   cancel() {
-    this.context.router.push(`/list/${this.props.collection.postId}/view`);
+    if ((this.state.changes && confirm('There are unsaved changes, are you sure you want to cancel?')) ||
+      !this.state.changes) {
+      this.context.router.push(`/list/${this.props.collection.postId}/view`);
+    }
   },
 
   done() {

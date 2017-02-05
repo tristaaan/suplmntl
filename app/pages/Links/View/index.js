@@ -39,8 +39,8 @@ const ViewLinks = React.createClass({
     this.props.getCollection(this.props.params.id);
   },
 
-  componentWillReceiveProps() {
-    if (!get(this.props, 'collection.name.length')) {
+  componentWillReceiveProps(nextProps) {
+    if (!get(this.props, 'collection.name.length') || this.props.collection.postId !== nextProps.params.id) {
       this.props.getCollection(this.props.params.id);
     }
   },
