@@ -91,6 +91,12 @@ exports.forkCollection = (collectionId, owner) => {
 };
 
 // users
+function validatePassword(password, dbpass) {
+  return bcrypt.compareSync(password, dbpass);
+}
+
+exports.validatePassword = validatePassword;
+
 exports.getUserById = (_id) => {
   return Users.findOne({ _id }).exec();
 };
@@ -120,6 +126,30 @@ exports.addUser = (user, cb) => {
     });
 };
 
-exports.validatePassword = (password, dbpass) => {
-  return bcrypt.compareSync(password, dbpass);
+exports.updateUserEmail = (_id, email) => {
+  return Users.findOneAndUpdate({ _id }, { email }).exec();
+};
+
+exports.updateUserPassword = (_id, oldPass, newPass) => {
+  return Users.findOne({ _id }).exec()
+    .then((resp) => {
+      if (!validatePassword(resp.pw, oldPass)) {
+        throw new Error('Incorrect password');
+      }
+      const hashpass = bcrypt.hashSync(newPass, bcrypt.genSaltSync(10));
+      return Users.update({ _id }, { ps: hashpass });
+    });
+};
+
+exports.deleteUser = (_id) => {
+  return Collections.find({ 'ownder._id': _id })
+    .then((resp) => {
+      const promises = resp.map(col => col.remove());
+      promises.push(Users.findOne({ _id }).exec());
+      return Promise.all(promises);
+    })
+    .then((resp) => {
+      console.log(resp);
+      return resp.remove();
+    });
 };

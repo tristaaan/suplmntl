@@ -6,9 +6,14 @@ import * as service from '../../service';
 export const LOGIN_SUCCESS = 'LOGIN_SUCCESS';
 export const LOGIN_ERROR = 'LOGIN_ERROR';
 export const LOGOUT = 'LOGOUT';
+export const UPDATE_USER = 'UPDATE_USER';
 
 function loginSuccess(token, user) {
   return { type: LOGIN_SUCCESS, token, user };
+}
+
+function updateUser(user) {
+  return { type: UPDATE_USER, user };
 }
 
 export function loggedIn(token) {
@@ -50,8 +55,41 @@ export function signup(user) {
   };
 }
 
+export function updateUserEmail(userId, newEmail) {
+  return (dispatch) => {
+    service.updateEmail(userId, newEmail)
+      .then((resp) => {
+        dispatch(updateUser(resp.data));
+      });
+  };
+}
+
+export function changePassword(userId, oldPass, newPass) {
+  return (dispatch) => {
+    service.changePassword(userId, oldPass, newPass)
+      .then((resp) => {
+        console.log(resp);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+}
+
 export function logout() {
   cookie.remove('token');
   hashHistory.push('/');
   return { type: LOGOUT };
+}
+
+export function deleteAccount(userId) {
+  return (dispatch) => {
+    service.deleteAccount(userId)
+      .then((resp) => {
+        dispatch(logout());
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
 }

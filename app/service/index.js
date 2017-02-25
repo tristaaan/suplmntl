@@ -41,5 +41,17 @@ export function login(user) {
 }
 
 export function getUser(token) {
-  return axios.get('user');
+  return axios.get('/user');
+}
+
+export function deleteAccoun(userId) {
+  return axios.delete(`/user/${userId}`);
+}
+
+export function changePassword(userId, oldPass, newPass) {
+  return axios.post(`/user/${userId}/password`, { oldPass, newPass });
+}
+
+export function updateEmail(userId, email) {
+  return axios.post(`/user/${userId}/email`, { email });
 }

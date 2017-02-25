@@ -6,10 +6,10 @@ import App from './pages/main';
 import Home from './pages/Home';
 import Login from './pages/Login';
 import SignUp from './pages/SignUp';
-import Account from './pages/Account'; // waterfall!!
-import CollectionList from './pages/Collection';
+import Account from './pages/Account';
 import LinksEdit from './pages/Links/Edit';
 import LinksView from './pages/Links/View';
+import CollectionList from './pages/Collection'; // waterfall imports!!
 
 export default function getRoutes(store) {
   const ensureAuthenticated = (nextState, replace) => {

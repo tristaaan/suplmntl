@@ -23,6 +23,12 @@ export default function authReducer(state = initialState, action) {
       return state;
     }
 
+    case Actions.UPDATE_USER: {
+      const newState = Object.assign({}, state);
+      newState.user = action.user;
+      return newState;
+    }
+
     default:
       return state;
   }

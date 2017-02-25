@@ -56,6 +56,14 @@ function ensureAuthenticated(req, res, next) {
   }
 }
 
+function ensureOwnership(res, req, next) {
+  if (req.query.userId !== req.user._id) {
+    res.send(401).send({ msg: 'Unauthorized' });
+  } else {
+    next();
+  }
+}
+
 function userResponse(user) {
   return { username: user.username, email: user.email, _id: user._id };
 }
@@ -104,6 +112,43 @@ app.route('/api/user')
     .catch((err) => {
       res.status(500).send(err);
     });
+  });
+
+app.route('/api/user/:userId')
+  .delete([ensureAuthenticated, ensureOwnership], (req, res) => {
+    db.deleteUser(req.query.userId)
+      .then((resp) => {
+        res.status(200);
+      })
+      .catch((err) => {
+        res.send(err);
+      });
+  });
+
+app.route('/api/user/:userId/password')
+  .post([ensureAuthenticated, ensureOwnership], (req, res) => {
+    db.updateUserPassword(req.query.userId, req.body.oldPass, req.body.newPass)
+      .then((resp) => {
+        res.status(200);
+      })
+      .catch((err) => {
+        if (err.message === 'Incorrect password') {
+          res.status(401).send({ message: 'Incorrect password.' });
+        } else {
+          res.status(500).send(err);
+        }
+      });
+  });
+
+app.route('/api/user/:userId/email')
+  .post([ensureAuthenticated, ensureOwnership], (req, res) => {
+    db.updateUserEmail(req.query.userId, req.body.email)
+      .then((resp) => {
+        res.send(userResponse(resp));
+      })
+      .catch((err) => {
+        res.send(err);
+      });
   });
 
 app.route('/api/collections')
