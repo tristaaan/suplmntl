@@ -23,7 +23,11 @@ export function loggedIn(token) {
       .then((resp) => {
         dispatch(loginSuccess(token, resp.data));
       })
-      .catch(err => ({ type: LOGIN_ERROR, err }));
+      .catch((err) => {
+        cookie.remove('token');
+        hashHistory.replace('/');
+        return { type: LOGIN_ERROR, err };
+      });
   };
 }
 

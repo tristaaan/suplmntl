@@ -19,8 +19,8 @@ export default function authReducer(state = initialState, action) {
     }
 
     case Actions.LOGIN_ERROR: {
-      console.error('There was an error logging in: ', action.err);
-      return state;
+      // console.error('There was an error logging in: ', action.err);
+      return initialState;
     }
 
     case Actions.UPDATE_USER: {

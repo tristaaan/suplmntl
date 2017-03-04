@@ -53,23 +53,30 @@ exports.updateCollection = (newCol, userId) => {
     });
 };
 
-exports.deleteCollection = (_id, userId) => {
+function deleteCollection(_id, userId) {
   return Collections.findOne({ _id }).exec()
     .then((resp) => {
       if (resp.toObject().owner._id.toString() !== userId.toString()) {
         throw new Error('unauthorized');
       }
+      // if the collection has forks, update them, then delete the collection
+      if (resp.toObject().forks > 0) {
+        return Collections.find({ 'forkOf._id': _id }).exec()
+          .then((forks) => {
+            return Promise.all(forks.map(col =>
+              Collections.update({ _id: col._id }, { forkOf: null }).exec()
+            ));
+          })
+          .then(() => {
+            return resp.remove();
+          });
+      }
+      // otherwise delete collection
       return resp.remove();
-    })
-    .then((resp) => {
-      return Collections.find({ 'forkOf._id': _id }).exec();
-    })
-    .then((resp) => {
-      return Promise.all(resp.map(col =>
-        Collections.update({ _id: col._id }, { forkOf: null }).exec()
-      ));
     });
-};
+}
+
+exports.deleteCollection = deleteCollection;
 
 exports.forkCollection = (collectionId, owner) => {
   return Collections.findOne({ _id: collectionId }).lean().exec()
@@ -141,15 +148,13 @@ exports.updateUserPassword = (_id, oldPass, newPass) => {
     });
 };
 
-exports.deleteUser = (_id) => {
-  return Collections.find({ 'ownder._id': _id })
-    .then((resp) => {
-      const promises = resp.map(col => col.remove());
-      promises.push(Users.findOne({ _id }).exec());
+exports.deleteUser = (userId) => {
+  return Collections.find({ 'owner._id': userId })
+    .then((resp = []) => {
+      const promises = resp.map(col => deleteCollection(col._id, userId));
       return Promise.all(promises);
     })
     .then((resp) => {
-      console.log(resp);
-      return resp.remove();
+      return Users.findOneAndRemove({ _id: userId }).exec();
     });
 };

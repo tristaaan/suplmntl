@@ -55,6 +55,7 @@ export function getCollections(username) {
       })
       .catch((err) => {
         console.log(err);
+        hashHistory.replace('/');
       });
   };
 }

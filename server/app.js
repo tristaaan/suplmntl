@@ -120,9 +120,9 @@ app.route('/api/user')
 
 app.route('/api/user/:userId')
   .delete([ensureAuthenticated, ensureOwnership], (req, res) => {
-    db.deleteUser(req.query.userId)
+    db.deleteUser(req.params.userId)
       .then((resp) => {
-        res.status(200);
+        res.sendStatus(200);
       })
       .catch((err) => {
         res.send(err);
@@ -133,7 +133,7 @@ app.route('/api/user/:userId/password')
   .post([ensureAuthenticated, ensureOwnership], (req, res) => {
     db.updateUserPassword(req.params.userId, req.body.oldPass, req.body.newPass)
       .then((resp) => {
-        res.status(200);
+        res.sendStatus(200);
       })
       .catch((err) => {
         if (err.message === 'Incorrect password') {

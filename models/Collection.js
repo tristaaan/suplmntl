@@ -16,6 +16,7 @@ module.exports = {
     _id: Schema.Types.ObjectId,
     username: String,
   },
+  forks: { type: Number, default: 0, validate: val => val >= 0 },
   forkOf: { type: Object, default: null },
   private: { type: Boolean, default: false },
   createdAt: { type: Date, default: Date.now }, // type.date().default(r.now()),
