@@ -56,9 +56,9 @@ function ensureAuthenticated(req, res, next) {
   }
 }
 
-function ensureOwnership(res, req, next) {
-  if (req.query.userId !== req.user._id) {
-    res.send(401).send({ msg: 'Unauthorized' });
+function ensureOwnership(req, res, next) {
+  if (req.params.userId !== req.user._id.toString()) {
+    res.status(401).send({ msg: 'Unauthorized' });
   } else {
     next();
   }
@@ -89,6 +89,10 @@ app.post('/api/login', (req, res) => {
 app.post('/api/logout', (req, res) => {
 
 });
+
+// -------------------------------------------
+// USER
+// -------------------------------------------
 
 app.route('/api/user')
   .get(ensureAuthenticated, (req, res) => {
@@ -127,7 +131,7 @@ app.route('/api/user/:userId')
 
 app.route('/api/user/:userId/password')
   .post([ensureAuthenticated, ensureOwnership], (req, res) => {
-    db.updateUserPassword(req.query.userId, req.body.oldPass, req.body.newPass)
+    db.updateUserPassword(req.params.userId, req.body.oldPass, req.body.newPass)
       .then((resp) => {
         res.status(200);
       })
@@ -142,14 +146,19 @@ app.route('/api/user/:userId/password')
 
 app.route('/api/user/:userId/email')
   .post([ensureAuthenticated, ensureOwnership], (req, res) => {
-    db.updateUserEmail(req.query.userId, req.body.email)
+    db.updateUserEmail(req.params.userId, req.body.email)
       .then((resp) => {
+        console.log(resp);
         res.send(userResponse(resp));
       })
       .catch((err) => {
         res.send(err);
       });
   });
+
+// -------------------------------------------
+// COLLECTIONS
+// -------------------------------------------
 
 app.route('/api/collections')
   .get((req, res) => {

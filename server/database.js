@@ -127,17 +127,17 @@ exports.addUser = (user, cb) => {
 };
 
 exports.updateUserEmail = (_id, email) => {
-  return Users.findOneAndUpdate({ _id }, { email }).exec();
+  return Users.findOneAndUpdate({ _id }, { email }, { new: true });
 };
 
 exports.updateUserPassword = (_id, oldPass, newPass) => {
   return Users.findOne({ _id }).exec()
     .then((resp) => {
-      if (!validatePassword(resp.pw, oldPass)) {
+      if (!validatePassword(oldPass, resp.pw)) {
         throw new Error('Incorrect password');
       }
       const hashpass = bcrypt.hashSync(newPass, bcrypt.genSaltSync(10));
-      return Users.update({ _id }, { ps: hashpass });
+      return Users.update({ _id }, { pw: hashpass });
     });
 };
 

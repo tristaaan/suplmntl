@@ -19,9 +19,11 @@
   }
 }
 
-// <input> element holds this back
-// @media screen and (max-width: @content-width) {
-//   .formGroup {
-//     min-width: 0;
-//   }
-// }
+@media screen and (max-width: @content-width) {
+  .formGroup {
+    min-width: 85%;
+    input {
+      width: 100%;
+    }
+  }
+}

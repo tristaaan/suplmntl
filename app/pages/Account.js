@@ -30,7 +30,11 @@ const Account = React.createClass({
   },
 
   updatePassword() {
-    this.props.updatePassword(this.props.user._id, this.state.oldPass, this.state.oldPass);
+    if (this.state.newPass !== this.state.confirmNewPass) {
+      alert('New password does not match');
+      return;
+    }
+    this.props.updatePassword(this.props.user._id, this.state.oldPass, this.state.newPass);
   },
 
   deleteAccount() {
@@ -40,13 +44,15 @@ const Account = React.createClass({
   },
 
   render() {
+    const email = this.props.user ? this.props.user.email : '';
     return (
       <div className="accountPage">
         <div className="formGroup">
           <label htmlFor="change-email">Change Email</label>
+          <small>currently: <em>{ email }</em></small>
           <input type="email" data-key="newEmail" placeholder="new email"
             value={this.state.newEmail} onChange={this.updateForm} />
-          <button>Upadte Email</button>
+          <button onClick={this.updateEmail}>Update Email</button>
         </div>
 
         <div className="formGroup">
@@ -57,12 +63,15 @@ const Account = React.createClass({
             value={this.state.newPass} onChange={this.updateForm} />
           <input type="password" data-key="confirmNewPass" placeholder="confirm new password"
             value={this.state.confirmNewPass} onChange={this.updateForm} />
-          <button>Update Password</button>
+          <button onClick={this.updatePassword}>Update Password</button>
         </div>
 
         <div className="formGroup">
           <label htmlFor="deleteAccount">Delete Account</label>
-          <button className="errorButton">Delete my account and all its data.</button>
+          <small><em>This action cannot be undone!</em></small>
+          <button className="errorButton" onClick={this.deleteAccount}>
+            Delete my account and all its data.
+          </button>
         </div>
       </div>
     );
@@ -72,12 +81,11 @@ const Account = React.createClass({
 export default connect(
   (state, props) => ({
     user: state.auth.user,
-    collections: state.collections.list
   }),
   dispatch => ({
-    deleteAccount: userId => dispatch(Actions.deleteAccount(userId)),
     updateEmail: (userId, newEmail) => dispatch(Actions.updateUserEmail(userId, newEmail)),
     updatePassword: (userId, oldPass, newPass) => dispatch(
-      Actions.changePassword(userId, newPass, oldPass)),
+      Actions.changePassword(userId, oldPass, newPass)),
+    deleteAccount: userId => dispatch(Actions.deleteAccount(userId)),
   })
 )(Account);

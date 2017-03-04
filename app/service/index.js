@@ -44,7 +44,7 @@ export function getUser(token) {
   return axios.get('/user');
 }
 
-export function deleteAccoun(userId) {
+export function deleteAccount(userId) {
   return axios.delete(`/user/${userId}`);
 }
 
