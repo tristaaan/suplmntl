@@ -2,9 +2,11 @@ import moment from 'moment';
 import cookie from 'react-cookie';
 import { hashHistory } from 'react-router';
 import * as service from '../../service';
+import store from '../';
 
 export const LOGIN_SUCCESS = 'LOGIN_SUCCESS';
-export const LOGIN_ERROR = 'LOGIN_ERROR';
+export const AUTH_ERROR = 'AUTH_ERROR';
+export const CLEAR_ERROR = 'CLEAR_ERROR';
 export const LOGOUT = 'LOGOUT';
 export const UPDATE_USER = 'UPDATE_USER';
 
@@ -14,6 +16,22 @@ function loginSuccess(token, user) {
 
 function updateUser(user) {
   return { type: UPDATE_USER, user };
+}
+
+export function clearError() {
+  return { type: CLEAR_ERROR };
+}
+
+let debounce = null;
+export function authError(err) {
+  if (debounce !== null) {
+    clearTimeout(debounce);
+    debounce = null;
+  }
+  debounce = setTimeout(() => {
+    store.dispatch(clearError());
+  }, 5000);
+  return { type: AUTH_ERROR, err };
 }
 
 export function loggedIn(token) {
@@ -26,7 +44,7 @@ export function loggedIn(token) {
       .catch((err) => {
         cookie.remove('token');
         hashHistory.replace('/');
-        return { type: LOGIN_ERROR, err };
+        return authError(err);
       });
   };
 }
@@ -41,6 +59,7 @@ export function login(user) {
       })
       .catch((err) => {
         console.log(err);
+        dispatch(authError(err));
       });
   };
 }
@@ -55,6 +74,7 @@ export function signup(user) {
       })
       .catch((err) => {
         console.log(err);
+        return authError(err);
       });
   };
 }
@@ -76,6 +96,7 @@ export function changePassword(userId, oldPass, newPass) {
       })
       .catch((err) => {
         console.log(err);
+        return authError(err);
       });
   };
 }
@@ -94,6 +115,7 @@ export function deleteAccount(userId) {
       })
       .catch((err) => {
         console.log(err);
+        return authError(err);
       });
   };
 }

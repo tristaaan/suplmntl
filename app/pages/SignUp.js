@@ -14,6 +14,9 @@ const SignUpForm = React.createClass({
 
   sumbmitForm(e) {
     e.preventDefault();
+    if (this.state.badPass) {
+      return;
+    }
     const user = {
       username: e.target[0].value,
       email: e.target[1].value,
@@ -49,7 +52,7 @@ const SignUpForm = React.createClass({
             placeholder="password" required onChange={this.checkPasswords} />
           <input ref={(c) => {this.confirmPassword = c;}} type="password" name="confirmPass"
             placeholder="confirm password" required onChange={this.checkPasswords} />
-          <button type="submit">Sign Up</button>
+          <button type="submit" disabled={this.state.badPass}>Sign Up</button>
         </form>
         <div className={[(this.state.badPass ? 'error-box' : 'hidden'), 'error-box'].join(' ')}>
           {this.state.errorMessage}

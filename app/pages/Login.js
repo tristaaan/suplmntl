@@ -6,10 +6,7 @@ import * as AuthActions from '../redux/actions/auth';
 const Login = React.createClass({
   propTypes: {
     dispatch: React.PropTypes.func,
-  },
-
-  getInitialState() {
-    return { error: false };
+    error: React.PropTypes.string,
   },
 
   sumbmitForm(e) {
@@ -34,8 +31,8 @@ const Login = React.createClass({
           <button type="button" onClick={this.gotoSignUp}>Sign Up</button>
           <button type="submit">Login</button>
         </form>
-        <div className={this.state.error ? 'error-box' : 'hidden'}>
-          There was an error.
+        <div className={this.props.error ? 'error-box' : 'hidden'}>
+          { this.props.error }
         </div>
       </div>
     );
@@ -43,5 +40,7 @@ const Login = React.createClass({
 });
 
 export default connect(
-  state => ({})
+  state => ({
+    error: state.auth.error,
+  })
 )(Login);

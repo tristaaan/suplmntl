@@ -71,10 +71,8 @@ function userResponse(user) {
 app.post('/api/login', (req, res) => {
   db.getUserByName(req.body.username)
     .then((resp) => {
-      if (!resp.username) {
-        res.status(401).send({ message: 'Incorrect username.' });
-      } else if (!db.validatePassword(req.body.password, resp.pw)) {
-        res.status(401).send({ message: 'Incorrect password.' });
+      if (!resp || !resp.username || !db.validatePassword(req.body.password, resp.pw)) {
+        res.status(401).send({ message: 'User not found or incorrect password' });
       } else {
         const payload = userResponse(resp);
         payload.token = generateToken(payload._id);
