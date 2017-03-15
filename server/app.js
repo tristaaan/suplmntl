@@ -146,7 +146,7 @@ app.route('/api/user/:userId/email')
   .post([ensureAuthenticated, ensureOwnership], (req, res) => {
     db.updateUserEmail(req.params.userId, req.body.email)
       .then((resp) => {
-        console.log(resp);
+        // console.log(resp);
         res.send(userResponse(resp));
       })
       .catch((err) => {

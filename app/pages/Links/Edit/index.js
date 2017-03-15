@@ -64,6 +64,12 @@ const EditLinks = React.createClass({
     this.setState({ tmpCol: newCol, changes: true });
   },
 
+  updateItem(index, key, value) {
+    const tmpCol = Object.assign({}, this.state.tmpCol);
+    tmpCol.links[index][key] = value;
+    this.setState({ tmpCol, changes: true });
+  },
+
   cancel() {
     if ((this.state.changes && confirm('There are unsaved changes, are you sure you want to cancel?')) ||
       !this.state.changes) {
@@ -90,10 +96,12 @@ const EditLinks = React.createClass({
         <div className="linkListHeader">
           <input ref={(c) => {this.titleEditor = c;}} onChange={this.updateTmpTitle}
             value={this.state.tmpCol.name} />
-          <button onClick={this.cancel}>Cancel</button>
+          <button onClick={this.cancel} style={{ margin: '0 4px' }}>Cancel</button>
           <button onClick={this.done}>Done</button>
         </div>
-        <LinksBox links={this.state.tmpCol.links} deleteItem={this.handleDelete} />
+        <LinksBox links={this.state.tmpCol.links}
+          deleteItem={this.handleDelete}
+          onChange={this.updateItem} />
         <AddLinkForm onLinkSubmit={this.handleSubmit} />
       </section>
     );

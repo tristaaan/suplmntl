@@ -4,7 +4,15 @@ import React from 'react';
 export default React.createClass({
   propTypes: {
     links: React.PropTypes.array,
-    deleteItem: React.PropTypes.func
+    deleteItem: React.PropTypes.func,
+    onChange: React.PropTypes.func,
+  },
+
+  onItemChange(e) {
+    const index = parseInt(e.target.parentElement.dataset.index, 10);
+    const key = e.target.dataset.key;
+    const value = e.target.value;
+    this.props.onChange(index, key, value);
   },
 
   deleteItem(e) {
@@ -13,20 +21,30 @@ export default React.createClass({
     }
   },
 
-  render() {
-    const createItem = (item, index) => {
-      return (
-        <div className="linkItem" key={index}>
-          <dt>
-            <a href={item.link} target="_blank" rel="noopener noreferrer">{item.title}</a>
-            <button onClick={this.deleteItem} value={index}>x</button>
-          </dt>
-          <dd>
-            <p>{item.description}</p>
-          </dd>
+  createItem(item, index) {
+    return (
+      <div className="editLinkItem" key={index} data-index={index}>
+        <div className="titleRow">
+          <input type="text" placeholder="title"
+            data-key="title"
+            onChange={this.onItemChange}
+            value={item.title} />
+          <button className="errorButton"
+            onClick={this.deleteItem} value={index}>x</button>
         </div>
-      );
-    };
-    return <dl>{this.props.links.map(createItem)}</dl>;
+        <input type="text" placeholder="url"
+          data-key="link"
+          onChange={this.onItemChange}
+          value={item.link} />
+        <textarea placeholder="description"
+          data-key="description"
+          onChange={this.onItemChange}
+          value={item.description} />
+      </div>
+    );
+  },
+
+  render() {
+    return <dl>{this.props.links.map(this.createItem)}</dl>;
   }
 });
