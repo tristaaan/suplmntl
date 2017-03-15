@@ -16,28 +16,39 @@ const Account = React.createClass({
       oldPass: '',
       newPass: '',
       confirmNewPass: '',
+      passwordError: ''
     };
   },
 
   updateForm(e) {
-    console.log(e.target.dataset.key, e.target.value);
+    // console.log(e.target.dataset.key, e.target.value);
     const newState = { [e.target.dataset.key]: e.target.value };
     this.setState(newState);
   },
 
-  updateEmail() {
+  updateEmail(e) {
+    e.preventDefault();
+    if (!this.state.newEmail.length) {
+      return;
+    }
     this.props.updateEmail(this.props.user._id, this.state.newEmail);
   },
 
-  updatePassword() {
+  updatePassword(e) {
+    e.preventDefault();
     if (this.state.newPass !== this.state.confirmNewPass) {
-      alert('New password does not match');
+      if (/still/.test(this.state.passwordError)) {
+        this.setState({ passwordError: 'Passwords do not match.' });
+      } else {
+        this.setState({ passwordError: 'Passwords still do not match.' });
+      }
       return;
     }
+    this.setState({ passwordError: '' });
     this.props.updatePassword(this.props.user._id, this.state.oldPass, this.state.newPass);
   },
 
-  deleteAccount() {
+  deleteAccount(e) {
     if (confirm('Are you sure you want to delete your account? This cannot be undone.')) {
       this.props.deleteAccount(this.props.user._id);
     }
@@ -48,11 +59,13 @@ const Account = React.createClass({
     return (
       <div className="accountPage">
         <div className="formGroup">
-          <label htmlFor="change-email">Change Email</label>
-          <small>currently: <em>{ email }</em></small>
-          <input type="email" data-key="newEmail" placeholder="new email"
-            value={this.state.newEmail} onChange={this.updateForm} />
-          <button onClick={this.updateEmail}>Update Email</button>
+          <form onSubmit={this.sumbmitForm}>
+            <label htmlFor="change-email">Change Email</label>
+            <small>currently: <em>{ email }</em></small>
+            <input type="email" data-key="newEmail" placeholder="new email"
+              value={this.state.newEmail} onChange={this.updateForm} required />
+            <button type="submit" onClick={this.updateEmail}>Update Email</button>
+          </form>
         </div>
 
         <div className="formGroup">
@@ -63,6 +76,7 @@ const Account = React.createClass({
             value={this.state.newPass} onChange={this.updateForm} />
           <input type="password" data-key="confirmNewPass" placeholder="confirm new password"
             value={this.state.confirmNewPass} onChange={this.updateForm} />
+          <span className="error-box" style={{ display: this.state.passwordError ? 'block' : 'none' }}>{ this.state.passwordError }</span>
           <button onClick={this.updatePassword}>Update Password</button>
         </div>
 
