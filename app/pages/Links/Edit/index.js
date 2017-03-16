@@ -10,10 +10,12 @@ import { connect } from 'react-redux';
 const EditLinks = React.createClass({
   propTypes: {
     collection: React.PropTypes.object,
-    // user: React.PropTypes.object,
     getCollection: React.PropTypes.func,
     updateCollection: React.PropTypes.func,
     params: React.PropTypes.object,
+    /* eslint-disable react/no-unused-prop-types */
+    user: React.PropTypes.object,
+    /* eslint-enable react/no-unused-prop-types */
   },
 
   contextTypes: {
