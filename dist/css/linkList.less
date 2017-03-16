@@ -33,7 +33,17 @@ dd{
 }
 
 .editLinkItem {
+  border: @link-list-border-color 1px solid;
   margin-bottom: 10px;
+  input {
+    border-width: 0 0 1px 0;
+    width: 397px;
+  }
+  textarea {
+    border-width: 0;
+    width: 397px;
+    resize: vertical;
+  }
 }
 
 .titleRow {
@@ -42,7 +52,7 @@ dd{
 }
 
 .titleRow > button{
-  margin-left: 4px;
+  margin: 2px 3px 0 4px;
   font-size: .75em;
 }
 

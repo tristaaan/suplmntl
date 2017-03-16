@@ -38,12 +38,13 @@ app.use((req, res, next) => {
   }
 });
 
-function generateToken(userId) {
+function generateToken(userId, rememberMe) {
+  var time = rememberMe ? [1, 'day'] : [5, 'days'];
   var payload = {
     sub: userId,
     iss: 'suplmntl',
     iat: moment().unix(),
-    exp: moment().add(7, 'days').unix()
+    exp: moment().add(...time).unix()
   };
   return jwt.sign(payload, process.env.TOKEN_SECRET);
 }
@@ -69,13 +70,13 @@ function userResponse(user) {
 }
 
 app.post('/api/login', (req, res) => {
-  db.getUserByName(req.body.username)
+  db.getUserByName(req.body.user.username)
     .then((resp) => {
-      if (!resp || !resp.username || !db.validatePassword(req.body.password, resp.pw)) {
+      if (!resp || !resp.username || !db.validatePassword(req.body.user.password, resp.pw)) {
         res.status(401).send({ message: 'User not found or incorrect password' });
       } else {
         const payload = userResponse(resp);
-        payload.token = generateToken(payload._id);
+        payload.token = generateToken(payload._id, req.body.rememberMe);
         res.status(200).send(payload);
       }
     })

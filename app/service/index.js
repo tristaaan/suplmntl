@@ -36,8 +36,8 @@ export function signup(newUser) {
   return axios.put('/user', newUser);
 }
 
-export function login(user) {
-  return axios.post('/login', user);
+export function login(user, rememberMe) {
+  return axios.post('/login', { user, rememberMe });
 }
 
 export function getUser(token) {

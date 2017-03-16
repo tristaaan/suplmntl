@@ -49,11 +49,15 @@ export function loggedIn(token) {
   };
 }
 
-export function login(user) {
+export function login(user, rememberMe = false) {
   return (dispatch) => {
-    service.login(user)
+    service.login(user, rememberMe)
       .then((resp) => {
-        cookie.save('token', resp.data.token, { expires: moment().add(1, 'hour').toDate() });
+        if (rememberMe) {
+          cookie.save('token', resp.data.token, { expires: moment().add(5, 'days').toDate() });
+        } else {
+          cookie.save('token', resp.data.token, { expires: moment().add(1, 'day').toDate() });
+        }
         hashHistory.push(`/${resp.data.username}/collections`);
         dispatch(loggedIn(resp.data.token));
       })

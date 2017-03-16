@@ -15,7 +15,8 @@ const Login = React.createClass({
       username: e.target[0].value,
       password: e.target[1].value
     };
-    this.props.dispatch(AuthActions.login(user));
+    const rememberMe = e.target[2].value;
+    this.props.dispatch(AuthActions.login(user, rememberMe));
   },
 
   gotoSignUp() {
@@ -28,6 +29,7 @@ const Login = React.createClass({
         <form ref={(c) => {this.form = c;}} onSubmit={this.sumbmitForm}>
           <input type="text" placeholder="username" required />
           <input type="password" placeholder="password" required />
+          <span>Remember Me: <input type="checkbox" /></span>
           <button type="button" onClick={this.gotoSignUp}>Sign Up</button>
           <button type="submit">Login</button>
         </form>
