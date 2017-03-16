@@ -31,10 +31,6 @@ const ViewLinks = React.createClass({
     };
   },
 
-  getInitialState() {
-    return { renaming: false };
-  },
-
   componentDidMount() {
     this.props.getCollection(this.props.params.id);
   },

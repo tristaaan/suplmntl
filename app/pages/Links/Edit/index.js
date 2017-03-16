@@ -10,7 +10,7 @@ import { connect } from 'react-redux';
 const EditLinks = React.createClass({
   propTypes: {
     collection: React.PropTypes.object,
-    user: React.PropTypes.object,
+    // user: React.PropTypes.object,
     getCollection: React.PropTypes.func,
     updateCollection: React.PropTypes.func,
     params: React.PropTypes.object,
@@ -36,17 +36,17 @@ const EditLinks = React.createClass({
   },
 
   componentDidMount() {
-    if (this.props.user.id !== this.props.collection.ownerId) {
-      this.context.router.replace(`/list/${this.props.collection.postId}/view`);
-      return;
-    }
-
     if (!this.props.collection.name) {
       this.props.getCollection(this.props.params.id);
     }
   },
 
   componentWillReceiveProps(nextProps) {
+    if (nextProps.user.id !== nextProps.collection.ownerId) {
+      this.context.router.replace(`/list/${this.props.collection.postId}/view`);
+      return;
+    }
+
     if (nextProps.collection.name.length && !this.state.tmpCol.name) {
       this.setState({ tmpCol: nextProps.collection });
     }

@@ -42,8 +42,6 @@ export function loggedIn(token) {
         dispatch(loginSuccess(token, resp.data));
       })
       .catch((err) => {
-        cookie.remove('token');
-        hashHistory.replace('/');
         return authError(err);
       });
   };

@@ -41,10 +41,10 @@ export default React.createClass({
 
   updateStateFromForm(e) {
     var key = e.target.dataset.key,
-      newState = {};
+      modState = {};
 
-    newState[key] = e.target.value;
-    this.setState(newState);
+    modState[key] = e.target.value;
+    this.setState(modState);
   },
 
   render() {

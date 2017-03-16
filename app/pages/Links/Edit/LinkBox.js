@@ -24,7 +24,7 @@ export default React.createClass({
   createItem(item, index) {
     return (
       <div className="editLinkItem" key={index} data-index={index}>
-        <div className="titleRow">
+        <div className="titleRow" data-index={index}>
           <input type="text" placeholder="title"
             data-key="title"
             onChange={this.onItemChange}
