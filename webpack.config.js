@@ -1,4 +1,3 @@
-/* eslint-disable */
 var webpack = require('webpack');
 
 function nodeEnv() {
@@ -30,7 +29,7 @@ module.exports = {
         test: /\.jsx?$/,
         exclude: /node_modules/,
         loaders: ['babel?presets[]=es2015&presets[]=react']
-      },
+      }
     ]
   }
 };
