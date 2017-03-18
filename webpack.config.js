@@ -1,11 +1,22 @@
 /* eslint-disable */
 var webpack = require('webpack');
 
+function nodeEnv() {
+  if (process.env.NODE_ENV) {
+    return '\'' + process.env.NODE_ENV + '\'';
+  }
+  return '\'development\'';
+}
+
+var definePlugin = new webpack.DefinePlugin({
+  'process.env.NODE_ENV': nodeEnv(),
+});
+
 module.exports = {
-  plugins: [],
+  plugins: [definePlugin],
   entry: './app/index.js',
   output: {
-    path: './dist',
+    path: './dist/js',
     filename: 'index.js',
   },
   module: {

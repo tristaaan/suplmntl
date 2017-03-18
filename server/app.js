@@ -11,6 +11,8 @@ var app = express();
 var rootpath = path.join(__dirname, '../dist');
 
 app.use(lessMiddleware(rootpath));
+app.use('/js', express.static(`${rootpath}/js`));
+app.use('/css', express.static(`${rootpath}/css`));
 app.use(express.static(rootpath));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));

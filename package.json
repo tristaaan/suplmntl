@@ -40,7 +40,7 @@
   "scripts": {
     "start": "node server.js",
     "build": "webpack",
-    "build:prod": "webpack -p",
+    "build:prod": "NODE_ENV='production' webpack -p",
     "watch": "webpack --watch",
     "postinstall": "npm run build:prod"
   }
