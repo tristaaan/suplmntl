@@ -11,9 +11,9 @@ var app = express();
 var rootpath = path.join(__dirname, '../dist');
 
 app.use(lessMiddleware(rootpath));
-app.use('/js', express.static(`${rootpath}/js`));
-app.use('/css', express.static(`${rootpath}/css`));
-app.use(express.static(rootpath));
+app.use('/js',  express.static(path.resolve(path.join(rootpath, 'js'))));
+app.use('/css', express.static(path.resolve(path.join(rootpath, 'css'))));
+// app.use(express.static(rootpath));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
@@ -234,7 +234,8 @@ app.route('/api/collection/:id')
       });
   });
 
-// app.get('/', homeRoute);
+
+// all other requests get index.html
 app.get('*', (req, res) => {
   res.sendFile('index.html', { root: rootpath });
 });
