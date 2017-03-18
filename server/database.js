@@ -1,16 +1,13 @@
 var bcrypt = require('bcryptjs');
 var mongoose = require('mongoose');
 var randomString = require('./utils').randomString;
-var dotenv = require('dotenv');
 
 const Users = mongoose.model('User', require('../models/User'));
 const Collections = mongoose.model('Collection', require('../models/Collection'));
 
-dotenv.load();
-
 let mongoURI;
-if (dotenv.MONGODB_URI) {
-  mongoURI = dotenv.MONGODB_URI;
+if (process.env.MONGODB_URI) {
+  mongoURI = process.env.MONGODB_URI;
 } else {
   mongoURI = 'mongodb://localhost/suplmntl';
 }
