@@ -38,12 +38,13 @@ export function deleteCollection(id, location = null) {
 export function updateCollection(collection) {
   return (dispatch) => {
     service.updateCollection(collection)
-      .then((resp) => {
-        dispatch({ type: UPDATE_COLLECTION, collection });
-      })
+      // .then((resp) => {
+      //   dispatch({ type: UPDATE_COLLECTION, collection });
+      // })
       .catch((err) => {
         console.log(err);
       });
+    dispatch({ type: UPDATE_COLLECTION, collection });
   };
 }
 

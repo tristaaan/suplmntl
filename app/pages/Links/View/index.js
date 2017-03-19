@@ -24,15 +24,10 @@ const ViewLinks = React.createClass({
     router: React.PropTypes.object,
   },
 
-  getDefaultProps() {
-    return {
-      links: [],
-      name: ''
-    };
-  },
-
   componentDidMount() {
-    this.props.getCollection(this.props.params.id);
+    if (!Object.keys(this.props.collection).length) {
+      this.props.getCollection(this.props.params.id);
+    }
   },
 
   componentWillReceiveProps(nextProps) {
