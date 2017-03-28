@@ -5,6 +5,8 @@ import cookie from 'react-cookie';
 import App from './pages/main';
 import Home from './pages/Home';
 import Login from './pages/Login';
+import Reset from './pages/Reset';
+import Forgot from './pages/Forgot';
 import SignUp from './pages/SignUp';
 import Account from './pages/Account';
 import LinksEdit from './pages/Links/Edit';
@@ -27,6 +29,7 @@ export default function getRoutes(store) {
       type: 'CLEAR_MESSAGES'
     });
   };
+  // <Route path="/login/reset/:token" component={Forgot} onEnter={skipIfAuthenticated} />
   return (<Router path="/" component={App}>
     <IndexRoute component={Home} onLeave={clearMessages} />
     <Route path="/login" component={Login} onEnter={skipIfAuthenticated} onLeave={clearMessages} />
@@ -37,5 +40,7 @@ export default function getRoutes(store) {
       onLeave={clearMessages} />
     <Route path="/:user/:id/view" component={LinksView} />
     <Route path="/account" component={Account} onEnter={ensureAuthenticated} />
+    <Route path="/forgot" component={Forgot} onEnter={skipIfAuthenticated} />
+    <Route path="/reset/:token" component={Reset} onEnter={skipIfAuthenticated} />
   </Router>);
 }

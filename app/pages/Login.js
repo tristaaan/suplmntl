@@ -1,5 +1,5 @@
 import React from 'react';
-import { hashHistory } from 'react-router';
+import { hashHistory, Link } from 'react-router';
 import { connect } from 'react-redux';
 import * as AuthActions from '../redux/actions/auth';
 
@@ -26,10 +26,13 @@ const Login = React.createClass({
   render() {
     return (
       <div className="login-form">
-        <form ref={(c) => {this.form = c;}} onSubmit={this.sumbmitForm}>
+        <form onSubmit={this.sumbmitForm}>
           <input type="text" placeholder="username" required />
           <input type="password" placeholder="password" required />
-          <span>Remember Me: <input type="checkbox" /></span>
+          <span>
+            <span>Remember Me: <input type="checkbox" /></span>
+            <Link to="/forgot">Forgot password?</Link>
+          </span>
           <button type="button" onClick={this.gotoSignUp}>Sign Up</button>
           <button type="submit">Login</button>
         </form>

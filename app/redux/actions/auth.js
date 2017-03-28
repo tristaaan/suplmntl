@@ -9,6 +9,8 @@ export const AUTH_ERROR = 'AUTH_ERROR';
 export const CLEAR_ERROR = 'CLEAR_ERROR';
 export const LOGOUT = 'LOGOUT';
 export const UPDATE_USER = 'UPDATE_USER';
+export const FORGOT = 'FORGOT';
+export const RESET = 'RESET';
 
 function loginSuccess(token, user) {
   return { type: LOGIN_SUCCESS, token, user };
@@ -71,12 +73,29 @@ export function signup(user) {
     service.signup(user)
       .then((resp) => {
         cookie.save('token', resp.data.token, { expires: moment().add(1, 'hour').toDate() });
-        hashHistory.push(`/${resp.data.username}/collections`);
         dispatch(loggedIn(resp.data.token));
       })
       .catch((err) => {
         console.log(err);
         return authError(err);
+      });
+  };
+}
+
+export function forgotPassword(email) {
+  return (dispatch) => {
+    service.forgotPassword(email)
+      .then((resp) => {
+        hashHistory.push('/login');
+      });
+  };
+}
+
+export function resetPassword(newPass, token) {
+  return (dispatch) => {
+    service.resetPassword(newPass, token)
+      .then((resp) => {
+        hashHistory.push('/login');
       });
   };
 }

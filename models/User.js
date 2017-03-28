@@ -7,6 +7,8 @@ module.exports = new Schema({
   email: String,
   pw: String,
   createdAt: { type: Date, default: Date.now },
+  passwordResetToken: { type: String, default: null },
+  passwordResetExpires: { type: Date, default: null },
 });
 
 // {

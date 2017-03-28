@@ -1,4 +1,5 @@
 var bcrypt = require('bcryptjs');
+var crypto = require('crypto');
 var mongoose = require('mongoose');
 var randomString = require('./utils').randomString;
 
@@ -22,7 +23,10 @@ function strId() {
   return randomString(8);
 }
 
+// ----------------------------------
 // collections
+// ----------------------------------
+
 exports.getCollections = (username) => {
   return Users.findOne({ username }).exec()
     .then((user) => {
@@ -104,7 +108,10 @@ exports.forkCollection = (collectionId, owner) => {
     });
 };
 
+// ----------------------------------
 // users
+// ----------------------------------
+
 function validatePassword(password, dbpass) {
   return bcrypt.compareSync(password, dbpass);
 }
@@ -131,11 +138,21 @@ exports.addUser = (user, cb) => {
       if (resp.length) {
         throw new Error('Email is already registered');
       }
-      user.password = bcrypt.hashSync(user.password, bcrypt.genSaltSync(10));
+      return new Promise((res, rej) => {
+        bcrypt.genSalt(10, (saltErr, salt) => {
+          if (saltErr) rej(saltErr);
+          bcrypt.hash(user.password, salt, (hashErr, hash) => {
+            if (hashErr) rej(hashErr);
+            res(hash);
+          });
+        });
+      });
+    })
+    .then((pw) => {
       return new Users({
         username: user.username,
         email: user.email,
-        pw: user.password
+        pw
       }).save();
     });
 };
@@ -163,5 +180,49 @@ exports.deleteUser = (userId) => {
     })
     .then((resp) => {
       return Users.findOneAndRemove({ _id: userId }).exec();
+    });
+};
+
+// ----------------------------------
+// password reset
+// ----------------------------------
+
+exports.setResetTokenForEmail = (email) => {
+  return Users.find({ email }).exec()
+    .then((resp) => {
+      if (!resp.length) {
+        throw new Error('Cannot find given email');
+      }
+      return new Promise((resolve, reject) => {
+        crypto.randomBytes(16, (err, buf) => {
+          var token = buf.toString('hex');
+          resolve({ token, user: resp[0] });
+        });
+      });
+    })
+    .then((resp) => {
+      console.log(resp);
+      return Users.findOneAndUpdate({ _id: resp.user._id }, {
+        passwordResetToken: resp.token,
+        passwordResetExpires: new Date(Date.now() + 3600000), // 1 hour
+      }).exec();
+    });
+};
+
+exports.resetPasswordForToken = (newPassword, passwordResetToken) => {
+  return Users.find({ passwordResetToken, passwordResetExpires: { $gt: new Date() } }).lean().exec()
+    .then((user) => {
+      return new Promise((resolve, reject) => {
+        bcrypt.genSalt(10, (saltErr, salt) => {
+          if (saltErr) reject(saltErr);
+          bcrypt.hash(newPassword, salt, (hashErr, hash) => {
+            if (hashErr) reject(hashErr);
+            resolve({ user, hash });
+          });
+        });
+      });
+    })
+    .then((resp) => {
+      return Users.findOneAndUpdate({ _id: resp.user._id }, { pw: resp.hash }).exec();
     });
 };

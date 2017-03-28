@@ -55,3 +55,11 @@ export function changePassword(userId, oldPass, newPass) {
 export function updateEmail(userId, email) {
   return axios.post(`/user/${userId}/email`, { email });
 }
+
+export function forgotPassword(email) {
+  return axios.post('/forgot', { email });
+}
+
+export function newPasswod(newPass, token) {
+  return axios.post(`/reset/${token}`, { newPass });
+}
