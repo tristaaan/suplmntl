@@ -33,7 +33,7 @@ const Reset = React.createClass({
       return;
     }
     this.setState({ passwordError: '' });
-    this.props.dispatch(AuthActions.reset(this.state.newPass, this.props.params.token));
+    this.props.dispatch(AuthActions.resetPassword(this.state.newPass, this.props.params.token));
   },
 
   render() {
