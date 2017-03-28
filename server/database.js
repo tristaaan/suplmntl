@@ -3,6 +3,12 @@ var crypto = require('crypto');
 var mongoose = require('mongoose');
 var randomString = require('./utils').randomString;
 
+if (process.env.MONGO_DEBUG) {
+  mongoose.set('debug', (collectionName, method, query, doc) => {
+    console.log(`${collectionName}.${method} (${JSON.stringify(query, null, 2)})`);
+  });
+}
+
 const Users = mongoose.model('User', require('../models/User'));
 const Collections = mongoose.model('Collection', require('../models/Collection'));
 
@@ -188,20 +194,19 @@ exports.deleteUser = (userId) => {
 // ----------------------------------
 
 exports.setResetTokenForEmail = (email) => {
-  return Users.find({ email }).exec()
-    .then((resp) => {
-      if (!resp.length) {
+  return Users.findOne({ email }).exec()
+    .then((user) => {
+      if (!user) {
         throw new Error('Cannot find given email');
       }
       return new Promise((resolve, reject) => {
         crypto.randomBytes(16, (err, buf) => {
           var token = buf.toString('hex');
-          resolve({ token, user: resp[0] });
+          resolve({ token, user });
         });
       });
     })
     .then((resp) => {
-      console.log(resp);
       return Users.findOneAndUpdate({ _id: resp.user._id }, {
         passwordResetToken: resp.token,
         passwordResetExpires: new Date(Date.now() + 3600000), // 1 hour
@@ -210,8 +215,11 @@ exports.setResetTokenForEmail = (email) => {
 };
 
 exports.resetPasswordForToken = (newPassword, passwordResetToken) => {
-  return Users.find({ passwordResetToken, passwordResetExpires: { $gt: new Date() } }).lean().exec()
+  return Users.findOne({ passwordResetToken }).exec()
     .then((user) => {
+      if (!user) {
+        throw new Error('Cannot find reset token');
+      }
       return new Promise((resolve, reject) => {
         bcrypt.genSalt(10, (saltErr, salt) => {
           if (saltErr) reject(saltErr);
@@ -223,6 +231,9 @@ exports.resetPasswordForToken = (newPassword, passwordResetToken) => {
       });
     })
     .then((resp) => {
-      return Users.findOneAndUpdate({ _id: resp.user._id }, { pw: resp.hash }).exec();
+      return Users.findOneAndUpdate({ _id: resp.user._id }, { pw: resp.hash,
+        passwordResetToken: null,
+        passwordResetExpires: null,
+      }).exec();
     });
 };

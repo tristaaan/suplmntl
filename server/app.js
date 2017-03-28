@@ -170,7 +170,7 @@ app.post('/api/forgot', (req, res) => {
       // send reset conf email
       /* eslint-disable prefer-template */
       const data = {
-        from: 'Suplmntl <no-reply@samples.mailgun.org>',
+        from: 'Suplmntl <no-reply@suplmntl.com>',
         to: req.body.email,
         subject: 'Reset your password on Suplmntl',
         text: 'You are receiving this email because you (or someone else) has requested to reset the password for your account.\n\n' +
@@ -190,13 +190,13 @@ app.post('/api/forgot', (req, res) => {
 });
 
 app.post('/api/reset/:token', (req, res) => {
-  db.resetPasswordForToken(req.body.newPass, req.query.token)
+  db.resetPasswordForToken(req.body.newPass, req.params.token)
     .then((resp) => {
       // send 'pass changed' email
       /* eslint-disable prefer-template */
       const email = resp.data.email;
-      var data = {
-        from: 'Suplmntl <no-reply@samples.mailgun.org>',
+      const data = {
+        from: 'Suplmntl <no-reply@suplmntl.com>',
         to: email,
         subject: 'Your Suplmntl password has been changed',
         text: 'This is a confirmation that the password for your account ' + email + ' has just been changed.\n'

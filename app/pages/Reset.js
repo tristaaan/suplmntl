@@ -23,7 +23,7 @@ const Reset = React.createClass({
 
   submitForm(e) {
     e.preventDefault();
-    if (this.state.newPass !== this.state.confirmNewPass) {
+    if (this.state.newPass !== this.state.confirmPass) {
       if (/still/.test(this.state.passwordError)) {
         this.setState({ passwordError: 'Passwords do not match.' });
       } else {
@@ -39,9 +39,9 @@ const Reset = React.createClass({
     return (
       <div className="login-form">
         <form onSubmit={this.submitForm}>
-          <input type="password" name="newPasss" placeholder="new password"
+          <input type="password" placeholder="new password"
             data-key="newPass" value={this.state.newPass} onChange={this.handleChange} autoFocus />
-          <input type="password" name="confirmPasss" placeholder="confirm password"
+          <input type="password" placeholder="confirm password"
             data-key="confirmPass" value={this.state.confirmPass} onChange={this.handleChange} />
           <span className="error-box" style={{ display: this.state.passwordError ? 'block' : 'none' }}>{ this.state.passwordError }</span>
           <button type="submit">Set Password</button>

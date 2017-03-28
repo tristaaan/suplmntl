@@ -60,6 +60,6 @@ export function forgotPassword(email) {
   return axios.post('/forgot', { email });
 }
 
-export function resetPasswod(newPass, token) {
+export function resetPassword(newPass, token) {
   return axios.post(`/reset/${token}`, { newPass });
 }
