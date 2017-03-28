@@ -20,7 +20,6 @@ const Forgot = React.createClass({
   submitForm(e) {
     e.preventDefault();
     const email = e.target[0].value;
-    console.log(email);
     this.props.forgot(email);
   },
 

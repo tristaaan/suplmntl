@@ -180,7 +180,7 @@ app.post('/api/forgot', (req, res) => {
       };
       /* eslint-enable prefer-template */
       mailgun.messages().send(data, (error, body) => {
-        console.log(body);
+        console.log(error, body);
         res.sendStatus(200);
       });
     })
