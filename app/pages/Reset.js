@@ -5,7 +5,6 @@ import * as AuthActions from '../redux/actions/auth';
 const Reset = React.createClass({
   propTypes: {
     params: React.PropTypes.object,
-    dispatch: React.PropTypes.func,
     error: React.PropTypes.string,
   },
 
@@ -22,7 +21,7 @@ const Reset = React.createClass({
     this.setState(newState);
   },
 
-  sumbmitForm(e) {
+  submitForm(e) {
     e.preventDefault();
     if (this.state.newPass !== this.state.confirmNewPass) {
       if (/still/.test(this.state.passwordError)) {
@@ -33,13 +32,13 @@ const Reset = React.createClass({
       return;
     }
     this.setState({ passwordError: '' });
-    this.props.dispatch(AuthActions.resetPassword(this.state.newPass, this.props.params.token));
+    AuthActions.resetPassword(this.state.newPass, this.props.params.token);
   },
 
   render() {
     return (
       <div className="login-form">
-        <form onSubmit={this.submitform}>
+        <form onSubmit={this.submitForm}>
           <input type="password" name="newPasss" placeholder="new password"
             data-key="newPass" value={this.state.newPass} onChange={this.handleChange} autoFocus />
           <input type="password" name="confirmPasss" placeholder="confirm password"

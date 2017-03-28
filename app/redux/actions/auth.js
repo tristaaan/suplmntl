@@ -82,22 +82,20 @@ export function signup(user) {
   };
 }
 
+// nothing to dispatch
 export function forgotPassword(email) {
-  return (dispatch) => {
-    service.forgotPassword(email)
-      .then((resp) => {
-        hashHistory.push('/login');
-      });
-  };
+  service.forgotPassword(email)
+    .then((resp) => {
+      hashHistory.push('/login');
+    });
 }
 
+// nothing to dispatch
 export function resetPassword(newPass, token) {
-  return (dispatch) => {
-    service.resetPassword(newPass, token)
-      .then((resp) => {
-        hashHistory.push('/login');
-      });
-  };
+  service.resetPassword(newPass, token)
+    .then((resp) => {
+      hashHistory.push('/login');
+    });
 }
 
 export function updateUserEmail(userId, newEmail) {

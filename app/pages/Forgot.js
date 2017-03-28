@@ -5,7 +5,6 @@ import * as AuthActions from '../redux/actions/auth';
 const Forgot = React.createClass({
   propTypes: {
     error: React.PropTypes.string,
-    forgot: React.PropTypes.func,
   },
 
   getInitialState() {
@@ -20,7 +19,7 @@ const Forgot = React.createClass({
   submitForm(e) {
     e.preventDefault();
     const email = e.target[0].value;
-    this.props.forgot(email);
+    AuthActions.forgotPassword(email);
   },
 
   render() {
@@ -43,8 +42,5 @@ const Forgot = React.createClass({
 export default connect(
   state => ({
     error: state.auth.error,
-  }),
-  dispatch => ({
-    forgot: email => dispatch(AuthActions.forgotPassword(email))
   })
 )(Forgot);
