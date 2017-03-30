@@ -4,6 +4,7 @@ import { Link } from 'react-router';
 
 export default React.createClass({
   propTypes: {
+    username: React.PropTypes.string,
     collections: React.PropTypes.array,
     deleteItem: React.PropTypes.func,
   },
@@ -17,7 +18,7 @@ export default React.createClass({
     const createItem = (col, index) => {
       return (
         <li key={`${col.postId}_${index}`}>
-          <Link to={`/list/${col.postId}/view`} className="title">{col.name}</Link>
+          <Link to={`/${this.props.username}/${col.postId}/view`} className="title">{col.name}</Link>
           <span>{col.links.length === 1 ? `${col.links.length} link` : `${col.links.length} links`}</span>
         </li>
       );

@@ -75,7 +75,7 @@ const EditLinks = React.createClass({
   cancel() {
     if ((this.state.changes && confirm('There are unsaved changes, are you sure you want to cancel?')) ||
       !this.state.changes) {
-      this.context.router.push(`/list/${this.props.collection.postId}/view`);
+      this.context.router.push(`/${this.props.user.username}/${this.props.collection.postId}/view`);
     }
   },
 
@@ -83,7 +83,7 @@ const EditLinks = React.createClass({
     if (this.state.changes) {
       this.props.updateCollection(this.state.tmpCol);
     }
-    this.context.router.push(`/list/${this.props.collection.postId}/view`);
+    this.context.router.push(`/${this.props.user.username}/${this.props.collection.postId}/view`);
   },
 
   updateTmpTitle(e) {

@@ -45,7 +45,7 @@ const ViewLinks = React.createClass({
   },
 
   editList() {
-    this.context.router.push(`/list/${this.props.params.id}/edit`);
+    this.context.router.push(`/${this.props.user.username}/${this.props.params.id}/edit`);
   },
 
   deleteList() {
@@ -79,7 +79,7 @@ const ViewLinks = React.createClass({
           </div>
           <Dropdown buttonText="#">
             <ul className="dropdown-list">
-              <li onClick={() => {console.log('star, wayyy unimplemented');}}>Star List</li>
+              {/* <li onClick={() => {console.log('star, wayyy unimplemented');}}>Star List</li> */}
               <li onClick={this.forkList}>Fork List</li>
               { isOwner ? <li onClick={this.editList}>Edit List</li> : null}
               { isOwner ? <li onClick={this.deleteList}>Delete list</li> : null}
