@@ -207,15 +207,16 @@ exports.setResetTokenForEmail = (email) => {
       });
     })
     .then((resp) => {
+      // console.log('find and update', resp);
       return Users.findOneAndUpdate({ _id: resp.user._id }, {
         passwordResetToken: resp.token,
         passwordResetExpires: new Date(Date.now() + 3600000), // 1 hour
-      }).exec();
+      }, { new: true }).exec();
     });
 };
 
 exports.resetPasswordForToken = (newPassword, passwordResetToken) => {
-  return Users.findOne({ passwordResetToken }).exec()
+  return Users.findOne({ passwordResetToken, passwordResetExpires: { $gt: new Date() } }).exec()
     .then((user) => {
       if (!user) {
         throw new Error('Cannot find reset token');

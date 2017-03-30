@@ -175,12 +175,12 @@ app.post('/api/forgot', (req, res) => {
         subject: 'Reset your password on Suplmntl',
         text: 'You are receiving this email because you (or someone else) has requested to reset the password for your account.\n\n' +
         'Please click on the following link, or paste this into your browser to complete the process:\n\n' +
-        'http://' + req.headers.host + '/reset/' + resp.passwordResetToken + '\n\n' +
+        'http://' + req.headers.host + '/#/reset/' + resp.passwordResetToken + '\n\n' +
         'If you did not request this, please ignore this email and your password will remain unchanged.\n'
       };
       /* eslint-enable prefer-template */
       mailgun.messages().send(data, (error, body) => {
-        console.log(error, body);
+        // console.log(error, body);
         res.sendStatus(200);
       });
     })
@@ -194,7 +194,7 @@ app.post('/api/reset/:token', (req, res) => {
     .then((resp) => {
       // send 'pass changed' email
       /* eslint-disable prefer-template */
-      const email = resp.data.email;
+      const email = resp.email;
       const data = {
         from: 'Suplmntl <no-reply@suplmntl.com>',
         to: email,
@@ -203,7 +203,7 @@ app.post('/api/reset/:token', (req, res) => {
       };
       /* eslint-enable prefer-template */
       mailgun.messages().send(data, (error, body) => {
-        console.log(error, body);
+        // console.log(error, body);
         res.sendStatus(200);
       });
     })
