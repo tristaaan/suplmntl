@@ -49,7 +49,7 @@ const ViewLinks = React.createClass({
   },
 
   deleteList() {
-    if (!confirm(`Are you sure you want to delete ${this.state.title}?`)) {
+    if (!confirm(`Are you sure you want to delete this collection:\n"${this.props.collection.name}"?`)) {
       return;
     }
     this.props.deleteCollection(this.props.collection._id,
