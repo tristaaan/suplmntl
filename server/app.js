@@ -31,8 +31,8 @@ app.use((req, res, next) => {
     }
   };
 
-  if (req.isAuthenticated()) {
-    const payload = req.isAuthenticated();
+  const payload = req.isAuthenticated();
+  if (payload) {
     db.getUserById(payload.sub)
       .then((resp) => {
         req.user = resp;
@@ -44,7 +44,7 @@ app.use((req, res, next) => {
 });
 
 function generateToken(userId, rememberMe) {
-  var time = rememberMe ? [1, 'day'] : [5, 'days'];
+  var time = rememberMe ? [5, 'days'] : [1, 'day'];
   var payload = {
     sub: userId,
     iss: 'suplmntl',
@@ -223,7 +223,11 @@ app.route('/api/collections')
         res.send(resp);
       })
       .catch((err) => {
-        res.status(500).send(err);
+        if (/not found/.test(err.message)) {
+          res.status(404).send(err.message);
+        } else {
+          res.status(500).send(err);
+        }
       });
   });
 

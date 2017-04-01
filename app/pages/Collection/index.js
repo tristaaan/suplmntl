@@ -9,6 +9,7 @@ import { connect } from 'react-redux';
 const Collections = React.createClass({
   propTypes: {
     user: React.PropTypes.object,
+    error: React.PropTypes.string,
     collections: React.PropTypes.array,
     getCollections: React.PropTypes.func,
     addCollection: React.PropTypes.func,
@@ -27,6 +28,12 @@ const Collections = React.createClass({
     this.props.getCollections(this.props.params.user);
   },
 
+  componentWillReceiveProps(nextProps) {
+    if (this.props.params.user !== nextProps.params.user) {
+      this.props.getCollections(nextProps.params.user);
+    }
+  },
+
   handleSubmit(newCol) {
     this.props.addCollection({ name: newCol.name });
   },
@@ -36,11 +43,16 @@ const Collections = React.createClass({
   },
 
   render() {
-    var showAddButton = this.props.user && this.props.user.username === this.props.params.user;
+    if (this.props.error) {
+      return (<section id="collectionList" >{this.props.error}</section>);
+    }
+
+    const showAddButton = this.props.user && this.props.user.username === this.props.params.user;
     return (
       <section id="collectionList">
         <h1>{this.props.params.user}&apos;s Collections</h1>
-        <CollectionBox collections={this.props.collections} deleteItem={this.handleDelete} username={this.props.params.user} />
+        <CollectionBox collections={this.props.collections} deleteItem={this.handleDelete}
+          username={this.props.params.user} />
         { this.state.colFormVisible ?
           <AddCollectionForm onLinkSubmit={this.handleSubmit} toggler={this.toggleForm} /> : null }
         { showAddButton && !this.state.colFormVisible ?
@@ -53,6 +65,7 @@ const Collections = React.createClass({
 export default connect(
   (state, props) => ({
     user: state.auth.user,
+    error: state.auth.error || state.collections.error,
     collections: state.collections.list
   }),
   dispatch => ({

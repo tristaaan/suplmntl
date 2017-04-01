@@ -9,6 +9,7 @@ import Reset from './pages/Reset';
 import Forgot from './pages/Forgot';
 import SignUp from './pages/SignUp';
 import Account from './pages/Account';
+import NotFound from './pages/NotFound';
 import LinksEdit from './pages/Links/Edit';
 import LinksView from './pages/Links/View';
 import CollectionList from './pages/Collection'; // waterfall imports!!
@@ -42,5 +43,6 @@ export default function getRoutes(store) {
     <Route path="/account" component={Account} onEnter={ensureAuthenticated} />
     <Route path="/forgot" component={Forgot} onEnter={skipIfAuthenticated} />
     <Route path="/reset/:token" component={Reset} onEnter={skipIfAuthenticated} />
+    <Route path="*" component={NotFound} />
   </Router>);
 }

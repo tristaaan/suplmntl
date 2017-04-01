@@ -7,6 +7,12 @@ export const FORK_COLLECTION = 'FORK_COLLECTION';
 export const UPDATE_COLLECTION = 'UPDATE_COLLECTION';
 export const GET_COLLECTIONS = 'GET_COLLECTIONS';
 export const GET_COLLECTION = 'GET_COLLECTION';
+export const COLLECTION_ERROR = 'COLLECTION_ERROR';
+export const CLEAR_COLLECTION_ERROR = 'CLEAR_COLLECTION_ERROR';
+
+export function clearError() {
+  return { type: CLEAR_COLLECTION_ERROR };
+}
 
 export function addCollection(collection) {
   return (dispatch) => {
@@ -38,9 +44,6 @@ export function deleteCollection(id, location = null) {
 export function updateCollection(collection) {
   return (dispatch) => {
     service.updateCollection(collection)
-      // .then((resp) => {
-      //   dispatch({ type: UPDATE_COLLECTION, collection });
-      // })
       .catch((err) => {
         console.log(err);
       });
@@ -53,10 +56,13 @@ export function getCollections(username) {
     service.getCollections(username)
       .then((resp) => {
         dispatch({ type: GET_COLLECTIONS, collections: resp.data });
+        dispatch({ type: COLLECTION_ERROR });
       })
       .catch((err) => {
-        console.log(err);
-        // hashHistory.replace('/');
+        if (err.response && err.response.data) {
+          dispatch({ type: COLLECTION_ERROR, err: err.response.data });
+        }
+        // console.log(err);
       });
   };
 }

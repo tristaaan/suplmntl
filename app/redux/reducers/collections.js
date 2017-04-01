@@ -3,6 +3,7 @@ import * as Actions from '../actions/collections';
 const initialState = {
   list: [],
   map: {},
+  error: null,
 };
 
 const sorter = (a, b) => a.createdAt - b.createdAt;
@@ -43,6 +44,15 @@ export default function authReducer(state = initialState, action) {
         list: action.collections.sort(sorter),
         map
       };
+    }
+    case Actions.COLLECTION_ERROR: {
+      if (typeof action.err === 'string') {
+        return Object.assign({}, state, { error: action.err });
+      }
+      return Object.assign({}, state, { error: action.err.response.data.message });
+    }
+    case Actions.CLEAR_COLLECTION_ERROR: {
+      return Object.assign({}, state, { error: null });
     }
     default:
       return state;

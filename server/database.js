@@ -36,6 +36,9 @@ function strId() {
 exports.getCollections = (username) => {
   return Users.findOne({ username }).exec()
     .then((user) => {
+      if (!user) {
+        throw new Error('User not found.');
+      }
       return Collections.find({ 'owner._id': user._id }).exec();
     });
 };

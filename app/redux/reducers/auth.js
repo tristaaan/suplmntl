@@ -20,7 +20,9 @@ export default function authReducer(state = initialState, action) {
     }
 
     case Actions.AUTH_ERROR: {
-      console.log('an error:', action.err);
+      if (typeof action.err === 'string') {
+        return Object.assign({}, state, { error: action.err });
+      }
       return Object.assign({}, state, { error: action.err.response.data.message });
     }
 
