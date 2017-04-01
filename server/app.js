@@ -5,6 +5,7 @@ var express = require('express'),
   bodyParser = require('body-parser'),
   cookieParser = require('cookie-parser'),
   lessMiddleware = require('less-middleware'),
+  favicon = require('serve-favicon'),
   mailgun = require('mailgun-js')({
     apiKey: process.env.MAILGUN_API_KEY,
     domain: process.env.MAILGUN_DOMAIN }),
@@ -16,6 +17,7 @@ var rootpath = path.join(__dirname, '../dist');
 app.use(lessMiddleware(rootpath));
 app.use('/js', express.static(path.resolve(path.join(rootpath, 'js'))));
 app.use('/css', express.static(path.resolve(path.join(rootpath, 'css'))));
+app.use(favicon(path.join(rootpath, 'favicon.png')));
 // app.use(express.static(rootpath));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
