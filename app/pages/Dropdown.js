@@ -13,14 +13,17 @@ export default React.createClass({
   componentDidUpdate(prevState) {
     if (this.state.toggled) {
       window.addEventListener('click', this.handleClickOutside);
+      window.addEventListener('touchend', this.handleClickOutside);
     } else if (!this.state.toggled) {
       window.removeEventListener('click', this.handleClickOutside);
+      window.removeEventListener('touchend', this.handleClickOutside);
     }
   },
 
   componentWillUnmount() {
     if (this.state.toggled) {
       window.removeEventListener('click', this.handleClickOutside);
+      window.removeEventListener('touchend', this.handleClickOutside);
     }
   },
 
