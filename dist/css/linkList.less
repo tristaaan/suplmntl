@@ -38,10 +38,12 @@ dd{
   input {
     border-width: 0 0 1px 0;
     width: 397px;
+    max-width: 100vw;
   }
   textarea {
     border-width: 0;
     width: 397px;
+    max-width: 100vw;
     resize: vertical;
   }
 }
@@ -57,8 +59,12 @@ dd{
 }
 
 .linkForm {
-  width: @content-width;
+  max-width: @content-width;
+  input {
+    max-width: 100vw;
+  }
   textarea {
+    max-width: 100vw;
     border-top: none;
     border: 1px solid lightgrey;
     margin-top: -1px;
@@ -69,10 +75,12 @@ dd{
   display: flex;
   justify-content: space-between;
   align-items: center;
-  max-width: @content-width;
   margin: 0 auto 10px;
   @media screen and (max-width: 400px) {
-    padding: 0 .5em 0 0.75em;
+    padding: 0 .5em 0;
+    input {
+      width: 100%;
+    }
   }
 }
 
