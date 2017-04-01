@@ -13,6 +13,7 @@ import NotFound from './pages/NotFound';
 import LinksEdit from './pages/Links/Edit';
 import LinksView from './pages/Links/View';
 import CollectionList from './pages/Collection'; // waterfall imports!!
+import { resetTitle } from './utils/setTitle';
 
 export default function getRoutes(store) {
   const ensureAuthenticated = (nextState, replace) => {
@@ -25,20 +26,15 @@ export default function getRoutes(store) {
       replace(`/${store.getState.auth.user.username}/collections`);
     }
   };
-  const clearMessages = () => {
-    store.dispatch({
-      type: 'CLEAR_MESSAGES'
-    });
-  };
   // <Route path="/login/reset/:token" component={Forgot} onEnter={skipIfAuthenticated} />
   return (<Router path="/" component={App}>
-    <IndexRoute component={Home} onLeave={clearMessages} />
-    <Route path="/login" component={Login} onEnter={skipIfAuthenticated} onLeave={clearMessages} />
+    <IndexRoute component={Home} onLeave={resetTitle} />
+    <Route path="/login" component={Login} onEnter={skipIfAuthenticated} onLeave={resetTitle} />
     <Route path="/sign-up" component={SignUp} onEnter={skipIfAuthenticated}
-      onLeave={clearMessages} />
-    <Route path="/:user/collections" component={CollectionList} onLeave={clearMessages} />
+      onLeave={resetTitle} />
+    <Route path="/:user/collections" component={CollectionList} onLeave={resetTitle} />
     <Route path="/:user/:id/edit" component={LinksEdit} onEnter={ensureAuthenticated}
-      onLeave={clearMessages} />
+      onLeave={resetTitle} />
     <Route path="/:user/:id/view" component={LinksView} />
     <Route path="/account" component={Account} onEnter={ensureAuthenticated} />
     <Route path="/forgot" component={Forgot} onEnter={skipIfAuthenticated} />

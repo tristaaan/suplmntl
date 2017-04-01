@@ -3,6 +3,7 @@ import React from 'react';
 import CollectionBox from './CollectionBox';
 import AddCollectionForm from './AddCollectionForm';
 import * as Actions from '../../redux/actions/collections';
+import setTitle from '../../utils/setTitle';
 
 import { connect } from 'react-redux';
 
@@ -31,6 +32,9 @@ const Collections = React.createClass({
   componentWillReceiveProps(nextProps) {
     if (this.props.params.user !== nextProps.params.user) {
       this.props.getCollections(nextProps.params.user);
+    }
+    if (nextProps.user) {
+      setTitle(`${nextProps.user.username}'s collections`);
     }
   },
 

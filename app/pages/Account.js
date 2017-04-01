@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import * as Actions from '../redux/actions/auth';
+import setTitle from '../utils/setTitle';
 
 const Account = React.createClass({
   propTypes: {
@@ -18,6 +19,12 @@ const Account = React.createClass({
       confirmNewPass: '',
       passwordError: ''
     };
+  },
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.user.username) {
+      setTitle('Account');
+    }
   },
 
   updateForm(e) {

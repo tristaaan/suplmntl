@@ -4,6 +4,7 @@ import { Link } from 'react-router';
 import Dropdown from '../../Dropdown';
 import LinksBox from './LinkBox';
 import get from '../../../utils/get';
+import setTitle from '../../../utils/setTitle';
 
 import * as Actions from '../../../redux/actions/collections';
 import { connect } from 'react-redux';
@@ -33,6 +34,9 @@ const ViewLinks = React.createClass({
   componentWillReceiveProps(nextProps) {
     if (!get(this.props, 'collection.name.length') || this.props.collection.postId !== nextProps.params.id) {
       this.props.getCollection(nextProps.params.id);
+    }
+    if (nextProps.collection.name) {
+      setTitle(`${nextProps.collection.name}`);
     }
   },
 
