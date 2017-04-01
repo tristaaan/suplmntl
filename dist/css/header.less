@@ -24,11 +24,22 @@ a.headerLink {
     }
 }
 
-.headerLink-container {
+ul.headerLink-container {
     display: flex;
     justify-content: flex-start;
     align-items: center;
     .spacer {
         flex: 1;
     }
+    @media screen and (max-width: 400px) {
+        padding-left: 0;
+        .spacer {
+            display: none;
+        }
+        li {
+             margin: 0 0.5em;
+             font-size: 0.95em;
+        }
+    }
 }
+
