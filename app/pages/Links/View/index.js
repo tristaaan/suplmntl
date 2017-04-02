@@ -5,6 +5,7 @@ import Dropdown from '../../Dropdown';
 import LinksBox from './LinkBox';
 import get from '../../../utils/get';
 import setTitle from '../../../utils/setTitle';
+import { jsonToMarkdown } from '../../../utils/exporter';
 
 import * as Actions from '../../../redux/actions/collections';
 import { connect } from 'react-redux';
@@ -52,6 +53,23 @@ const ViewLinks = React.createClass({
     this.context.router.push(`/${this.props.user.username}/${this.props.params.id}/edit`);
   },
 
+  downloadMarkdownList() {
+    const newFileContent = new Blob([jsonToMarkdown(this.props.collection)], {
+      type: 'text/plain',
+    });
+    const downloadURL = window.URL.createObjectURL(newFileContent);
+    const downloadLink = document.getElementById('download-link');
+
+    downloadLink.href = downloadURL;
+    downloadLink.download = `${this.props.collection.name}.md`;
+    downloadLink.click();
+    console.log('download?');
+    // Free memory
+    setTimeout(() => {
+      window.URL.revokeObjectURL(downloadURL);
+    }, 1000);
+  },
+
   deleteList() {
     if (!confirm(`Are you sure you want to delete this collection:\n"${this.props.collection.name}"?`)) {
       return;
@@ -87,6 +105,7 @@ const ViewLinks = React.createClass({
               <li onClick={this.forkList}>Fork List</li>
               { isOwner ? <li onClick={this.editList}>Edit List</li> : null}
               { isOwner ? <li onClick={this.deleteList}>Delete list</li> : null}
+              { isOwner ? <li onClick={this.downloadMarkdownList}>List to Markdown</li> : null}
             </ul>
           </Dropdown>
         </div>

@@ -1,6 +1,6 @@
 module.exports = {
   extends: 'airbnb',
-  globals: {window: true, confirm: true, alert:true, document: true},
+  globals: {window: true, confirm: true, alert:true, document: true, Blob: true},
   rules: {
     'no-console': 0,
     'no-alert': 0,
