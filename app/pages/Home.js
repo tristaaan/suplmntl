@@ -12,6 +12,7 @@ const home = (props) => {
         </li>
         <li>Gathering sources for a paper you&apos;re writing?&nbsp;
           Collect and organize them with Suplmntl.</li>
+        <li>Quickly write and compose list based articles with Markdown export.</li>
       </ul>
       <Link className="headerLink" to="sign-up">Sign Up</Link>
     </div>

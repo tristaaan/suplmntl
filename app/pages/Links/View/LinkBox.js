@@ -1,6 +1,10 @@
 // LinkBox
 import React from 'react';
 
+// function isImage(link) {
+//   return /.*(\.png$|\.jpg$|\.gif$)/.test(link);
+// }
+
 export default React.createClass({
   propTypes: {
     links: React.PropTypes.array,
@@ -18,6 +22,7 @@ export default React.createClass({
             <a href={item.link} target="_blank" rel="noopener noreferrer">{item.title}</a>
           </dt>
           <dd>
+            {/* {isImage(item.link) ? <img src={item.link} /> : null} */ }
             <p>{item.description}</p>
           </dd>
         </div>
