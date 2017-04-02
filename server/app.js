@@ -107,7 +107,7 @@ app.route('/api/user')
         res.send(userResponse(resp));
       })
       .catch((err) => {
-        res.send({ error: err.message });
+        res.send({ message: err.message });
       });
   })
   .put((req, res) => {
@@ -118,9 +118,19 @@ app.route('/api/user')
     })
     .then((resp) => {
       res.send(userResponse(resp));
+      const data = {
+        from: 'Suplmntl <no-reply@suplmntl.com>',
+        to: req.body.email,
+        subject: 'Welcome to Suplmntl',
+        text: `You have just created an account on Suplmntl with the username "${req.body.username}".\n\nWelcome.`
+      };
+      /* eslint-enable prefer-template */
+      mailgun.messages().send(data, (error, body) => {
+        res.sendStatus(200);
+      });
     })
     .catch((err) => {
-      res.status(500).send(err);
+      res.status(500).send({ message: err.message });
     });
   });
 

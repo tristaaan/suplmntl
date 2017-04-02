@@ -6,10 +6,11 @@ const SignUpForm = React.createClass({
 
   propTypes: {
     signup: React.PropTypes.func,
+    error: React.PropTypes.string,
   },
 
   getInitialState() {
-    return { error: false, badPass: false, errorMessage: false };
+    return { badPass: false, errorMessage: false };
   },
 
   sumbmitForm(e) {
@@ -57,8 +58,8 @@ const SignUpForm = React.createClass({
         <div className={[(this.state.badPass ? 'error-box' : 'hidden'), 'error-box'].join(' ')}>
           {this.state.errorMessage}
         </div>
-        <div className={this.state.error ? 'error-box' : 'hidden'}>
-          There was an error.
+        <div className={this.props.error ? 'error-box' : 'hidden'}>
+          { this.props.error }
         </div>
       </div>
     );
@@ -66,7 +67,9 @@ const SignUpForm = React.createClass({
 });
 
 export default connect(
-  () => ({}),
+  state => ({
+    error: state.auth.error
+  }),
   dispatch => ({
     signup: user => dispatch(signup(user))
   })

@@ -62,7 +62,6 @@ export function login(user, rememberMe = false) {
         dispatch(loggedIn(resp.data.token));
       })
       .catch((err) => {
-        console.log(err);
         dispatch(authError(err));
       });
   };
@@ -74,10 +73,11 @@ export function signup(user) {
       .then((resp) => {
         cookie.save('token', resp.data.token, { expires: moment().add(1, 'hour').toDate() });
         dispatch(loggedIn(resp.data.token));
+        hashHistory.push('/login');
       })
       .catch((err) => {
         console.log(err);
-        return authError(err);
+        dispatch(authError(err));
       });
   };
 }
