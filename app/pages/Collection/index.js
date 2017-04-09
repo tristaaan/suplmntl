@@ -70,7 +70,8 @@ export default connect(
   (state, props) => ({
     user: state.auth.user,
     error: state.auth.error || state.collections.error,
-    collections: state.collections.list
+    collections: state.collections.list.sort((a, b) =>
+      new Date(b.createdAt) - new Date(a.createdAt)),
   }),
   dispatch => ({
     addCollection: collection => dispatch(Actions.addCollection(collection)),
