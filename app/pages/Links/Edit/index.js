@@ -13,6 +13,7 @@ const EditLinks = React.createClass({
     getCollection: React.PropTypes.func,
     updateCollection: React.PropTypes.func,
     params: React.PropTypes.object,
+    route: React.PropTypes.object,
     /* eslint-disable react/no-unused-prop-types */
     user: React.PropTypes.object,
     /* eslint-enable react/no-unused-prop-types */
@@ -41,16 +42,37 @@ const EditLinks = React.createClass({
     if (!this.props.collection.name) {
       this.props.getCollection(this.props.params.id);
     }
+    this.context.router.setRouteLeaveHook(
+      this.props.route,
+      (nextLoc) => {
+        if (this.state.changes) {
+          return 'There are unsaved changes, are you sure you want to leave?';
+        }
+        return false;
+      }
+    );
   },
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.user.id !== nextProps.collection.ownerId) {
-      this.context.router.replace(`/list/${this.props.collection.postId}/view`);
+      this.context.router.replace(`/${this.props.params.user}/${this.props.collection.postId}/view`);
       return;
     }
 
     if (nextProps.collection.name.length && !this.state.tmpCol.name) {
       this.setState({ tmpCol: nextProps.collection });
+    }
+  },
+
+  componentWillUpdate(nextProps, nextState) {
+    if (nextState.changes) {
+      window.onbeforeunload = () => 'There are unsaved changes, are you sure you want to leave?';
+    }
+  },
+
+  componentWillUnmount() {
+    if (window.onbeforeunload) {
+      window.onbeforeunload = null;
     }
   },
 
@@ -75,12 +97,14 @@ const EditLinks = React.createClass({
   cancel() {
     if ((this.state.changes && confirm('There are unsaved changes, are you sure you want to cancel?')) ||
       !this.state.changes) {
+      this.context.router.setRouteLeaveHook(this.props.route, () => {});
       this.context.router.push(`/${this.props.user.username}/${this.props.collection.postId}/view`);
     }
   },
 
   done() {
     if (this.state.changes) {
+      this.context.router.setRouteLeaveHook(this.props.route, () => {});
       this.props.updateCollection(this.state.tmpCol);
     }
     this.context.router.push(`/${this.props.user.username}/${this.props.collection.postId}/view`);
