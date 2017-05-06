@@ -1,4 +1,5 @@
 var webpack = require('webpack');
+var path = require('path');
 
 function nodeEnv() {
   if (process.env.NODE_ENV) {
@@ -15,20 +16,21 @@ module.exports = {
   plugins: [definePlugin],
   entry: './app/index.js',
   output: {
-    path: './dist/js',
+    path: path.resolve(__dirname, 'dist/js'),
     filename: 'index.js',
   },
   module: {
-    preLoaders: [{
+    rules: [
+      {
+        enforce: 'pre',
         test: /\.js$/,
-        loader: "eslint-loader",
         exclude: /node_modules/,
-    }],
-    loaders: [
+        loader: "eslint-loader"
+      },
       {
         test: /\.jsx?$/,
         exclude: /node_modules/,
-        loaders: ['babel?presets[]=es2015&presets[]=react']
+        loader: 'babel-loader'
       }
     ]
   }
