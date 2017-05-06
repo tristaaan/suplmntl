@@ -307,7 +307,7 @@ app.route('/api/collection/:id')
 
 
 // all other requests get index.html
-app.get('*', (req, res) => {
+app.get('/*', (req, res) => {
   res.sendFile('index.html', { root: rootpath });
 });
 
