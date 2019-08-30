@@ -87,7 +87,7 @@ const ViewLinks = React.createClass({
     if (forkOf) {
       sub = (<small>by <Link to={`/${owner.username}/collections`}>{ owner.username }</Link>
         &nbsp;- fork of: <Link to={`/list/${forkOf.postId}/view`}>{forkOf.owner.username}/{forkOf.name}</Link>
-        </small>);
+      </small>);
     } else if (owner) {
       sub = (<small>by <Link to={`/${owner.username}/collections`}>{ owner.username }</Link></small>);
     }
