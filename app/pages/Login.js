@@ -1,8 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { hashHistory, Link } from 'react-router';
+import { useHistory, Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import * as AuthActions from '../redux/actions/auth';
+
+const history = useHistory();
 
 class Login extends React.component {
   sumbmitForm(e) {
@@ -16,7 +18,7 @@ class Login extends React.component {
   }
 
   static gotoSignUp() {
-    hashHistory.push('/sign-up');
+    history.push('/sign-up');
   }
 
   render() {
