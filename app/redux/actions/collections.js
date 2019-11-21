@@ -1,5 +1,6 @@
+import { useHistory } from 'react-router-dom';
+
 import * as service from '../../service';
-import { hashHistory } from 'react-router';
 
 export const ADD_COLLECTION = 'ADD_COLLECTION';
 export const DELETE_COLLECTION = 'DELETE_COLLECTION';
@@ -9,6 +10,8 @@ export const GET_COLLECTIONS = 'GET_COLLECTIONS';
 export const GET_COLLECTION = 'GET_COLLECTION';
 export const COLLECTION_ERROR = 'COLLECTION_ERROR';
 export const CLEAR_COLLECTION_ERROR = 'CLEAR_COLLECTION_ERROR';
+
+const history = useHistory();
 
 export function clearError() {
   return { type: CLEAR_COLLECTION_ERROR };
@@ -31,7 +34,7 @@ export function deleteCollection(id, location = null) {
     service.deleteCollection(id)
       .then((resp) => {
         if (location) {
-          hashHistory.replace(location);
+          history.replace(location);
         }
         dispatch({ type: DELETE_COLLECTION, id });
       })
@@ -83,7 +86,7 @@ export function forkCollection(id, user) {
   return (dispatch) => {
     service.forkCollection(id)
       .then((resp) => {
-        hashHistory.push(`/list/${resp.data.postId}/view`);
+        history.push(`/list/${resp.data.postId}/view`);
         dispatch({ type: FORK_COLLECTION, collection: resp.data });
       })
       .catch((err) => {
@@ -91,4 +94,3 @@ export function forkCollection(id, user) {
       });
   };
 }
-

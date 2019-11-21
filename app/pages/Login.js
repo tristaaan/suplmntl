@@ -1,14 +1,10 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { hashHistory, Link } from 'react-router';
 import { connect } from 'react-redux';
 import * as AuthActions from '../redux/actions/auth';
 
-const Login = React.createClass({
-  propTypes: {
-    dispatch: React.PropTypes.func,
-    error: React.PropTypes.string,
-  },
-
+class Login extends React.component {
   sumbmitForm(e) {
     e.preventDefault();
     const user = {
@@ -17,11 +13,11 @@ const Login = React.createClass({
     };
     const rememberMe = e.target[2].value;
     this.props.dispatch(AuthActions.login(user, rememberMe));
-  },
+  }
 
-  gotoSignUp() {
+  static gotoSignUp() {
     hashHistory.push('/sign-up');
-  },
+  }
 
   render() {
     return (
@@ -30,7 +26,10 @@ const Login = React.createClass({
           <input type="text" placeholder="username" required />
           <input type="password" placeholder="password" required />
           <span>
-            <span>Remember Me: <input type="checkbox" /></span>
+            <span>
+              Remember Me:
+              <input type="checkbox" />
+            </span>
             <Link to="/forgot">Forgot password?</Link>
           </span>
           <button type="button" onClick={this.gotoSignUp}>Sign Up</button>
@@ -42,10 +41,15 @@ const Login = React.createClass({
       </div>
     );
   }
-});
+}
+
+Login.propTypes = {
+  dispatch: PropTypes.func,
+  error: PropTypes.string,
+};
 
 export default connect(
-  state => ({
+  (state) => ({
     error: state.auth.error,
   })
 )(Login);

@@ -1,19 +1,17 @@
 // Collection Box
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Link } from 'react-router';
 
-export default React.createClass({
-  propTypes: {
-    username: React.PropTypes.string,
-    collections: React.PropTypes.array,
-    deleteItem: React.PropTypes.func,
-  },
+class CollectionBox extends React.component {
   getDefaultProps() {
     return { collections: [] };
-  },
+  }
+
   deleteItem(e) {
     this.props.deleteItem(e.target.value);
-  },
+  }
+
   render() {
     const createItem = (col, index) => {
       return (
@@ -25,6 +23,12 @@ export default React.createClass({
     };
     return (<ul>{this.props.collections.map(createItem)}</ul>);
   }
-});
+}
 
-// <button onClick={this.deleteItem} value={index}>x</button>
+CollectionBox.propTypes = {
+  username: PropTypes.string,
+  collections: PropTypes.array,
+  deleteItem: PropTypes.func,
+};
+
+export default CollectionBox;

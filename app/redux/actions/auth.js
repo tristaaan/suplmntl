@@ -1,8 +1,8 @@
 import moment from 'moment';
 import cookie from 'react-cookie';
-import { hashHistory } from 'react-router';
+import { useHistory } from 'react-router-dom';
 import * as service from '../../service';
-import store from '../';
+import store from '..';
 
 export const LOGIN_SUCCESS = 'LOGIN_SUCCESS';
 export const AUTH_ERROR = 'AUTH_ERROR';
@@ -11,6 +11,8 @@ export const LOGOUT = 'LOGOUT';
 export const UPDATE_USER = 'UPDATE_USER';
 export const FORGOT = 'FORGOT';
 export const RESET = 'RESET';
+
+const history = useHistory();
 
 function loginSuccess(token, user) {
   return { type: LOGIN_SUCCESS, token, user };
@@ -58,7 +60,7 @@ export function login(user, rememberMe = false) {
         } else {
           cookie.save('token', resp.data.token, { expires: moment().add(1, 'day').toDate() });
         }
-        hashHistory.push(`/${resp.data.username}/collections`);
+        history.push(`/${resp.data.username}/collections`);
         dispatch(loggedIn(resp.data.token));
       })
       .catch((err) => {
@@ -73,7 +75,7 @@ export function signup(user) {
       .then((resp) => {
         cookie.save('token', resp.data.token, { expires: moment().add(1, 'hour').toDate() });
         dispatch(loggedIn(resp.data.token));
-        hashHistory.push('/login');
+        history.push('/login');
       })
       .catch((err) => {
         console.log(err);
@@ -86,7 +88,7 @@ export function signup(user) {
 export function forgotPassword(email) {
   service.forgotPassword(email)
     .then((resp) => {
-      hashHistory.push('/login');
+      history.push('/login');
     });
 }
 
@@ -94,7 +96,7 @@ export function forgotPassword(email) {
 export function resetPassword(newPass, token) {
   service.resetPassword(newPass, token)
     .then((resp) => {
-      hashHistory.push('/login');
+      history.push('/login');
     });
 }
 
@@ -122,7 +124,7 @@ export function changePassword(userId, oldPass, newPass) {
 
 export function logout() {
   cookie.remove('token');
-  hashHistory.push('/');
+  history.push('/');
   return { type: LOGOUT };
 }
 

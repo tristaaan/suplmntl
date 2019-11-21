@@ -1,13 +1,10 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
-export default React.createClass({
-  propTypes: {
-    onLinkSubmit: React.PropTypes.func,
-  },
-
+class AddLinkForm extends React.component {
   getInitialState() {
     return { title: '', link: '', description: '' };
-  },
+  }
 
   handleSubmit(e) {
     e.preventDefault();
@@ -20,16 +17,20 @@ export default React.createClass({
     if (!title) {
       console.log('there is no value for title');
       return;
-    } else if (!link) {
+    }
+
+    if (!link) {
       console.log('there is no value for link');
       return;
-    } else if (!description) {
+    }
+
+    if (!description) {
       console.log('there is no value for description');
       return;
     }
 
-    if (link.substring(0, 8).toLowerCase() !== 'https://' &&
-      link.substring(0, 7).toLowerCase() !== 'http://') {
+    if (link.substring(0, 8).toLowerCase() !== 'https://'
+      && link.substring(0, 7).toLowerCase() !== 'http://') {
       link = `https://${link}`;
     }
 
@@ -37,37 +38,51 @@ export default React.createClass({
     this.setState(this.getInitialState());
     this.submitButton.blur();
     this.titleInput.focus();
-  },
+  }
 
   updateStateFromForm(e) {
-    var key = e.target.dataset.key,
+    var { key } = e.target.dataset,
       modState = {};
 
     modState[key] = e.target.value;
     this.setState(modState);
-  },
+  }
 
   render() {
+    const { title, link, description } = this.state;
     return (
       <form onSubmit={this.handleSubmit} className="linkForm">
-        <input type="text" placeholder="title"
+        <input type="text"
+          placeholder="title"
           ref={(c) => { this.titleInput = c; }}
           data-key="title"
           onChange={this.updateStateFromForm}
-          value={this.state.title}
-          autoFocus required />
-        <input type="text" placeholder="url"
+          value={title}
+          required />
+        <input type="text"
+          placeholder="url"
           data-key="link"
           onChange={this.updateStateFromForm}
-          value={this.state.link}
+          value={link}
           required />
         <textarea placeholder="description"
           data-key="description"
           onChange={this.updateStateFromForm}
-          value={this.state.description}
+          value={description}
           required />
-        <button className="addItemButton" ref={(c) => { this.submitButton = c; }}>Add Link</button>
+        <button
+          type="submit"
+          className="addItemButton"
+          ref={(c) => { this.submitButton = c; }}>
+          Add Link
+        </button>
       </form>
     );
   }
-});
+}
+
+AddLinkForm.propTypes = {
+  onLinkSubmit: PropTypes.func,
+};
+
+export default AddLinkForm;

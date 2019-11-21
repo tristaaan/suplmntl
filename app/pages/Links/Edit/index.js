@@ -1,34 +1,20 @@
 // LinkList
 import React from 'react';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+
 import LinksBox from './LinkBox';
 import AddLinkForm from './AddLinkForm';
 import get from '../../../utils/get';
 import * as Actions from '../../../redux/actions/collections';
 
-import { connect } from 'react-redux';
-
-const EditLinks = React.createClass({
-  propTypes: {
-    collection: React.PropTypes.object,
-    getCollection: React.PropTypes.func,
-    updateCollection: React.PropTypes.func,
-    params: React.PropTypes.object,
-    route: React.PropTypes.object,
-    /* eslint-disable react/no-unused-prop-types */
-    user: React.PropTypes.object,
-    /* eslint-enable react/no-unused-prop-types */
-  },
-
-  contextTypes: {
-    router: React.PropTypes.object,
-  },
-
+class EditLinks extends React.component {
   getDefaultProps() {
     return {
       user: {},
       collection: { links: [] }
     };
-  },
+  }
 
   getInitialState() {
     return {
@@ -36,7 +22,7 @@ const EditLinks = React.createClass({
       changes: false,
       renaming: false
     };
-  },
+  }
 
   componentDidMount() {
     if (!this.props.collection.name) {
@@ -51,7 +37,7 @@ const EditLinks = React.createClass({
         return false;
       }
     );
-  },
+  }
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.user.id !== nextProps.collection.ownerId) {
@@ -62,45 +48,46 @@ const EditLinks = React.createClass({
     if (nextProps.collection.name.length && !this.state.tmpCol.name) {
       this.setState({ tmpCol: nextProps.collection });
     }
-  },
+  }
 
   componentWillUpdate(nextProps, nextState) {
     if (nextState.changes) {
       window.onbeforeunload = () => 'There are unsaved changes, are you sure you want to leave?';
     }
-  },
+  }
 
   componentWillUnmount() {
     if (window.onbeforeunload) {
       window.onbeforeunload = null;
     }
-  },
+  }
 
   handleSubmit(newLink) {
-    const newCol = Object.assign({}, this.props.collection);
+    const newCol = { ...this.props.collection };
     newCol.links.push(newLink);
     this.setState({ tmpCol: newCol, changes: true });
-  },
+  }
 
   handleDelete(index) {
-    const newCol = Object.assign({}, this.props.collection);
+    const newCol = { ...this.props.collection };
     newCol.links.splice(index, 1);
     this.setState({ tmpCol: newCol, changes: true });
-  },
+  }
 
   updateItem(index, key, value) {
-    const tmpCol = Object.assign({}, this.state.tmpCol);
+    const { tmpCol } = this.state;
     tmpCol.links[index][key] = value;
     this.setState({ tmpCol, changes: true });
-  },
+  }
 
   cancel() {
-    if ((this.state.changes && confirm('There are unsaved changes, are you sure you want to cancel?')) ||
-      !this.state.changes) {
+    if ((this.state.changes
+      && window.confirm('There are unsaved changes, are you sure you want to cancel?'))
+      || !this.state.changes) {
       this.context.router.setRouteLeaveHook(this.props.route, () => {});
       this.context.router.push(`/${this.props.user.username}/${this.props.collection.postId}/view`);
     }
-  },
+  }
 
   done() {
     if (this.state.changes) {
@@ -108,22 +95,30 @@ const EditLinks = React.createClass({
       this.props.updateCollection(this.state.tmpCol);
     }
     this.context.router.push(`/${this.props.user.username}/${this.props.collection.postId}/view`);
-  },
+  }
 
   updateTmpTitle(e) {
-    const tmpCol = Object.assign({}, this.state.tmpCol);
+    const { tmpCol } = this.state;
     tmpCol.name = e.target.value;
     this.setState({ tmpCol, changes: true });
-  },
+  }
 
   render() {
     return (
       <section id="linkList" ref={(c) => {this.el = c;}}>
         <div className="linkListHeader">
-          <input ref={(c) => {this.titleEditor = c;}} onChange={this.updateTmpTitle}
+          <input ref={(c) => {this.titleEditor = c;}}
+            onChange={this.updateTmpTitle}
             value={this.state.tmpCol.name} />
-          <button onClick={this.cancel} style={{ margin: '0 4px' }}>Cancel</button>
-          <button onClick={this.done}>Done</button>
+          <button type="button"
+            onClick={this.cancel}
+            style={{ margin: '0 4px' }}>
+            Cancel
+          </button>
+          <button type="button"
+            onClick={this.done}>
+            Done
+          </button>
         </div>
         <LinksBox links={this.state.tmpCol.links}
           deleteItem={this.handleDelete}
@@ -132,7 +127,16 @@ const EditLinks = React.createClass({
       </section>
     );
   }
-});
+}
+
+EditLinks.propTypes = {
+  collection: PropTypes.object,
+  getCollection: PropTypes.func,
+  updateCollection: PropTypes.func,
+  params: PropTypes.object,
+  route: PropTypes.object,
+  user: PropTypes.object,
+};
 
 export default connect(
   (state, props) => {
@@ -145,9 +149,9 @@ export default connect(
     }
     return nextProp;
   },
-  dispatch => ({
-    updateCollection: collection => dispatch(Actions.updateCollection(collection)),
-    getCollection: id => dispatch(Actions.getCollection(id)),
+  (dispatch) => ({
+    updateCollection: (collection) => dispatch(Actions.updateCollection(collection)),
+    getCollection: (id) => dispatch(Actions.getCollection(id)),
     deleteCollection: (id, loc) => dispatch(Actions.deleteCollection(id, loc))
   })
 )(EditLinks);

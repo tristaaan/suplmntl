@@ -1,6 +1,14 @@
 module.exports = {
   extends: 'airbnb',
-  globals: {window: true, confirm: true, alert:true, document: true, Blob: true},
+  env: {
+    browser: true,
+    es6: true,
+    node: true,
+  },
+  parserOptions: {
+    ecmaVersion: 2018,
+    sourceType: "module",
+  },
   rules: {
     'no-console': 0,
     'no-alert': 0,

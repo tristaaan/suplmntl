@@ -1,14 +1,10 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
-export default React.createClass({
-  propTypes: {
-    buttonText: React.PropTypes.string,
-    children: React.PropTypes.object
-  },
-
+class Dropdown extends React.component {
   getInitialState() {
     return { toggled: false };
-  },
+  }
 
   componentDidUpdate(prevState) {
     if (this.state.toggled) {
@@ -18,14 +14,14 @@ export default React.createClass({
       window.removeEventListener('click', this.handleClickOutside);
       window.removeEventListener('touchend', this.handleClickOutside);
     }
-  },
+  }
 
   componentWillUnmount() {
     if (this.state.toggled) {
       window.removeEventListener('click', this.handleClickOutside);
       window.removeEventListener('touchend', this.handleClickOutside);
     }
-  },
+  }
 
   handleClickOutside(e) {
     const children = this.el.getElementsByTagName('*');
@@ -35,23 +31,34 @@ export default React.createClass({
       }
     }
     this.toggle();
-  },
+  }
 
   toggle(newVal) {
-    var toggleValue = !this.state.toggled;
+    var { toggleValue } = this.state;
     if (newVal === undefined) {
       toggleValue = newVal;
     }
-    this.setState({ toggled: toggleValue });
-  },
+    this.setState({ toggled: !toggleValue });
+  }
 
   render() {
     var isHidden = !this.state.toggled ? 'hidden' : '';
     return (
       <div className="dropdown" ref={(c) => {this.el = c;}}>
-        <button className="dropdown-button" onClick={this.toggle}>{this.props.buttonText}</button>
-        <section className={[isHidden, 'dropdown-content'].join(' ')}>{this.props.children}</section>
+        <button type="button" className="dropdown-button" onClick={this.toggle}>
+          {this.props.buttonText}
+        </button>
+        <section className={[isHidden, 'dropdown-content'].join(' ')}>
+          {this.props.children}
+        </section>
       </div>
     );
   }
-});
+}
+
+Dropdown.propTypes = {
+  buttonText: PropTypes.string,
+  children: PropTypes.object
+};
+
+export default Dropdown;

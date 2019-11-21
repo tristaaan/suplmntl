@@ -1,33 +1,34 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import * as AuthActions from '../redux/actions/auth';
 
-const Forgot = React.createClass({
-  propTypes: {
-    error: React.PropTypes.string,
-  },
-
+class Forgot extends React.component {
   getInitialState() {
     return { email: '' };
-  },
+  }
 
   handleChange(e) {
     const newState = { [e.target.dataset.key]: e.target.value };
     this.setState(newState);
-  },
+  }
 
-  submitForm(e) {
+  static submitForm(e) {
     e.preventDefault();
     const email = e.target[0].value;
     AuthActions.forgotPassword(email);
-  },
+  }
 
   render() {
     return (
       <div className="login-form">
         <form onSubmit={this.submitForm}>
-          <input type="email" placeholder="Email" data-key="email"
-            value={this.state.email} onChange={this.handleChange} autoFocus />
+          <input type="email"
+            placeholder="Email"
+            data-key="email"
+            value={this.state.email}
+            onChange={this.handleChange}
+          />
           <br />
           <button type="submit">Reset Password</button>
         </form>
@@ -37,10 +38,14 @@ const Forgot = React.createClass({
       </div>
     );
   }
-});
+}
+
+Forgot.propTypes = {
+  error: PropTypes.string,
+};
 
 export default connect(
-  state => ({
+  (state) => ({
     error: state.auth.error,
   })
 )(Forgot);
