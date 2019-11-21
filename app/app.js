@@ -1,6 +1,6 @@
 import React from 'react';
 import { BrowserRouter, Route } from 'react-router-dom';
-import cookie from 'react-cookie';
+import { useCookies } from 'react-cookie';
 
 import App from './pages/main';
 import Home from './pages/Home';
@@ -15,9 +15,11 @@ import LinksView from './pages/Links/View';
 import CollectionList from './pages/Collection'; // waterfall imports!!
 import { resetTitle } from './utils/setTitle';
 
+const [cookies] = useCookies(['token']);
+
 export default function getRoutes(store) {
   const ensureAuthenticated = (nextState, replace) => {
-    if (!store.getState().auth.token && !cookie.load('token')) {
+    if (!store.getState().auth.token && !cookies.token) {
       replace('/login');
     }
   };

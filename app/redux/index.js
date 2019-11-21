@@ -1,13 +1,15 @@
 import { createStore, applyMiddleware } from 'redux';
-import thunk                            from 'redux-thunk';
-import reducers                         from './reducers';
+import { useCookies } from 'react-cookie';
+import thunk from 'redux-thunk';
+
+import reducers from './reducers';
 import { loggedIn } from './actions/auth';
-import cookie from 'react-cookie';
 
 const store = createStore(reducers, applyMiddleware(thunk));
+const [cookies] = useCookies(['token']);
 
-if (cookie.load('token')) {
-  store.dispatch(loggedIn(cookie.load('token')));
+if (cookies.token) {
+  store.dispatch(loggedIn(cookies.token));
 }
 
 export default store;

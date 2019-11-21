@@ -1,5 +1,5 @@
 import moment from 'moment';
-import cookie from 'react-cookie';
+import { useCookies } from 'react-cookie';
 import { useHistory } from 'react-router-dom';
 import * as service from '../../service';
 import store from '..';
@@ -13,6 +13,7 @@ export const FORGOT = 'FORGOT';
 export const RESET = 'RESET';
 
 const history = useHistory();
+const [setCookie] = useCookies(['token']);
 
 function loginSuccess(token, user) {
   return { type: LOGIN_SUCCESS, token, user };
@@ -56,9 +57,9 @@ export function login(user, rememberMe = false) {
     service.login(user, rememberMe)
       .then((resp) => {
         if (rememberMe) {
-          cookie.save('token', resp.data.token, { expires: moment().add(5, 'days').toDate() });
+          setCookie('token', resp.data.token, { expires: moment().add(5, 'days').toDate() });
         } else {
-          cookie.save('token', resp.data.token, { expires: moment().add(1, 'day').toDate() });
+          setCookie('token', resp.data.token, { expires: moment().add(1, 'day').toDate() });
         }
         history.push(`/${resp.data.username}/collections`);
         dispatch(loggedIn(resp.data.token));
@@ -73,7 +74,7 @@ export function signup(user) {
   return (dispatch) => {
     service.signup(user)
       .then((resp) => {
-        cookie.save('token', resp.data.token, { expires: moment().add(1, 'hour').toDate() });
+        setCookie('token', resp.data.token, { expires: moment().add(1, 'hour').toDate() });
         dispatch(loggedIn(resp.data.token));
         history.push('/login');
       })
