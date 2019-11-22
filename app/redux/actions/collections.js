@@ -1,9 +1,7 @@
-import { useHistory } from 'react-router-dom';
+import history from '../../history';
 
 import * as service from '../../service';
 import * as Actions from './actionTypes';
-
-const history = useHistory();
 
 export function clearError() {
   return { type: Actions.CLEAR_COLLECTION_ERROR };

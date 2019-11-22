@@ -1,8 +1,8 @@
 import React from 'react';
-import { BrowserRouter, Route } from 'react-router-dom';
+import { BrowserRouter, Switch, Route } from 'react-router-dom';
 import { useCookies } from 'react-cookie';
 
-import App from './pages/main';
+import Main from './pages/main';
 import Home from './pages/Home';
 import Login from './pages/Login';
 import Reset from './pages/Reset';
@@ -15,9 +15,10 @@ import LinksView from './pages/Links/View';
 import CollectionList from './pages/Collection'; // waterfall imports!!
 import { resetTitle } from './utils/setTitle';
 
-const [cookies] = useCookies(['token']);
+import { loggedIn } from './redux/actions/auth';
 
 export default function getRoutes(store) {
+  const [cookies] = useCookies(['token']);
   const ensureAuthenticated = (nextState, replace) => {
     if (!store.getState().auth.token && !cookies.token) {
       replace('/login');
@@ -28,18 +29,25 @@ export default function getRoutes(store) {
       replace(`/${store.getState.auth.user.username}/collections`);
     }
   };
+
+  if (cookies.token) {
+    store.dispatch(loggedIn(cookies.token));
+  }
+
   // <Route path="/login/reset/:token" component={Forgot} onEnter={skipIfAuthenticated} />
   return (
-    <BrowserRouter path="/" component={App}>
-      <div>
+    <BrowserRouter path="/" component={Main}>
+      <Switch>
         <Route exact path="/" component={Home} onLeave={resetTitle} />
         <Route path="/login" component={Login} onEnter={skipIfAuthenticated} onLeave={resetTitle} />
-        <Route path="/sign-up"
+        <Route
+          path="/sign-up"
           component={SignUp}
           onEnter={skipIfAuthenticated}
           onLeave={resetTitle} />
         <Route path="/:user/collections" component={CollectionList} onLeave={resetTitle} />
-        <Route path="/:user/:id/edit"
+        <Route
+          path="/:user/:id/edit"
           component={LinksEdit}
           onEnter={ensureAuthenticated}
           onLeave={resetTitle} />
@@ -48,7 +56,7 @@ export default function getRoutes(store) {
         <Route path="/forgot" component={Forgot} onEnter={skipIfAuthenticated} />
         <Route path="/reset/:token" component={Reset} onEnter={skipIfAuthenticated} />
         <Route path="*" component={NotFound} />
-      </div>
+      </Switch>
     </BrowserRouter>
   );
 }

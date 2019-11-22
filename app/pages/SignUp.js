@@ -4,8 +4,12 @@ import { connect } from 'react-redux';
 import { signup } from '../redux/actions/auth';
 
 class SignUpForm extends React.Component {
-  getInitialState() {
-    return { badPass: false, errorMessage: false };
+  constructor(props) {
+    super(props);
+    this.state = {
+      badPass: false,
+      errorMessage: false
+    };
   }
 
   sumbmitForm(e) {
@@ -22,10 +26,10 @@ class SignUpForm extends React.Component {
   }
 
   checkPasswords() {
-    var pass = this.password.value,
-      conf = this.confirmPassword.value,
-      message = '',
-      bad = false;
+    const pass = this.password.value;
+    const conf = this.confirmPassword.value;
+    let message = '';
+    let bad = false;
 
     if (pass !== conf) {
       bad = true;
@@ -44,13 +48,15 @@ class SignUpForm extends React.Component {
         <form ref={(c) => {this.form = c;}} onSubmit={this.sumbmitForm}>
           <input type="text" name="username" placeholder="username" required />
           <input type="email" name="email" placeholder="email" required />
-          <input ref={(c) => {this.password = c;}}
+          <input
+            ref={(c) => {this.password = c;}}
             type="password"
             name="password"
             placeholder="password"
             required
             onChange={this.checkPasswords} />
-          <input ref={(c) => {this.confirmPassword = c;}}
+          <input
+            ref={(c) => {this.confirmPassword = c;}}
             type="password"
             name="confirmPass"
             placeholder="confirm password"

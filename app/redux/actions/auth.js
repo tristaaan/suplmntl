@@ -1,11 +1,8 @@
 import moment from 'moment';
-import { useCookies } from 'react-cookie';
 import * as service from '../../service';
 import * as Actions from './actionTypes';
 import history from '../../history';
 import store from '..';
-
-const [setCookie, removeCookie] = useCookies(['token']);
 
 function loginSuccess(token, user) {
   return { type: Actions.LOGIN_SUCCESS, token, user };
@@ -44,14 +41,18 @@ export function loggedIn(token) {
   };
 }
 
-export function login(user, rememberMe = false) {
+export function login(user, setCookie, rememberMe = false) {
   return (dispatch) => {
     service.login(user, rememberMe)
       .then((resp) => {
         if (rememberMe) {
-          setCookie('token', resp.data.token, { expires: moment().add(5, 'days').toDate() });
+          setCookie('token', resp.data.token, {
+            expires: moment().add(5, 'days').toDate()
+          });
         } else {
-          setCookie('token', resp.data.token, { expires: moment().add(1, 'day').toDate() });
+          setCookie('token', resp.data.token, {
+            expires: moment().add(1, 'day').toDate()
+          });
         }
         history.push(`/${resp.data.username}/collections`);
         dispatch(loggedIn(resp.data.token));
@@ -62,7 +63,7 @@ export function login(user, rememberMe = false) {
   };
 }
 
-export function signup(user) {
+export function signup(user, setCookie) {
   return (dispatch) => {
     service.signup(user)
       .then((resp) => {
@@ -115,7 +116,7 @@ export function changePassword(userId, oldPass, newPass) {
   };
 }
 
-export function logout() {
+export function logout(removeCookie) {
   removeCookie('token');
   history.push('/');
   return { type: Actions.LOGOUT };

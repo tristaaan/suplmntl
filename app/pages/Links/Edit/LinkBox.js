@@ -20,24 +20,28 @@ class LinkBox extends React.Component {
     return (
       <div className="editLinkItem" key={index} data-index={index}>
         <div className="titleRow" data-index={index}>
-          <input type="text"
+          <input
+            type="text"
             placeholder="title"
             data-key="title"
             onChange={this.onItemChange}
             value={item.title} />
-          <button className="errorButton"
+          <button
+            className="errorButton"
             type="button"
             onClick={this.deleteItem}
             value={index}>
             x
           </button>
         </div>
-        <input type="text"
+        <input
+          type="text"
           placeholder="url"
           data-key="link"
           onChange={this.onItemChange}
           value={item.link} />
-        <textarea placeholder="description"
+        <textarea
+          placeholder="description"
           data-key="description"
           onChange={this.onItemChange}
           value={item.description} />

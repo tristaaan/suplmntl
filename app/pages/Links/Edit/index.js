@@ -8,6 +8,7 @@ import LinksBox from './LinkBox';
 import AddLinkForm from './AddLinkForm';
 import get from '../../../utils/get';
 import * as Actions from '../../../redux/actions/collections';
+import history from '../../../history';
 
 class EditLinks extends React.Component {
   constructor(props) {
@@ -15,48 +16,25 @@ class EditLinks extends React.Component {
     this.state = {
       tmpCol: props.collection,
       changes: false,
-      ...props
-    };
-  }
-
-  getDefaultProps() {
-    return {
-      user: {},
-      collection: { links: [] }
     };
   }
 
   componentDidMount() {
-    if (!this.collection.name) {
-      this.getCollection(this.params.id);
-    }
-  }
-
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.user.id !== nextProps.collection.ownerId) {
-      this.context.router.replace(`/${this.props.params.user}/${this.props.collection.postId}/view`);
+    const { collection, user, getCollection, match } = this.props;
+    if (user.id !== collection.ownerId) {
+      history.replace(`/${match.params.user}/${collection.postId}/view`);
       return;
     }
 
-    if (nextProps.collection.name.length && !this.state.tmpCol.name) {
-      this.setState({ tmpCol: nextProps.collection });
+    if (!collection.name) {
+      getCollection(match.params.id);
     }
   }
 
-  componentDidUpdate(nextProps, nextState) {
-    if (nextState.changes) {
+  componentDidUpdate(prevProps, prevState) {
+    if (prevState.changes) {
       window.onbeforeunload = () => 'There are unsaved changes, are you sure you want to leave?';
     }
-
-    this.context.router.setRouteLeaveHook(
-      this.route,
-      (nextLoc) => {
-        if (this.changes) {
-          return 'There are unsaved changes, are you sure you want to leave?';
-        }
-        return false;
-      }
-    );
   }
 
   componentWillUnmount() {
@@ -66,15 +44,15 @@ class EditLinks extends React.Component {
   }
 
   handleSubmit(newLink) {
-    const newCol = { ...this.collection };
-    newCol.links.push(newLink);
-    this.setState({ tmpCol: newCol, changes: true });
+    const { collection } = this.props;
+    collection.links.push(newLink);
+    this.setState({ tmpCol: collection, changes: true });
   }
 
   handleDelete(index) {
-    const newCol = { ...this.collection };
-    newCol.links.splice(index, 1);
-    this.setState({ tmpCol: newCol, changes: true });
+    const { collection } = this.props;
+    collection.links.splice(index, 1);
+    this.setState({ tmpCol: collection, changes: true });
   }
 
   updateItem(index, key, value) {
@@ -84,20 +62,20 @@ class EditLinks extends React.Component {
   }
 
   cancel() {
-    if ((this.state.changes
+    if ((this.changes
       && window.confirm('There are unsaved changes, are you sure you want to cancel?'))
-      || !this.state.changes) {
-      this.context.router.setRouteLeaveHook(this.props.route, () => {});
-      this.context.router.push(`/${this.props.user.username}/${this.props.collection.postId}/view`);
+      || !this.changes) {
+      const { collection, user } = this.props;
+      history.push(`/${user.username}/${collection.postId}/view`);
     }
   }
 
   done() {
-    if (this.state.changes) {
-      this.context.router.setRouteLeaveHook(this.props.route, () => {});
-      this.props.updateCollection(this.state.tmpCol);
+    const { collection, user, updateCollection } = this.props;
+    if (this.changes) {
+      updateCollection(this.tmpCol);
     }
-    this.context.router.push(`/${this.props.user.username}/${this.props.collection.postId}/view`);
+    history.push(`/${user.username}/${collection.postId}/view`);
   }
 
   updateTmpTitle(e) {
@@ -111,23 +89,27 @@ class EditLinks extends React.Component {
       <section id="linkList" ref={(c) => {this.el = c;}}>
         <Prompt
           when={this.changes}
-          message="Are you sure you want to leave?"
+          message="There are unsaved changes, are you sure you want to leave?"
         />
         <div className="linkListHeader">
-          <input ref={(c) => {this.titleEditor = c;}}
+          <input
+            ref={(c) => {this.titleEditor = c;}}
             onChange={this.updateTmpTitle}
             value={this.tmpCol.name} />
-          <button type="button"
+          <button
+            type="button"
             onClick={this.cancel}
             style={{ margin: '0 4px' }}>
             Cancel
           </button>
-          <button type="button"
+          <button
+            type="button"
             onClick={this.done}>
             Done
           </button>
         </div>
-        <LinksBox links={this.tmpCol.links}
+        <LinksBox
+          links={this.tmpCol.links}
           deleteItem={this.handleDelete}
           onChange={this.updateItem} />
         <AddLinkForm onLinkSubmit={this.handleSubmit} />
@@ -141,8 +123,13 @@ EditLinks.propTypes = {
   getCollection: PropTypes.func,
   updateCollection: PropTypes.func,
   params: PropTypes.object,
-  route: PropTypes.object,
   user: PropTypes.object,
+  match: PropTypes.object,
+};
+
+EditLinks.defaultProps = {
+  user: {},
+  collection: { links: [] },
 };
 
 export default connect(
@@ -159,6 +146,6 @@ export default connect(
   (dispatch) => ({
     updateCollection: (collection) => dispatch(Actions.updateCollection(collection)),
     getCollection: (id) => dispatch(Actions.getCollection(id)),
-    deleteCollection: (id, loc) => dispatch(Actions.deleteCollection(id, loc))
+    deleteCollection: (id, loc) => dispatch(Actions.deleteCollection(id, loc)),
   })
 )(EditLinks);

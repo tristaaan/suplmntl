@@ -2,8 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 class AddLinkForm extends React.Component {
-  getInitialState() {
-    return { title: '', link: '', description: '' };
+  constructor(props) {
+    super(props);
+    this.state = { title: '', link: '', description: '' };
   }
 
   handleSubmit(e) {
@@ -41,8 +42,8 @@ class AddLinkForm extends React.Component {
   }
 
   updateStateFromForm(e) {
-    var { key } = e.target.dataset,
-      modState = {};
+    const { key } = e.target.dataset;
+    const modState = {};
 
     modState[key] = e.target.value;
     this.setState(modState);
@@ -52,20 +53,23 @@ class AddLinkForm extends React.Component {
     const { title, link, description } = this.state;
     return (
       <form onSubmit={this.handleSubmit} className="linkForm">
-        <input type="text"
+        <input
+          type="text"
           placeholder="title"
           ref={(c) => { this.titleInput = c; }}
           data-key="title"
           onChange={this.updateStateFromForm}
           value={title}
           required />
-        <input type="text"
+        <input
+          type="text"
           placeholder="url"
           data-key="link"
           onChange={this.updateStateFromForm}
           value={link}
           required />
-        <textarea placeholder="description"
+        <textarea
+          placeholder="description"
           data-key="description"
           onChange={this.updateStateFromForm}
           value={description}

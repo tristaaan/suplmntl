@@ -6,22 +6,24 @@ import { logout } from '../redux/actions/auth';
 
 class Header extends React.Component {
   logout() {
-    this.props.dispatch(logout);
+    const { dispatch } = this.props;
+    dispatch(logout);
   }
 
   render() {
+    const { token, user } = this.props;
     return (
       <header>
         <ul className="headerLink-container">
           <li><h1><Link to="/">SUPLMNTL</Link></h1></li>
-          { this.props.token
-            ? <li><Link className="headerLink" to={`/${this.props.user.username}/collections`}>Collections</Link></li>
+          { token
+            ? <li><Link className="headerLink" to={`/${user.username}/collections`}>Collections</Link></li>
             : null }
           <li className="spacer" />
-          { this.props.token
+          { token
             ? <li><Link className="headerLink" to="account">Account</Link></li>
             : <li><Link className="headerLink" to="login">Login</Link></li> }
-          { this.props.token
+          { token
             ? <li><a href="/" className="headerLink" onClick={this.logout}>Sign Out</a></li>
             : <li><Link className="headerLink" to="sign-up">Sign Up</Link></li> }
         </ul>
