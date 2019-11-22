@@ -36,27 +36,29 @@ export default function getRoutes(store) {
 
   // <Route path="/login/reset/:token" component={Forgot} onEnter={skipIfAuthenticated} />
   return (
-    <BrowserRouter path="/" component={Main}>
-      <Switch>
-        <Route exact path="/" component={Home} onLeave={resetTitle} />
-        <Route path="/login" component={Login} onEnter={skipIfAuthenticated} onLeave={resetTitle} />
-        <Route
-          path="/sign-up"
-          component={SignUp}
-          onEnter={skipIfAuthenticated}
-          onLeave={resetTitle} />
-        <Route path="/:user/collections" component={CollectionList} onLeave={resetTitle} />
-        <Route
-          path="/:user/:id/edit"
-          component={LinksEdit}
-          onEnter={ensureAuthenticated}
-          onLeave={resetTitle} />
-        <Route path="/:user/:id/view" component={LinksView} />
-        <Route path="/account" component={Account} onEnter={ensureAuthenticated} />
-        <Route path="/forgot" component={Forgot} onEnter={skipIfAuthenticated} />
-        <Route path="/reset/:token" component={Reset} onEnter={skipIfAuthenticated} />
-        <Route path="*" component={NotFound} />
-      </Switch>
+    <BrowserRouter>
+      <Main>
+        <Switch>
+          <Route exact path="/" component={Home} onLeave={resetTitle} />
+          <Route path="/login" component={Login} onEnter={skipIfAuthenticated} onLeave={resetTitle} />
+          <Route
+            path="/sign-up"
+            component={SignUp}
+            onEnter={skipIfAuthenticated}
+            onLeave={resetTitle} />
+          <Route path="/:user/collections" component={CollectionList} onLeave={resetTitle} />
+          <Route
+            path="/:user/:id/edit"
+            component={LinksEdit}
+            onEnter={ensureAuthenticated}
+            onLeave={resetTitle} />
+          <Route path="/:user/:id/view" component={LinksView} />
+          <Route path="/account" component={Account} onEnter={ensureAuthenticated} />
+          <Route path="/forgot" component={Forgot} onEnter={skipIfAuthenticated} />
+          <Route path="/reset/:token" component={Reset} onEnter={skipIfAuthenticated} />
+          <Route path="*" component={NotFound} />
+        </Switch>
+      </Main>
     </BrowserRouter>
   );
 }
