@@ -5,11 +5,12 @@ import PropTypes from 'prop-types';
 class AddCollectionForm extends React.Component {
   constructor(props) {
     super(props);
+    this.nameInput = React.createRef();
     this.state = { name: '' };
   }
 
   componentDidMount() {
-    this.nameInput.focus();
+    this.nameInput.current.focus();
   }
 
   handleChange(e) {
@@ -27,12 +28,13 @@ class AddCollectionForm extends React.Component {
 
   render() {
     return (
-      <form className="collectionForm" onSubmit={this.handleSubmit}>
-        <input onChange={this.handleChange}
+      <form className="collectionForm" onSubmit={(e) => this.handleSubmit(e)}>
+        <input
+          onChange={(e) => this.handleChange(e)}
           value={this.state.name}
-          ref={(c) => {this.nameInput = c;} } />
-        <button type="button">+</button>
-        <button type="button" onClick={this.props.toggler}>x</button>
+          ref={this.nameInput} />
+        <button type="submit">+</button>
+        <button type="button" onClick={() => this.props.toggler()}>x</button>
       </form>
     );
   }

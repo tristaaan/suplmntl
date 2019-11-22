@@ -55,7 +55,7 @@ class Collections extends React.Component {
         </h1>
         <CollectionBox
           collections={this.props.collections}
-          deleteItem={this.handleDelete}
+          deleteItem={() => this.handleDelete()}
           username={user} />
         { this.state.colFormVisible
           ? (
@@ -65,7 +65,14 @@ class Collections extends React.Component {
           )
           : null }
         { showAddButton && !this.state.colFormVisible
-          ? <button type="button" className="addItemButton" onClick={this.toggleForm}>+</button>
+          ? (
+            <button
+              type="button"
+              className="addItemButton"
+              onClick={() => this.toggleForm()}>
+              +
+            </button>
+          )
           : null }
       </section>
     );

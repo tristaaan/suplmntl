@@ -15,17 +15,17 @@ import * as Actions from '../../../redux/actions/collections';
 class ViewLinks extends React.Component {
   componentDidMount() {
     if (!Object.keys(this.props.collection).length) {
-      this.props.getCollection(this.props.params.id);
+      this.props.getCollection(this.props.match.params.id);
     }
   }
 
-  componentWillReceiveProps(nextProps) {
+  componentDidUpdate(prevProps) {
     if (!get(this.props, 'collection.name.length')
-        || this.props.collection.postId !== nextProps.params.id) {
-      this.props.getCollection(nextProps.params.id);
+        || prevProps.match.params.id !== this.props.collection.postId) {
+      this.props.getCollection(this.props.match.params.id);
     }
-    if (nextProps.collection.name) {
-      setTitle(`${nextProps.collection.name}`);
+    if (this.props.collection.name) {
+      setTitle(`${this.props.collection.name}`);
     }
   }
 
@@ -38,7 +38,7 @@ class ViewLinks extends React.Component {
   }
 
   editList() {
-    this.context.router.push(`/${this.props.user.username}/${this.props.params.id}/edit`);
+    this.context.router.push(`/${this.props.user.username}/${this.props.match.params.id}/edit`);
   }
 
   downloadMarkdownList() {
@@ -105,14 +105,18 @@ class ViewLinks extends React.Component {
             <ul className="dropdown-list">
               {/* <li onClick={() => {console.log('star, wayyy unimplemented');}}>Star List</li> */}
               <li>
-                <button type="button" onClick={this.forkList}>
+                <button
+                  type="button"
+                  onClick={() => this.forkList()}>
                   Fork List
                 </button>
               </li>
               { isOwner
                 ? (
                   <li>
-                    <button type="button" onClick={this.editList}>
+                    <button
+                      type="button"
+                      onClick={() => this.editList()}>
                       Edit List
                     </button>
                   </li>
@@ -121,7 +125,9 @@ class ViewLinks extends React.Component {
               { isOwner
                 ? (
                   <li>
-                    <button type="button" onClick={this.deleteList}>
+                    <button
+                      type="button"
+                      onClick={() => this.deleteList()}>
                       Delete list
                     </button>
                   </li>
@@ -130,7 +136,9 @@ class ViewLinks extends React.Component {
               { isOwner
                 ? (
                   <li>
-                    <button type="button" onClick={this.downloadMarkdownList}>
+                    <button
+                      type="button"
+                      onClick={() => this.downloadMarkdownList()}>
                       List to Markdown
                     </button>
                   </li>
@@ -151,14 +159,14 @@ ViewLinks.propTypes = {
   getCollection: PropTypes.func,
   forkCollection: PropTypes.func,
   deleteCollection: PropTypes.func,
-  params: PropTypes.object
+  match: PropTypes.object
 };
 
 export default connect(
   (state, props) => {
     let collection = {};
-    if (state.collections.map[props.params.id]) {
-      collection = state.collections.map[props.params.id];
+    if (state.collections.map[props.match.params.id]) {
+      collection = state.collections.map[props.match.params.id];
     }
     return {
       collection,

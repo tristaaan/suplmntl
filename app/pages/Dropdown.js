@@ -4,14 +4,17 @@ import PropTypes from 'prop-types';
 class Dropdown extends React.Component {
   constructor(props) {
     super(props);
+    this.el = React.createRef();
     this.state = { toggled: false };
+
+    this.handleClickOutside = this.handleClickOutside.bind(this);
   }
 
-  componentDidUpdate(prevState) {
+  componentDidUpdate() {
     if (this.state.toggled) {
       window.addEventListener('click', this.handleClickOutside);
       window.addEventListener('touchend', this.handleClickOutside);
-    } else if (!this.state.toggled) {
+    } else {
       window.removeEventListener('click', this.handleClickOutside);
       window.removeEventListener('touchend', this.handleClickOutside);
     }
@@ -25,28 +28,27 @@ class Dropdown extends React.Component {
   }
 
   handleClickOutside(e) {
-    const children = this.el.getElementsByTagName('*');
+    const children = this.el.current.getElementsByTagName('*');
+    // if the click was in this element, ignore it.
     for (let i = 0; i < children.length; i += 1) {
-      if (children[i] === e.target) {
+      if (e.target === children[i]) {
         return;
       }
     }
+    // otherwise toggle
     this.toggle();
   }
 
-  toggle(newVal) {
-    var { toggleValue } = this.state;
-    if (newVal === undefined) {
-      toggleValue = newVal;
-    }
-    this.setState({ toggled: !toggleValue });
+  toggle() {
+    const { toggled } = this.state;
+    this.setState({ toggled: !toggled });
   }
 
   render() {
-    var isHidden = !this.state.toggled ? 'hidden' : '';
+    const isHidden = !this.state.toggled ? 'hidden' : '';
     return (
-      <div className="dropdown" ref={(c) => {this.el = c;}}>
-        <button type="button" className="dropdown-button" onClick={this.toggle}>
+      <div className="dropdown" ref={this.el}>
+        <button type="button" className="dropdown-button" onClick={() => this.toggle()}>
           {this.props.buttonText}
         </button>
         <section className={[isHidden, 'dropdown-content'].join(' ')}>

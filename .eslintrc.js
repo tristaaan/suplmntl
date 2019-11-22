@@ -19,6 +19,7 @@ module.exports = {
     }],
     'no-alert': 0,
     'no-console': 0,
+    "no-restricted-globals": 0,
     'no-underscore-dangle': 0,
     'block-spacing': 0,
     'react/forbid-prop-types': 0,
