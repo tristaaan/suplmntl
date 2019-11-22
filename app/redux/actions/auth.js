@@ -35,22 +35,20 @@ export function loggedIn(token) {
       .then((resp) => {
         dispatch(loginSuccess(token, resp.data));
       })
-      .catch((err) => {
-        return authError(err);
-      });
+      .catch((err) => authError(err));
   };
 }
 
-export function login(user, setCookie, rememberMe = false) {
+export function login(user, cookie, rememberMe = false) {
   return (dispatch) => {
     service.login(user, rememberMe)
       .then((resp) => {
         if (rememberMe) {
-          setCookie('token', resp.data.token, {
+          cookie.set('token', resp.data.token, {
             expires: moment().add(5, 'days').toDate()
           });
         } else {
-          setCookie('token', resp.data.token, {
+          cookie.set('token', resp.data.token, {
             expires: moment().add(1, 'day').toDate()
           });
         }
@@ -63,11 +61,11 @@ export function login(user, setCookie, rememberMe = false) {
   };
 }
 
-export function signup(user, setCookie) {
+export function signup(user, cookies) {
   return (dispatch) => {
     service.signup(user)
       .then((resp) => {
-        setCookie('token', resp.data.token, { expires: moment().add(1, 'hour').toDate() });
+        cookies.set('token', resp.data.token, { expires: moment().add(1, 'hour').toDate() });
         dispatch(loggedIn(resp.data.token));
         history.push('/login');
       })
@@ -81,7 +79,7 @@ export function signup(user, setCookie) {
 // nothing to dispatch
 export function forgotPassword(email) {
   service.forgotPassword(email)
-    .then((resp) => {
+    .then(() => {
       history.push('/login');
     });
 }
@@ -89,7 +87,7 @@ export function forgotPassword(email) {
 // nothing to dispatch
 export function resetPassword(newPass, token) {
   service.resetPassword(newPass, token)
-    .then((resp) => {
+    .then(() => {
       history.push('/login');
     });
 }
@@ -104,7 +102,7 @@ export function updateUserEmail(userId, newEmail) {
 }
 
 export function changePassword(userId, oldPass, newPass) {
-  return (dispatch) => {
+  return () => {
     service.changePassword(userId, oldPass, newPass)
       .then((resp) => {
         console.log(resp);
@@ -116,17 +114,17 @@ export function changePassword(userId, oldPass, newPass) {
   };
 }
 
-export function logout(removeCookie) {
-  removeCookie('token');
+export function logout(cookies) {
+  cookies.remove('token');
   history.push('/');
   return { type: Actions.LOGOUT };
 }
 
-export function deleteAccount(userId) {
+export function deleteAccount(userId, cookies) {
   return (dispatch) => {
     service.deleteAccount(userId)
-      .then((resp) => {
-        dispatch(logout());
+      .then(() => {
+        dispatch(logout(cookies));
       })
       .catch((err) => {
         console.log(err);

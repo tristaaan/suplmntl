@@ -1,11 +1,16 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { withCookies } from 'react-cookie';
 import { signup } from '../redux/actions/auth';
 
 class SignUpForm extends React.Component {
   constructor(props) {
     super(props);
+
+    this.password = React.createRef();
+    this.confirmPassword = React.createRef();
+
     this.state = {
       badPass: false,
       errorMessage: false
@@ -22,12 +27,12 @@ class SignUpForm extends React.Component {
       email: e.target[1].value,
       password: e.target[2].value
     };
-    this.props.signup(user);
+    this.props.signup(user, this.props.cookies);
   }
 
   checkPasswords() {
-    const pass = this.password.value;
-    const conf = this.confirmPassword.value;
+    const pass = this.password.current.value;
+    const conf = this.confirmPassword.current.value;
     let message = '';
     let bad = false;
 
@@ -45,23 +50,23 @@ class SignUpForm extends React.Component {
   render() {
     return (
       <div className="login-form">
-        <form ref={(c) => {this.form = c;}} onSubmit={this.sumbmitForm}>
+        <form onSubmit={(e) => this.sumbmitForm(e)}>
           <input type="text" name="username" placeholder="username" required />
           <input type="email" name="email" placeholder="email" required />
           <input
-            ref={(c) => {this.password = c;}}
+            ref={this.password}
             type="password"
             name="password"
             placeholder="password"
             required
-            onChange={this.checkPasswords} />
+            onChange={() => this.checkPasswords()} />
           <input
-            ref={(c) => {this.confirmPassword = c;}}
+            ref={this.confirmPassword}
             type="password"
             name="confirmPass"
             placeholder="confirm password"
             required
-            onChange={this.checkPasswords} />
+            onChange={() => this.checkPasswords()} />
           <button type="submit" disabled={this.state.badPass}>Sign Up</button>
         </form>
         <div className={[(this.state.badPass ? 'error-box' : 'hidden'), 'error-box'].join(' ')}>
@@ -78,13 +83,15 @@ class SignUpForm extends React.Component {
 SignUpForm.propTypes = {
   signup: PropTypes.func,
   error: PropTypes.string,
+  cookies: PropTypes.object,
 };
 
-export default connect(
-  (state) => ({
-    error: state.auth.error
+export default withCookies(connect(
+  (state, ownProps) => ({
+    error: state.auth.error,
+    cookies: ownProps.cookies
   }),
   (dispatch) => ({
-    signup: (user) => dispatch(signup(user))
+    signup: (user, cookies) => dispatch(signup(user, cookies))
   })
-)(SignUpForm);
+)(SignUpForm));

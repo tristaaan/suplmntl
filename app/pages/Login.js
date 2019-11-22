@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
+import { withCookies } from 'react-cookie';
 import * as AuthActions from '../redux/actions/auth';
 import history from '../history';
 
@@ -17,13 +18,17 @@ class Login extends React.Component {
       password: e.target[1].value
     };
     const rememberMe = e.target[2].value;
-    this.props.dispatch(AuthActions.login(user, rememberMe));
+    this.props.dispatch(AuthActions.login(
+      user,
+      this.props.cookies,
+      rememberMe
+    ));
   }
 
   render() {
     return (
       <div className="login-form">
-        <form onSubmit={this.sumbmitForm}>
+        <form onSubmit={(e) => this.sumbmitForm(e)}>
           <input type="text" placeholder="username" required />
           <input type="password" placeholder="password" required />
           <span>
@@ -33,7 +38,7 @@ class Login extends React.Component {
             </span>
             <Link to="/forgot">Forgot password?</Link>
           </span>
-          <button type="button" onClick={this.gotoSignUp}>Sign Up</button>
+          <button type="button" onClick={() => this.gotoSignUp()}>Sign Up</button>
           <button type="submit">Login</button>
         </form>
         <div className={this.props.error ? 'error-box' : 'hidden'}>
@@ -47,10 +52,12 @@ class Login extends React.Component {
 Login.propTypes = {
   dispatch: PropTypes.func,
   error: PropTypes.string,
+  cookies: PropTypes.object,
 };
 
-export default connect(
-  (state) => ({
+export default withCookies(connect(
+  (state, ownProps) => ({
     error: state.auth.error,
+    cookies: ownProps.cookies
   })
-)(Login);
+)(Login));

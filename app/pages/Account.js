@@ -79,17 +79,20 @@ class Account extends React.Component {
 
         <div className="formGroup">
           Change Password
-          <input type="password"
+          <input
+            type="password"
             data-key="oldPass"
             placeholder="current password"
             value={this.state.oldPass}
             onChange={this.updateForm} />
-          <input type="password"
+          <input
+            type="password"
             data-key="newPass"
             placeholder="new password"
             value={this.state.newPass}
             onChange={this.updateForm} />
-          <input type="password"
+          <input
+            type="password"
             data-key="confirmNewPass"
             placeholder="confirm new password"
             value={this.state.confirmNewPass}
@@ -103,7 +106,8 @@ class Account extends React.Component {
         <div className="formGroup">
           Delete Account
           <small><em>This action cannot be undone!</em></small>
-          <button id="deleteAccount"
+          <button
+            id="deleteAccount"
             className="errorButton"
             type="button"
             onClick={this.deleteAccount}
@@ -124,7 +128,7 @@ Account.PropTypes = {
 };
 
 export default connect(
-  (state, props) => ({
+  (state) => ({
     user: state.auth.user,
   }),
   (dispatch) => ({
