@@ -116,22 +116,22 @@ app.route('/api/user')
       email: req.body.email,
       password: req.body.password
     })
-    .then((resp) => {
-      res.send(userResponse(resp));
-      const data = {
-        from: 'Suplmntl <no-reply@suplmntl.com>',
-        to: req.body.email,
-        subject: 'Welcome to Suplmntl',
-        text: `You have just created an account on Suplmntl with the username "${req.body.username}".\n\nWelcome.`
-      };
-      /* eslint-enable prefer-template */
-      mailgun.messages().send(data, (error, body) => {
-        res.sendStatus(200);
+      .then((resp) => {
+        res.send(userResponse(resp));
+        const data = {
+          from: 'Suplmntl <no-reply@suplmntl.com>',
+          to: req.body.email,
+          subject: 'Welcome to Suplmntl',
+          text: `You have just created an account on Suplmntl with the username "${req.body.username}".\n\nWelcome.`
+        };
+        /* eslint-enable prefer-template */
+        mailgun.messages().send(data, (error, body) => {
+          res.sendStatus(200);
+        });
+      })
+      .catch((err) => {
+        res.status(500).send({ message: err.message });
       });
-    })
-    .catch((err) => {
-      res.status(500).send({ message: err.message });
-    });
   });
 
 app.route('/api/user/:userId')
