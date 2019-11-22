@@ -73,7 +73,7 @@ class EditLinks extends React.Component {
   done() {
     const { collection, user, updateCollection } = this.props;
     if (this.changes) {
-      updateCollection(this.tmpCol);
+      updateCollection(this.state.tmpCol);
     }
     history.push(`/${user.username}/${collection.postId}/view`);
   }
@@ -95,7 +95,7 @@ class EditLinks extends React.Component {
           <input
             ref={(c) => {this.titleEditor = c;}}
             onChange={this.updateTmpTitle}
-            value={this.tmpCol.name} />
+            value={this.state.tmpCol.name} />
           <button
             type="button"
             onClick={this.cancel}
@@ -109,7 +109,7 @@ class EditLinks extends React.Component {
           </button>
         </div>
         <LinksBox
-          links={this.tmpCol.links}
+          links={this.state.tmpCol.links}
           deleteItem={this.handleDelete}
           onChange={this.updateItem} />
         <AddLinkForm onLinkSubmit={this.handleSubmit} />
