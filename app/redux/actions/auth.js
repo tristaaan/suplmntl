@@ -1,11 +1,10 @@
 import moment from 'moment';
 import { useCookies } from 'react-cookie';
-import { useHistory } from 'react-router-dom';
 import * as service from '../../service';
 import * as Actions from './actionTypes';
+import history from '../../history';
 import store from '..';
 
-const history = useHistory();
 const [setCookie, removeCookie] = useCookies(['token']);
 
 function loginSuccess(token, user) {
