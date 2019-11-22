@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-const home = (props) => {
+function Home() {
   return (
     <div className="homeStyle">
       <p>Suplmntl is an easy way to annotate and share links.</p>
@@ -19,6 +19,6 @@ const home = (props) => {
       <Link className="headerLink" to="sign-up">Sign Up</Link>
     </div>
   );
-};
+}
 
-export default home;
+export default Home;
