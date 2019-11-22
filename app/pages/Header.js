@@ -30,7 +30,7 @@ function Header() {
             <li>
               <Link
                 className="headerLink"
-                to="account">
+                to="/account">
                 Account
               </Link>
             </li>
@@ -50,7 +50,7 @@ function Header() {
               <a
                 href="/"
                 className="headerLink"
-                onClick={dispatch(logout(cookies))}>
+                onClick={() => dispatch(logout(cookies))}>
                 Sign Out
               </a>
             </li>

@@ -15,16 +15,18 @@ class Collections extends React.Component {
   }
 
   componentDidMount() {
-    const { user } = this.props.params;
+    const { user } = this.props.match.params;
     this.props.getCollections(user);
   }
 
-  componentWillReceiveProps(nextProps) {
-    if (this.props.params.user !== nextProps.params.user) {
-      this.props.getCollections(nextProps.params.user);
+  componentDidUpdate(prevProps) {
+    const prevUser = prevProps.match.params.user;
+    const currUser = this.props.match.params.user;
+    if (prevUser !== currUser) {
+      this.props.getCollections(this.props.match.params.user);
     }
-    if (nextProps.user) {
-      setTitle(`${nextProps.user.username}'s collections`);
+    if (currUser) {
+      setTitle(`${currUser}'s collections`);
     }
   }
 
@@ -32,9 +34,9 @@ class Collections extends React.Component {
     this.props.addCollection({ name: newCol.name });
   }
 
-  toggleForm(e) {
-    const newVal = !this.state.colFormVisible;
-    this.setState({ colFormVisible: newVal });
+  toggleForm() {
+    const { colFormVisible } = this.state;
+    this.setState({ colFormVisible: !colFormVisible });
   }
 
   render() {
@@ -42,18 +44,25 @@ class Collections extends React.Component {
       return (<section id="collectionList">{this.props.error}</section>);
     }
 
-    const showAddButton = this.props.user && this.props.user.username === this.props.params.user;
+    const { user } = this.props.match.params;
+
+    const showAddButton = this.props.user && this.props.user.username === user;
     return (
       <section id="collectionList">
         <h1>
-          {this.props.params.user}
+          {user}
           &apos;s Collections
         </h1>
-        <CollectionBox collections={this.props.collections}
+        <CollectionBox
+          collections={this.props.collections}
           deleteItem={this.handleDelete}
-          username={this.props.params.user} />
+          username={user} />
         { this.state.colFormVisible
-          ? <AddCollectionForm onLinkSubmit={this.handleSubmit} toggler={this.toggleForm} />
+          ? (
+            <AddCollectionForm
+              onLinkSubmit={(e) => this.handleSubmit(e)}
+              toggler={() => this.toggleForm()} />
+          )
           : null }
         { showAddButton && !this.state.colFormVisible
           ? <button type="button" className="addItemButton" onClick={this.toggleForm}>+</button>
@@ -69,7 +78,7 @@ Collections.propTypes = {
   collections: PropTypes.array,
   getCollections: PropTypes.func,
   addCollection: PropTypes.func,
-  params: PropTypes.object,
+  match: PropTypes.object,
 };
 
 Collections.defaltProps = {
@@ -77,12 +86,12 @@ Collections.defaltProps = {
 };
 
 export default connect(
-  (state, props) => ({
+  (state) => ({
     user: state.auth.user,
     error: state.auth.error || state.collections.error,
-    collections: state.collections.list.sort((a, b) => {
-      return new Date(b.createdAt) - new Date(a.createdAt);
-    }),
+    collections: state.collections.list.sort((a, b) => (
+      new Date(b.createdAt) - new Date(a.createdAt)
+    )),
   }),
   (dispatch) => ({
     addCollection: (collection) => dispatch(Actions.addCollection(collection)),

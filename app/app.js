@@ -34,7 +34,7 @@ function Routes() {
     }
   };
 
-  if (cookies.token) {
+  if (cookies.token && !auth.token) {
     dispatch(loggedIn(cookies.token));
   }
 
