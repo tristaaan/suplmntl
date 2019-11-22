@@ -1,7 +1,7 @@
-var bcrypt = require('bcryptjs');
-var crypto = require('crypto');
-var mongoose = require('mongoose');
-var randomString = require('./utils').randomString;
+const bcrypt = require('bcryptjs');
+const crypto = require('crypto');
+const mongoose = require('mongoose');
+const { randomString } = require('./utils');
 
 if (process.env.MONGO_DEBUG) {
   mongoose.set('debug', (collectionName, method, query, doc) => {
@@ -62,7 +62,7 @@ exports.createCollection = (entry) => {
 };
 
 exports.updateCollection = (newCol, userId) => {
-  var _id = newCol._id;
+  const _id = newCol._id;
   delete newCol._id;
   return Collections.findOne({ _id }).lean().exec()
     .then((resp) => {
@@ -135,7 +135,7 @@ exports.getUserByName = (username) => {
   return Users.findOne({ username }).lean().exec();
 };
 
-exports.addUser = (user, cb) => {
+exports.addUser = (user) => {
   return Users.find({ username: user.username }).exec()
     .then((resp) => {
       if (resp.length) {
@@ -204,7 +204,7 @@ exports.setResetTokenForEmail = (email) => {
       }
       return new Promise((resolve, reject) => {
         crypto.randomBytes(16, (err, buf) => {
-          var token = buf.toString('hex');
+          const token = buf.toString('hex');
           resolve({ token, user });
         });
       });
