@@ -6,8 +6,7 @@ import { logout } from '../redux/actions/auth';
 
 class Header extends React.Component {
   logout() {
-    const { dispatch } = this.props;
-    dispatch(logout);
+    dispatch(this.props.logout);
   }
 
   render() {
