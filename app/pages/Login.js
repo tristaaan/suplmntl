@@ -6,6 +6,10 @@ import * as AuthActions from '../redux/actions/auth';
 import history from '../history';
 
 class Login extends React.Component {
+  static gotoSignUp() {
+    history.push('/sign-up');
+  }
+
   sumbmitForm(e) {
     e.preventDefault();
     const user = {
@@ -14,10 +18,6 @@ class Login extends React.Component {
     };
     const rememberMe = e.target[2].value;
     this.props.dispatch(AuthActions.login(user, rememberMe));
-  }
-
-  static gotoSignUp() {
-    history.push('/sign-up');
   }
 
   render() {

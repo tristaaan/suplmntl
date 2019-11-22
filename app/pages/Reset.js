@@ -4,8 +4,9 @@ import { connect } from 'react-redux';
 import * as AuthActions from '../redux/actions/auth';
 
 class Reset extends React.Component {
-  getInitialState() {
-    return {
+  constructor(props) {
+    super(props);
+    this.state = {
       newPass: '',
       confirmPass: '',
       passwordError: ''
@@ -35,12 +36,14 @@ class Reset extends React.Component {
     return (
       <div className="login-form">
         <form onSubmit={this.submitForm}>
-          <input type="password"
+          <input
+            type="password"
             placeholder="new password"
             data-key="newPass"
             value={this.state.newPass}
             onChange={this.handleChange} />
-          <input type="password"
+          <input
+            type="password"
             placeholder="confirm password"
             data-key="confirmPass"
             value={this.state.confirmPass}

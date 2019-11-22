@@ -4,23 +4,17 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 
 class CollectionBox extends React.Component {
-  getDefaultProps() {
-    return { collections: [] };
-  }
-
   deleteItem(e) {
     this.props.deleteItem(e.target.value);
   }
 
   render() {
-    const createItem = (col, index) => {
-      return (
-        <li key={`${col.postId}_${index}`}>
-          <Link to={`/${this.props.username}/${col.postId}/view`} className="title">{col.name}</Link>
-          <span>{col.links.length === 1 ? `${col.links.length} link` : `${col.links.length} links`}</span>
-        </li>
-      );
-    };
+    const createItem = (col, index) => (
+      <li key={`${col.postId}_${index}`}>
+        <Link to={`/${this.props.username}/${col.postId}/view`} className="title">{col.name}</Link>
+        <span>{col.links.length === 1 ? `${col.links.length} link` : `${col.links.length} links`}</span>
+      </li>
+    );
     return (<ul>{this.props.collections.map(createItem)}</ul>);
   }
 }
@@ -30,5 +24,7 @@ CollectionBox.propTypes = {
   collections: PropTypes.array,
   deleteItem: PropTypes.func,
 };
+
+CollectionBox.defaultProps = { collections: [] };
 
 export default CollectionBox;

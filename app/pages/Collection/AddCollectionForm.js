@@ -3,8 +3,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 class AddCollectionForm extends React.Component {
-  getInitialState() {
-    return { name: '' };
+  constructor(props) {
+    super(props);
+    this.state = { name: '' };
   }
 
   componentDidMount() {

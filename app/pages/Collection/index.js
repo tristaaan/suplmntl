@@ -9,12 +9,9 @@ import * as Actions from '../../redux/actions/collections';
 import setTitle from '../../utils/setTitle';
 
 class Collections extends React.Component {
-  getDefaultProps() {
-    return { collections: [] };
-  }
-
-  getInitialState() {
-    return { colFormVisible: false };
+  constructor(props) {
+    super(props);
+    this.state = { colFormVisible: false };
   }
 
   componentDidMount() {
@@ -73,6 +70,10 @@ Collections.propTypes = {
   getCollections: PropTypes.func,
   addCollection: PropTypes.func,
   params: PropTypes.object,
+};
+
+Collections.defaltProps = {
+  collections: []
 };
 
 export default connect(

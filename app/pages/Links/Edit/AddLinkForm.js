@@ -4,7 +4,8 @@ import PropTypes from 'prop-types';
 class AddLinkForm extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { title: '', link: '', description: '' };
+    this.initialState = { title: '', link: '', description: '' };
+    this.state = { ...this.initialState };
   }
 
   handleSubmit(e) {
@@ -36,7 +37,7 @@ class AddLinkForm extends React.Component {
     }
 
     this.props.onLinkSubmit({ title, link, description });
-    this.setState(this.getInitialState());
+    this.setState({ ...this.initialState });
     this.submitButton.blur();
     this.titleInput.focus();
   }

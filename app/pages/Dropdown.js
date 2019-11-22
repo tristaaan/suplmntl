@@ -2,8 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 class Dropdown extends React.Component {
-  getInitialState() {
-    return { toggled: false };
+  constructor(props) {
+    super(props);
+    this.state = { toggled: false };
   }
 
   componentDidUpdate(prevState) {

@@ -4,8 +4,15 @@ import { connect } from 'react-redux';
 import * as AuthActions from '../redux/actions/auth';
 
 class Forgot extends React.Component {
-  getInitialState() {
-    return { email: '' };
+  static submitForm(e) {
+    e.preventDefault();
+    const email = e.target[0].value;
+    AuthActions.forgotPassword(email);
+  }
+
+  constructor(props) {
+    super(props);
+    this.state = { email: '' };
   }
 
   handleChange(e) {
@@ -13,17 +20,12 @@ class Forgot extends React.Component {
     this.setState(newState);
   }
 
-  static submitForm(e) {
-    e.preventDefault();
-    const email = e.target[0].value;
-    AuthActions.forgotPassword(email);
-  }
-
   render() {
     return (
       <div className="login-form">
         <form onSubmit={this.submitForm}>
-          <input type="email"
+          <input
+            type="email"
             placeholder="Email"
             data-key="email"
             value={this.state.email}

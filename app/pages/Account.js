@@ -5,8 +5,9 @@ import * as Actions from '../redux/actions/auth';
 import setTitle from '../utils/setTitle';
 
 class Account extends React.Component {
-  getInitialState() {
-    return {
+  constructor(props) {
+    super(props);
+    this.state = {
       newEmail: '',
       oldPass: '',
       newPass: '',
