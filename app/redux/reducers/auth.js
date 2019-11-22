@@ -1,4 +1,4 @@
-import * as Actions from '../actions/auth';
+import * as Actions from '../actions/actionTypes';
 
 const initialState = {
   token: '',
@@ -21,17 +21,17 @@ export default function authReducer(state = initialState, action) {
 
     case Actions.AUTH_ERROR: {
       if (typeof action.err === 'string') {
-        return Object.assign({}, state, { error: action.err });
+        return { error: action.err, ...state };
       }
-      return Object.assign({}, state, { error: action.err.response.data.message });
+      return { error: action.err.response.data.message, ...state };
     }
 
     case Actions.CLEAR_ERROR: {
-      return Object.assign({}, state, { error: null });
+      return { error: null, ...state };
     }
 
     case Actions.UPDATE_USER: {
-      const newState = Object.assign({}, state);
+      const newState = { ...state };
       newState.user = action.user;
       return newState;
     }

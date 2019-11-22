@@ -2,29 +2,22 @@ import moment from 'moment';
 import { useCookies } from 'react-cookie';
 import { useHistory } from 'react-router-dom';
 import * as service from '../../service';
+import * as Actions from './actionTypes';
 import store from '..';
 
-export const LOGIN_SUCCESS = 'LOGIN_SUCCESS';
-export const AUTH_ERROR = 'AUTH_ERROR';
-export const CLEAR_ERROR = 'CLEAR_ERROR';
-export const LOGOUT = 'LOGOUT';
-export const UPDATE_USER = 'UPDATE_USER';
-export const FORGOT = 'FORGOT';
-export const RESET = 'RESET';
-
 const history = useHistory();
-const [setCookie] = useCookies(['token']);
+const [setCookie, removeCookie] = useCookies(['token']);
 
 function loginSuccess(token, user) {
-  return { type: LOGIN_SUCCESS, token, user };
+  return { type: Actions.LOGIN_SUCCESS, token, user };
 }
 
 function updateUser(user) {
-  return { type: UPDATE_USER, user };
+  return { type: Actions.UPDATE_USER, user };
 }
 
 export function clearError() {
-  return { type: CLEAR_ERROR };
+  return { type: Actions.CLEAR_ERROR };
 }
 
 let debounce = null;
@@ -36,7 +29,7 @@ export function authError(err) {
   debounce = setTimeout(() => {
     store.dispatch(clearError());
   }, 5000);
-  return { type: AUTH_ERROR, err };
+  return { type: Actions.AUTH_ERROR, err };
 }
 
 export function loggedIn(token) {
@@ -124,9 +117,9 @@ export function changePassword(userId, oldPass, newPass) {
 }
 
 export function logout() {
-  cookie.remove('token');
+  removeCookie('token');
   history.push('/');
-  return { type: LOGOUT };
+  return { type: Actions.LOGOUT };
 }
 
 export function deleteAccount(userId) {
