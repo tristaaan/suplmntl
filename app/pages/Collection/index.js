@@ -8,7 +8,7 @@ import AddCollectionForm from './AddCollectionForm';
 import * as Actions from '../../redux/actions/collections';
 import setTitle from '../../utils/setTitle';
 
-class Collections extends React.component {
+class Collections extends React.Component {
   getDefaultProps() {
     return { collections: [] };
   }
@@ -18,7 +18,8 @@ class Collections extends React.component {
   }
 
   componentDidMount() {
-    this.props.getCollections(this.props.params.user);
+    const { user } = this.props.params;
+    this.props.getCollections(user);
   }
 
   componentWillReceiveProps(nextProps) {

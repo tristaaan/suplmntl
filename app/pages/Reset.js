@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import * as AuthActions from '../redux/actions/auth';
 
-class Reset extends React.component {
+class Reset extends React.Component {
   getInitialState() {
     return {
       newPass: '',

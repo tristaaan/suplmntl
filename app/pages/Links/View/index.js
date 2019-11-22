@@ -12,7 +12,7 @@ import { jsonToMarkdown } from '../../../utils/exporter';
 
 import * as Actions from '../../../redux/actions/collections';
 
-class ViewLinks extends React.component {
+class ViewLinks extends React.Component {
   componentDidMount() {
     if (!Object.keys(this.props.collection).length) {
       this.props.getCollection(this.props.params.id);

@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import * as AuthActions from '../redux/actions/auth';
 
-class Forgot extends React.component {
+class Forgot extends React.Component {
   getInitialState() {
     return { email: '' };
   }

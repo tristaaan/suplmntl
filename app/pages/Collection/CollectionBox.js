@@ -3,7 +3,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 
-class CollectionBox extends React.component {
+class CollectionBox extends React.Component {
   getDefaultProps() {
     return { collections: [] };
   }

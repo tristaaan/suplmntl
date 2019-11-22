@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-class AddLinkForm extends React.component {
+class AddLinkForm extends React.Component {
   getInitialState() {
     return { title: '', link: '', description: '' };
   }

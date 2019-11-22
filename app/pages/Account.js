@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import * as Actions from '../redux/actions/auth';
 import setTitle from '../utils/setTitle';
 
-class Account extends React.component {
+class Account extends React.Component {
   getInitialState() {
     return {
       newEmail: '',

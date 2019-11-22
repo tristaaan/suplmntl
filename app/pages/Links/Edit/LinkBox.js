@@ -2,7 +2,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-class LinkBox extends React.component {
+class LinkBox extends React.Component {
   onItemChange(e) {
     const index = parseInt(e.target.parentElement.dataset.index, 10);
     const { key } = e.target.dataset;

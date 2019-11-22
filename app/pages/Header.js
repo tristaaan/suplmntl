@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { logout } from '../redux/actions/auth';
 
-class App extends React.component {
+class Header extends React.Component {
   logout() {
     this.props.dispatch(logout);
   }
@@ -30,7 +30,7 @@ class App extends React.component {
   }
 }
 
-App.propTypes = {
+Header.propTypes = {
   token: PropTypes.string,
   user: PropTypes.object,
   dispatch: PropTypes.func
@@ -41,4 +41,4 @@ export default connect(
     token: state.auth.token,
     user: state.auth.user
   })
-)(App);
+)(Header);

@@ -1,12 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { useHistory, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import * as AuthActions from '../redux/actions/auth';
+import history from '../history';
 
-const history = useHistory();
-
-class Login extends React.component {
+class Login extends React.Component {
   sumbmitForm(e) {
     e.preventDefault();
     const user = {

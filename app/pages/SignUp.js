@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { signup } from '../redux/actions/auth';
 
-class SignUpForm extends React.component {
+class SignUpForm extends React.Component {
   getInitialState() {
     return { badPass: false, errorMessage: false };
   }
