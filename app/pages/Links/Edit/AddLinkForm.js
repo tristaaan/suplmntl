@@ -6,6 +6,9 @@ class AddLinkForm extends React.Component {
     super(props);
     this.initialState = { title: '', link: '', description: '' };
     this.state = { ...this.initialState };
+
+    this.submitButton = React.createRef();
+    this.titleInput = React.createRef();
   }
 
   handleSubmit(e) {
@@ -38,8 +41,8 @@ class AddLinkForm extends React.Component {
 
     this.props.onLinkSubmit({ title, link, description });
     this.setState({ ...this.initialState });
-    this.submitButton.blur();
-    this.titleInput.focus();
+    this.submitButton.current.blur();
+    this.titleInput.current.focus();
   }
 
   updateStateFromForm(e) {
@@ -53,32 +56,32 @@ class AddLinkForm extends React.Component {
   render() {
     const { title, link, description } = this.state;
     return (
-      <form onSubmit={this.handleSubmit} className="linkForm">
+      <form onSubmit={(e) => this.handleSubmit(e)} className="linkForm">
         <input
           type="text"
           placeholder="title"
-          ref={(c) => { this.titleInput = c; }}
+          ref={this.titleInput}
           data-key="title"
-          onChange={this.updateStateFromForm}
+          onChange={(e) => this.updateStateFromForm(e)}
           value={title}
           required />
         <input
           type="text"
           placeholder="url"
           data-key="link"
-          onChange={this.updateStateFromForm}
+          onChange={(e) => this.updateStateFromForm(e)}
           value={link}
           required />
         <textarea
           placeholder="description"
           data-key="description"
-          onChange={this.updateStateFromForm}
+          onChange={(e) => this.updateStateFromForm(e)}
           value={description}
           required />
         <button
           type="submit"
           className="addItemButton"
-          ref={(c) => { this.submitButton = c; }}>
+          ref={this.submitButton}>
           Add Link
         </button>
       </form>

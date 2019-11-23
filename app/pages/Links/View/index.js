@@ -1,7 +1,7 @@
 // LinkList
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
+import { Redirect, Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 import Dropdown from '../../Dropdown';
@@ -13,6 +13,11 @@ import { jsonToMarkdown } from '../../../utils/exporter';
 import * as Actions from '../../../redux/actions/collections';
 
 class ViewLinks extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { redirect: false };
+  }
+
   componentDidMount() {
     if (!Object.keys(this.props.collection).length) {
       this.props.getCollection(this.props.match.params.id);
@@ -33,12 +38,14 @@ class ViewLinks extends React.Component {
     if (this.props.user) {
       this.props.forkCollection(this.props.collection._id, this.props.user);
     } else {
-      this.context.router.push('/login');
+      this.setState({ redirect: '/login' });
     }
   }
 
   editList() {
-    this.context.router.push(`/${this.props.user.username}/${this.props.match.params.id}/edit`);
+    const editString = `/${this.props.user.username}/`
+      + `${this.props.match.params.id}/edit`;
+    this.setState({ redirect: editString });
   }
 
   downloadMarkdownList() {
@@ -67,6 +74,10 @@ class ViewLinks extends React.Component {
   }
 
   render() {
+    if (this.state.redirect) {
+      return <Redirect to={this.state.redirect} />;
+    }
+
     const user = get(this.props, 'user');
     const { name, forkOf, owner } = this.props.collection;
     const isOwner = user && user._id === get(this.props, 'collection.owner._id');
@@ -88,7 +99,7 @@ class ViewLinks extends React.Component {
     } else if (owner) {
       sub = (
         <small>
-          by
+          by&nbsp;
           <Link to={`/${owner.username}/collections`}>{ owner.username }</Link>
         </small>
       );

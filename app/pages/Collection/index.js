@@ -16,6 +16,7 @@ class Collections extends React.Component {
 
   componentDidMount() {
     const { user } = this.props.match.params;
+    console.log('collections mounted');
     this.props.getCollections(user);
   }
 

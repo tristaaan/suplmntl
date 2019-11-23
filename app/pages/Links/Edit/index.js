@@ -2,13 +2,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Prompt } from 'react-router';
+import { Redirect, Prompt } from 'react-router';
 
 import LinksBox from './LinkBox';
 import AddLinkForm from './AddLinkForm';
 import get from '../../../utils/get';
 import * as Actions from '../../../redux/actions/collections';
-import history from '../../../history';
 
 class EditLinks extends React.Component {
   constructor(props) {
@@ -16,13 +15,15 @@ class EditLinks extends React.Component {
     this.state = {
       tmpCol: props.collection,
       changes: false,
+      redirect: false,
     };
   }
 
   componentDidMount() {
     const { collection, user, getCollection, match } = this.props;
     if (user.id !== collection.ownerId) {
-      history.replace(`/${match.params.user}/${collection.postId}/view`);
+      const viewString = `/${match.params.user}/${collection.postId}/view`;
+      this.setState({ redirect: viewString });
       return;
     }
 
@@ -66,7 +67,7 @@ class EditLinks extends React.Component {
       && window.confirm('There are unsaved changes, are you sure you want to cancel?'))
       || !this.changes) {
       const { collection, user } = this.props;
-      history.push(`/${user.username}/${collection.postId}/view`);
+      this.setState({ redirect: `/${user.username}/${collection.postId}/view` });
     }
   }
 
@@ -75,7 +76,7 @@ class EditLinks extends React.Component {
     if (this.changes) {
       updateCollection(this.state.tmpCol);
     }
-    history.push(`/${user.username}/${collection.postId}/view`);
+    this.setState({ redirect: `/${user.username}/${collection.postId}/view` });
   }
 
   updateTmpTitle(e) {
@@ -85,6 +86,9 @@ class EditLinks extends React.Component {
   }
 
   render() {
+    if (this.state.redirect) {
+      return <Redirect to={this.state.redirect} />;
+    }
     return (
       <section id="linkList" ref={(c) => {this.el = c;}}>
         <Prompt
@@ -94,25 +98,25 @@ class EditLinks extends React.Component {
         <div className="linkListHeader">
           <input
             ref={(c) => {this.titleEditor = c;}}
-            onChange={this.updateTmpTitle}
+            onChange={(e) => this.updateTmpTitle(e)}
             value={this.state.tmpCol.name} />
           <button
             type="button"
-            onClick={this.cancel}
+            onClick={() => this.cancel()}
             style={{ margin: '0 4px' }}>
             Cancel
           </button>
           <button
             type="button"
-            onClick={this.done}>
+            onClick={() => this.done()}>
             Done
           </button>
         </div>
         <LinksBox
           links={this.state.tmpCol.links}
-          deleteItem={this.handleDelete}
-          onChange={this.updateItem} />
-        <AddLinkForm onLinkSubmit={this.handleSubmit} />
+          deleteItem={(index) => this.handleDelete(index)}
+          onChange={(i, k, v) => this.updateItem(i, k, v)} />
+        <AddLinkForm onLinkSubmit={(link) => this.handleSubmit(link)} />
       </section>
     );
   }
@@ -122,7 +126,6 @@ EditLinks.propTypes = {
   collection: PropTypes.object,
   getCollection: PropTypes.func,
   updateCollection: PropTypes.func,
-  params: PropTypes.object,
   user: PropTypes.object,
   match: PropTypes.object,
 };
@@ -136,7 +139,7 @@ export default connect(
   (state, props) => {
     const nextProp = { collections: {}, username: '' };
     if (state.collections && state.collections.map) {
-      nextProp.collection = state.collections.map[props.params.id];
+      nextProp.collection = state.collections.map[props.match.params.id];
     }
     if (get(state.auth, 'user.username')) {
       nextProp.user = state.auth.user;

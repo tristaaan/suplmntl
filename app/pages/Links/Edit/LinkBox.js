@@ -24,12 +24,12 @@ class LinkBox extends React.Component {
             type="text"
             placeholder="title"
             data-key="title"
-            onChange={this.onItemChange}
+            onChange={(e) => this.onItemChange(e)}
             value={item.title} />
           <button
             className="errorButton"
             type="button"
-            onClick={this.deleteItem}
+            onClick={(e) => this.deleteItem(e)}
             value={index}>
             x
           </button>
@@ -38,12 +38,12 @@ class LinkBox extends React.Component {
           type="text"
           placeholder="url"
           data-key="link"
-          onChange={this.onItemChange}
+          onChange={(e) => this.onItemChange(e)}
           value={item.link} />
         <textarea
           placeholder="description"
           data-key="description"
-          onChange={this.onItemChange}
+          onChange={(e) => this.onItemChange(e)}
           value={item.description} />
       </div>
     );
