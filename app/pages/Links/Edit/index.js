@@ -65,7 +65,7 @@ class EditLinks extends React.Component {
   cancel() {
     if ((this.changes
       && window.confirm('There are unsaved changes, are you sure you want to cancel?'))
-      || !this.changes) {
+      || !this.state.changes) {
       const { collection, user } = this.props;
       this.setState({ redirect: `/${user.username}/${collection.postId}/view` });
     }
@@ -73,7 +73,7 @@ class EditLinks extends React.Component {
 
   done() {
     const { collection, user, updateCollection } = this.props;
-    if (this.changes) {
+    if (this.state.changes) {
       updateCollection(this.state.tmpCol);
     }
     this.setState({ redirect: `/${user.username}/${collection.postId}/view` });
@@ -92,7 +92,7 @@ class EditLinks extends React.Component {
     return (
       <section id="linkList" ref={(c) => {this.el = c;}}>
         <Prompt
-          when={this.changes}
+          when={this.state.changes}
           message="There are unsaved changes, are you sure you want to leave?"
         />
         <div className="linkListHeader">
