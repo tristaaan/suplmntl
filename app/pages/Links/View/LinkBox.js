@@ -11,19 +11,17 @@ function LinkBox({ links }) {
     return (<p>There are no links in this collection</p>);
   }
 
-  const createItem = (item, index) => {
-    return (
-      <div className="linkItem" key={index}>
-        <dt>
-          <a href={item.link} target="_blank" rel="noopener noreferrer">{item.title}</a>
-        </dt>
-        <dd>
-          {/* {isImage(item.link) ? <img src={item.link} /> : null} */ }
-          <p>{item.description}</p>
-        </dd>
-      </div>
-    );
-  };
+  const createItem = (item, index) => (
+    <div className="linkItem" key={index}>
+      <dt>
+        <a href={item.link} target="_blank" rel="noopener noreferrer">{item.title}</a>
+      </dt>
+      <dd>
+        {/* {isImage(item.link) ? <img src={item.link} /> : null} */ }
+        <p>{item.description}</p>
+      </dd>
+    </div>
+  );
   return <dl>{links.map(createItem)}</dl>;
 }
 

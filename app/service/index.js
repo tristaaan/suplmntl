@@ -40,7 +40,7 @@ export function login(user, rememberMe) {
   return axios.post('/login', { user, rememberMe });
 }
 
-export function getUser(token) {
+export function getUser() {
   return axios.get('/user');
 }
 
