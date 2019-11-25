@@ -1,5 +1,3 @@
-import history from '../../history';
-
 import * as service from '../../service';
 import * as Actions from './actionTypes';
 
@@ -19,13 +17,11 @@ export function addCollection(collection) {
   };
 }
 
-export function deleteCollection(id, location = null) {
+export function deleteCollection(id, username, location) {
   return (dispatch) => {
     service.deleteCollection(id)
       .then(() => {
-        if (location) {
-          history.replace(location);
-        }
+        location.replace(`/${username}/collections`);
         dispatch({ type: Actions.DELETE_COLLECTION, id });
       })
       .catch((err) => {
@@ -72,11 +68,11 @@ export function getCollection(id) {
   };
 }
 
-export function forkCollection(id) {
+export function forkCollection(id, location) {
   return (dispatch) => {
     service.forkCollection(id)
       .then((resp) => {
-        history.push(`/list/${resp.data.postId}/view`);
+        location.push(`/list/${resp.data.postId}/view`);
         dispatch({ type: Actions.FORK_COLLECTION, collection: resp.data });
       })
       .catch((err) => {

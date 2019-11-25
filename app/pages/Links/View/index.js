@@ -36,7 +36,10 @@ class ViewLinks extends React.Component {
 
   forkList() {
     if (this.props.user) {
-      this.props.forkCollection(this.props.collection._id, this.props.user);
+      this.props.forkCollection(
+        this.props.collection._id,
+        this.props.history
+      );
     } else {
       this.setState({ redirect: '/login' });
     }
@@ -58,7 +61,6 @@ class ViewLinks extends React.Component {
     downloadLink.href = downloadURL;
     downloadLink.download = `${this.props.collection.name}.md`;
     downloadLink.click();
-    console.log('download?');
     // Free memory
     setTimeout(() => {
       window.URL.revokeObjectURL(downloadURL);
@@ -69,8 +71,11 @@ class ViewLinks extends React.Component {
     if (!confirm(`Are you sure you want to delete this collection:\n"${this.props.collection.name}"?`)) {
       return;
     }
-    this.props.deleteCollection(this.props.collection._id,
-      `/${this.props.user.username}/collections`);
+    this.props.deleteCollection(
+      this.props.collection._id,
+      this.props.user.username,
+      this.props.history
+    );
   }
 
   render() {
@@ -170,7 +175,8 @@ ViewLinks.propTypes = {
   getCollection: PropTypes.func,
   forkCollection: PropTypes.func,
   deleteCollection: PropTypes.func,
-  match: PropTypes.object
+  match: PropTypes.object,
+  history: PropTypes.object,
 };
 
 export default connect(
@@ -186,7 +192,7 @@ export default connect(
   },
   (dispatch) => ({
     getCollection: (id) => dispatch(Actions.getCollection(id)),
-    forkCollection: (id, user) => dispatch(Actions.forkCollection(id, user)),
-    deleteCollection: (id, loc) => dispatch(Actions.deleteCollection(id, loc))
+    forkCollection: (id, loc) => dispatch(Actions.forkCollection(id, loc)),
+    deleteCollection: (id, username, loc) => dispatch(Actions.deleteCollection(id, username, loc))
   })
 )(ViewLinks);
