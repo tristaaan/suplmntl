@@ -16,20 +16,41 @@ export function clearError() {
   return { type: Actions.CLEAR_ERROR };
 }
 
+export function clearMessage() {
+  return { type: Actions.CLEAR_MESSAGE };
+}
+
+export function passChangeMessage() {
+  return (dispatch) => {
+    dispatch({
+      type: Actions.PASS_CHANGE,
+      message: 'Password successfully updated.',
+    });
+    setTimeout(
+      () => { dispatch(clearMessage()); },
+      3500
+    );
+  };
+}
+
 let debounce = null;
 export function authError(err) {
-  if (debounce !== null) {
-    clearTimeout(debounce);
-    debounce = null;
-  }
-  debounce = setTimeout(() => {
-    store.dispatch(clearError());
-  }, 5000);
-  return { type: Actions.AUTH_ERROR, err };
+  return (dispatch) => {
+    dispatch({ type: Actions.AUTH_ERROR, err });
+    if (debounce !== null) {
+      clearTimeout(debounce);
+      debounce = null;
+    }
+    debounce = setTimeout(() => {
+      debounce = null;
+      console.log('dispatch clear');
+      store.dispatch(clearError());
+    }, 3500);
+  };
 }
 
 export function loggedIn(token) {
-  service.upadteAuthToken(token);
+  service.updateAuthToken(token);
   return (dispatch) => {
     service.getUser()
       .then((resp) => {
@@ -102,15 +123,10 @@ export function updateUserEmail(userId, newEmail) {
 }
 
 export function changePassword(userId, oldPass, newPass) {
-  return () => {
-    service.changePassword(userId, oldPass, newPass)
-      .then((resp) => {
-        console.log(resp);
-      })
-      .catch((err) => {
-        console.log(err);
-        return authError(err);
-      });
+  return (dispatch) => {
+    return service.changePassword(userId, oldPass, newPass)
+      .then(() => dispatch(passChangeMessage()))
+      .catch((err) => dispatch(authError(err)));
   };
 }
 

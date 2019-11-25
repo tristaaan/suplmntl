@@ -47,12 +47,12 @@ export default function authReducer(state = initialState, action) {
     }
     case Actions.COLLECTION_ERROR: {
       if (typeof action.err === 'string') {
-        return { error: action.err, ...state };
+        return { ...state, error: action.err };
       }
-      return { error: action.err.response.data.message, ...state };
+      return { ...state, error: action.err.response.data.message };
     }
     case Actions.CLEAR_COLLECTION_ERROR: {
-      return { error: null, ...state };
+      return { ...state, error: null };
     }
     default:
       return state;

@@ -4,6 +4,7 @@ const initialState = {
   token: '',
   user: null,
   error: null,
+  passChangeMessage: '',
 };
 
 export default function authReducer(state = initialState, action) {
@@ -21,19 +22,27 @@ export default function authReducer(state = initialState, action) {
 
     case Actions.AUTH_ERROR: {
       if (typeof action.err === 'string') {
-        return { error: action.err, ...state };
+        return { ...state, error: action.err };
       }
-      return { error: action.err.response.data.message, ...state };
+      return { ...state, error: action.err.response.data.message };
     }
 
     case Actions.CLEAR_ERROR: {
-      return { error: null, ...state };
+      return { ...state, error: null };
     }
 
     case Actions.UPDATE_USER: {
       const newState = { ...state };
       newState.user = action.user;
       return newState;
+    }
+
+    case Actions.PASS_CHANGE: {
+      return { ...state, passChangeMessage: action.message };
+    }
+
+    case Actions.CLEAR_MESSAGE: {
+      return { ...state, passChangeMessage: '' };
     }
 
     default:

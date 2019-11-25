@@ -1,3 +1,4 @@
+// AUTH actions
 export const LOGIN_SUCCESS = 'LOGIN_SUCCESS';
 export const AUTH_ERROR = 'AUTH_ERROR';
 export const CLEAR_ERROR = 'CLEAR_ERROR';
@@ -5,7 +6,10 @@ export const LOGOUT = 'LOGOUT';
 export const UPDATE_USER = 'UPDATE_USER';
 export const FORGOT = 'FORGOT';
 export const RESET = 'RESET';
+export const CLEAR_MESSAGE = 'CLEAR_MESSAGE';
+export const PASS_CHANGE = 'PASS_CHANGE';
 
+// Collection actions
 export const ADD_COLLECTION = 'ADD_COLLECTION';
 export const DELETE_COLLECTION = 'DELETE_COLLECTION';
 export const FORK_COLLECTION = 'FORK_COLLECTION';
