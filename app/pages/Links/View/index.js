@@ -8,7 +8,7 @@ import Dropdown from '../../Dropdown';
 import LinksBox from './LinkBox';
 import get from '../../../utils/get';
 import setTitle from '../../../utils/setTitle';
-import { jsonToMarkdown } from '../../../utils/exporter';
+import jsonToMarkdown from '../../../utils/exporter';
 
 import * as Actions from '../../../redux/actions/collections';
 

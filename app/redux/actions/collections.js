@@ -22,7 +22,7 @@ export function addCollection(collection) {
 export function deleteCollection(id, location = null) {
   return (dispatch) => {
     service.deleteCollection(id)
-      .then((resp) => {
+      .then(() => {
         if (location) {
           history.replace(location);
         }
@@ -72,7 +72,7 @@ export function getCollection(id) {
   };
 }
 
-export function forkCollection(id, user) {
+export function forkCollection(id) {
   return (dispatch) => {
     service.forkCollection(id)
       .then((resp) => {
