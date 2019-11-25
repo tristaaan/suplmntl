@@ -27,7 +27,7 @@ class SignUpForm extends React.Component {
       email: e.target[1].value,
       password: e.target[2].value
     };
-    this.props.signup(user, this.props.cookies);
+    this.props.signup(user, this.props.cookies, this.props.history);
   }
 
   checkPasswords() {
@@ -84,6 +84,7 @@ SignUpForm.propTypes = {
   signup: PropTypes.func,
   error: PropTypes.string,
   cookies: PropTypes.object,
+  history: PropTypes.object,
 };
 
 export default withCookies(connect(
@@ -92,6 +93,6 @@ export default withCookies(connect(
     cookies: ownProps.cookies
   }),
   (dispatch) => ({
-    signup: (user, cookies) => dispatch(signup(user, cookies))
+    signup: (user, cookies, loc) => dispatch(signup(user, cookies, loc))
   })
 )(SignUpForm));

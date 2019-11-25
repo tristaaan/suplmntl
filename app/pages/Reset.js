@@ -29,7 +29,13 @@ class Reset extends React.Component {
       return;
     }
     this.setState({ passwordError: '' });
-    AuthActions.resetPassword(this.state.newPass, this.props.params.token);
+    this.props.dispatch(
+      AuthActions.resetPassword(
+        this.state.newPass,
+        this.props.match.params.token,
+        this.props.history
+      )
+    );
   }
 
   render() {
@@ -62,8 +68,10 @@ class Reset extends React.Component {
 }
 
 Reset.propTypes = {
-  params: PropTypes.object,
+  match: PropTypes.object,
   error: PropTypes.string,
+  history: PropTypes.object,
+  dispatch: PropTypes.func,
 };
 
 export default connect(

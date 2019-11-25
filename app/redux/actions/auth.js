@@ -1,7 +1,6 @@
 import moment from 'moment';
 import * as service from '../../service';
 import * as Actions from './actionTypes';
-import history from '../../history';
 import store from '..';
 
 function loginSuccess(token, user) {
@@ -60,7 +59,7 @@ export function loggedIn(token) {
   };
 }
 
-export function login(user, cookie, rememberMe = false) {
+export function login(user, cookie, location, rememberMe = false) {
   return (dispatch) => {
     service.login(user, rememberMe)
       .then((resp) => {
@@ -73,7 +72,7 @@ export function login(user, cookie, rememberMe = false) {
             expires: moment().add(1, 'day').toDate()
           });
         }
-        history.push(`/${resp.data.username}/collections`);
+        location.push(`/${resp.data.username}/collections`);
         dispatch(loggedIn(resp.data.token));
       })
       .catch((err) => {
@@ -82,13 +81,13 @@ export function login(user, cookie, rememberMe = false) {
   };
 }
 
-export function signup(user, cookies) {
+export function signup(user, cookies, location) {
   return (dispatch) => {
     service.signup(user)
       .then((resp) => {
         cookies.set('token', resp.data.token, { expires: moment().add(1, 'hour').toDate() });
         dispatch(loggedIn(resp.data.token));
-        history.push('/login');
+        location.push('/login');
       })
       .catch((err) => {
         console.log(err);
@@ -98,18 +97,18 @@ export function signup(user, cookies) {
 }
 
 // nothing to dispatch
-export function forgotPassword(email) {
+export function forgotPassword(email, location) {
   service.forgotPassword(email)
     .then(() => {
-      history.push('/login');
+      location.push('/login');
     });
 }
 
 // nothing to dispatch
-export function resetPassword(newPass, token) {
+export function resetPassword(newPass, token, location) {
   service.resetPassword(newPass, token)
     .then(() => {
-      history.push('/login');
+      location.push('/login');
     });
 }
 
@@ -130,7 +129,7 @@ export function changePassword(userId, oldPass, newPass) {
 
 export function logout(cookies) {
   cookies.remove('token');
-  history.push('/');
+  location.push('/');
   return { type: Actions.LOGOUT };
 }
 
