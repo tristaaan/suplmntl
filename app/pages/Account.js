@@ -22,6 +22,13 @@ class Account extends React.Component {
     }
   }
 
+  static getDerivedStateFromProps(props) {
+    if (props.passChangeMessage && props.passChangeMessage.length) {
+      return { oldPass: '', newPass: '', confirmNewPass: '' };
+    }
+    return null;
+  }
+
   updateForm(e) {
     // console.log(e.target.dataset.key, e.target.value);
     const newState = { [e.target.dataset.key]: e.target.value };
@@ -39,7 +46,7 @@ class Account extends React.Component {
   updatePassword(e) {
     e.preventDefault();
     if (this.state.newPass !== this.state.confirmNewPass) {
-      if (/still/.test(this.state.passwordError)) {
+      if (!(/still/.test(this.state.passwordError))) {
         this.setState({ passwordError: 'Passwords do not match.' });
       } else {
         this.setState({ passwordError: 'Passwords still do not match.' });
@@ -47,7 +54,11 @@ class Account extends React.Component {
       return;
     }
     this.setState({ passwordError: '' });
-    this.props.updatePassword(this.props.user._id, this.state.oldPass, this.state.newPass);
+    this.props.updatePassword(
+      this.props.user._id,
+      this.state.oldPass,
+      this.state.newPass
+    );
   }
 
   deleteAccount() {
@@ -80,6 +91,9 @@ class Account extends React.Component {
 
         <div className="formGroup">
           Change Password
+          <small>
+            { this.props.passChangeMessage }
+          </small>
           <input
             type="password"
             data-key="oldPass"
@@ -98,7 +112,12 @@ class Account extends React.Component {
             placeholder="confirm new password"
             value={this.state.confirmNewPass}
             onChange={(e) => this.updateForm(e)} />
-          <span className="error-box" style={{ display: this.state.passwordError ? 'block' : 'none' }}>{ this.state.passwordError }</span>
+          <span className="error-box" style={{ display: this.state.passwordError ? 'block' : 'none' }}>
+            { this.state.passwordError }
+          </span>
+          <span className="error-box" style={{ display: this.props.authError ? 'block' : 'none' }}>
+            { this.props.authError }
+          </span>
           <button type="button" onClick={(e) => this.updatePassword(e)}>
             Update Password
           </button>
@@ -111,7 +130,7 @@ class Account extends React.Component {
             id="deleteAccount"
             className="errorButton"
             type="button"
-            onClick={this.deleteAccount}
+            onClick={() => this.deleteAccount()}
           >
             Delete my account and all its data.
           </button>
@@ -123,6 +142,8 @@ class Account extends React.Component {
 
 Account.propTypes = {
   user: PropTypes.object,
+  passChangeMessage: PropTypes.string,
+  authError: PropTypes.string,
   deleteAccount: PropTypes.func,
   updateEmail: PropTypes.func,
   updatePassword: PropTypes.func,
@@ -131,6 +152,8 @@ Account.propTypes = {
 export default connect(
   (state) => ({
     user: state.auth.user,
+    authError: state.auth.error,
+    passChangeMessage: state.auth.passChangeMessage
   }),
   (dispatch) => ({
     updateEmail: (userId, newEmail) => dispatch(Actions.updateUserEmail(userId, newEmail)),
