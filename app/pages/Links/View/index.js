@@ -86,9 +86,9 @@ class ViewLinks extends React.Component {
     if (forkOf) {
       sub = (
         <small>
-          by
+          by&nbsp;
           <Link to={`/${owner.username}/collections`}>{ owner.username }</Link>
-          &nbsp;- fork of:
+          &nbsp;-&nbsp;fork of:&nbsp;
           <Link to={`/list/${forkOf.postId}/view`}>
             {forkOf.owner.username}
             /
