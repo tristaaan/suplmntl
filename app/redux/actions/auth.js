@@ -123,11 +123,9 @@ export function updateUserEmail(userId, newEmail) {
 }
 
 export function changePassword(userId, oldPass, newPass) {
-  return (dispatch) => {
-    return service.changePassword(userId, oldPass, newPass)
-      .then(() => dispatch(passChangeMessage()))
-      .catch((err) => dispatch(authError(err)));
-  };
+  return (dispatch) => service.changePassword(userId, oldPass, newPass)
+    .then(() => dispatch(passChangeMessage()))
+    .catch((err) => dispatch(authError(err)));
 }
 
 export function logout(cookies) {
