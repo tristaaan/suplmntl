@@ -1,19 +1,20 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import Header from './Header';
 
-export default React.createClass({
-  propTypes: {
-    children: React.PropTypes.object,
-  },
-
-  render() {
-    return (
+function Main(props) {
+  return (
+    <div>
+      <Header />
       <div>
-        <Header />
-        <div>
-          {this.props.children}
-        </div>
+        { props.children }
       </div>
-    );
-  }
-});
+    </div>
+  );
+}
+
+Main.propTypes = {
+  children: PropTypes.object
+};
+
+export default Main;

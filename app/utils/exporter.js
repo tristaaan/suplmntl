@@ -1,9 +1,5 @@
-export function jsonToBlob(json) {
-
-}
-
-export function jsonToMarkdown(col) {
-  var md = '';
+export default function jsonToMarkdown(col) {
+  let md = '';
   md += `# ${col.name}\n\n`;
 
   col.links.forEach((el) => {

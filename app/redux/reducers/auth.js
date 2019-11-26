@@ -1,9 +1,10 @@
-import * as Actions from '../actions/auth';
+import * as Actions from '../actions/actionTypes';
 
 const initialState = {
   token: '',
   user: null,
   error: null,
+  passChangeMessage: '',
 };
 
 export default function authReducer(state = initialState, action) {
@@ -21,19 +22,27 @@ export default function authReducer(state = initialState, action) {
 
     case Actions.AUTH_ERROR: {
       if (typeof action.err === 'string') {
-        return Object.assign({}, state, { error: action.err });
+        return { ...state, error: action.err };
       }
-      return Object.assign({}, state, { error: action.err.response.data.message });
+      return { ...state, error: action.err.response.data.message };
     }
 
     case Actions.CLEAR_ERROR: {
-      return Object.assign({}, state, { error: null });
+      return { ...state, error: null };
     }
 
     case Actions.UPDATE_USER: {
-      const newState = Object.assign({}, state);
+      const newState = { ...state };
       newState.user = action.user;
       return newState;
+    }
+
+    case Actions.PASS_CHANGE: {
+      return { ...state, passChangeMessage: action.message };
+    }
+
+    case Actions.CLEAR_MESSAGE: {
+      return { ...state, passChangeMessage: '' };
     }
 
     default:

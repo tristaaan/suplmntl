@@ -1,10 +1,12 @@
-var bcrypt = require('bcryptjs');
-var crypto = require('crypto');
-var mongoose = require('mongoose');
-var randomString = require('./utils').randomString;
+const bcrypt = require('bcryptjs');
+const crypto = require('crypto');
+const mongoose = require('mongoose');
+const { randomString } = require('./utils');
+
+/* eslint-disable arrow-body-style */
 
 if (process.env.MONGO_DEBUG) {
-  mongoose.set('debug', (collectionName, method, query, doc) => {
+  mongoose.set('debug', (collectionName, method, query) => {
     console.log(`${collectionName}.${method} (${JSON.stringify(query, null, 2)})`);
   });
 }
@@ -61,8 +63,9 @@ exports.createCollection = (entry) => {
   }).save();
 };
 
-exports.updateCollection = (newCol, userId) => {
-  var _id = newCol._id;
+exports.updateCollection = (col, userId) => {
+  const newCol = { ...col };
+  const { _id } = newCol;
   delete newCol._id;
   return Collections.findOne({ _id }).lean().exec()
     .then((resp) => {
@@ -83,9 +86,8 @@ function deleteCollection(_id, userId) {
       if (resp.toObject().forks > 0) {
         return Collections.find({ 'forkOf._id': _id }).exec()
           .then((forks) => {
-            return Promise.all(forks.map(col =>
-              Collections.update({ _id: col._id }, { forkOf: null }).exec()
-            ));
+            return Promise.all(forks.map((col) => Collections
+              .update({ _id: col._id }, { forkOf: null }).exec()));
           })
           .then(() => {
             return resp.remove();
@@ -102,14 +104,15 @@ exports.forkCollection = (collectionId, owner) => {
   return Collections.findOne({ _id: collectionId }).lean().exec()
     .then((col) => {
       const newCol = new Collections({
-        name: col.name,
+        name: `fork of ${col.name}`,
         postId: strId(),
         private: col.private,
         links: col.links,
-        forkOf: { _id: col._id,
+        forkOf: {
+          _id: col._id,
           postId: col.postId,
           owner: col.owner,
-          name: col.name
+          name: col.name,
         },
         owner
       });
@@ -135,7 +138,7 @@ exports.getUserByName = (username) => {
   return Users.findOne({ username }).lean().exec();
 };
 
-exports.addUser = (user, cb) => {
+exports.addUser = (user) => {
   return Users.find({ username: user.username }).exec()
     .then((resp) => {
       if (resp.length) {
@@ -184,10 +187,10 @@ exports.updateUserPassword = (_id, oldPass, newPass) => {
 exports.deleteUser = (userId) => {
   return Collections.find({ 'owner._id': userId })
     .then((resp = []) => {
-      const promises = resp.map(col => deleteCollection(col._id, userId));
+      const promises = resp.map((col) => deleteCollection(col._id, userId));
       return Promise.all(promises);
     })
-    .then((resp) => {
+    .then(() => {
       return Users.findOneAndRemove({ _id: userId }).exec();
     });
 };
@@ -202,9 +205,9 @@ exports.setResetTokenForEmail = (email) => {
       if (!user) {
         throw new Error('Cannot find given email');
       }
-      return new Promise((resolve, reject) => {
+      return new Promise((resolve) => {
         crypto.randomBytes(16, (err, buf) => {
-          var token = buf.toString('hex');
+          const token = buf.toString('hex');
           resolve({ token, user });
         });
       });
@@ -219,7 +222,8 @@ exports.setResetTokenForEmail = (email) => {
 };
 
 exports.resetPasswordForToken = (newPassword, passwordResetToken) => {
-  return Users.findOne({ passwordResetToken, passwordResetExpires: { $gt: new Date() } }).exec()
+  return Users.findOne({ passwordResetToken,
+    passwordResetExpires: { $gt: new Date() } }).exec()
     .then((user) => {
       if (!user) {
         throw new Error('Cannot find reset token');
@@ -235,7 +239,8 @@ exports.resetPasswordForToken = (newPassword, passwordResetToken) => {
       });
     })
     .then((resp) => {
-      return Users.findOneAndUpdate({ _id: resp.user._id }, { pw: resp.hash,
+      return Users.findOneAndUpdate({ _id: resp.user._id }, {
+        pw: resp.hash,
         passwordResetToken: null,
         passwordResetExpires: null,
       }).exec();

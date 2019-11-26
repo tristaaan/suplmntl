@@ -1,13 +1,15 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
-import { Router, hashHistory } from 'react-router';
+import { CookiesProvider } from 'react-cookie';
 import store from './redux';
-import getRoutes from './routes';
+import App from './app';
 
 ReactDOM.render(
-  <Provider store={store}>
-    <Router history={hashHistory} routes={getRoutes(store)} />
-  </Provider>,
+  <CookiesProvider>
+    <Provider store={store}>
+      <App />
+    </Provider>
+  </CookiesProvider>,
   document.getElementById('content')
 );

@@ -46,8 +46,8 @@ app.use((req, res, next) => {
 });
 
 function generateToken(userId, rememberMe) {
-  var time = rememberMe ? [5, 'days'] : [1, 'day'];
-  var payload = {
+  const time = rememberMe ? [5, 'days'] : [1, 'day'];
+  const payload = {
     sub: userId,
     iss: 'suplmntl',
     iat: moment().unix(),
@@ -116,22 +116,21 @@ app.route('/api/user')
       email: req.body.email,
       password: req.body.password
     })
-    .then((resp) => {
-      res.send(userResponse(resp));
-      const data = {
-        from: 'Suplmntl <no-reply@suplmntl.com>',
-        to: req.body.email,
-        subject: 'Welcome to Suplmntl',
-        text: `You have just created an account on Suplmntl with the username "${req.body.username}".\n\nWelcome.`
-      };
-      /* eslint-enable prefer-template */
-      mailgun.messages().send(data, (error, body) => {
-        res.sendStatus(200);
+      .then((resp) => {
+        const data = {
+          from: 'Suplmntl <no-reply@suplmntl.com>',
+          to: req.body.email,
+          subject: 'Welcome to Suplmntl',
+          text: `You have just created an account on Suplmntl with the username "${req.body.username}".\n\nWelcome.`
+        };
+        /* eslint-enable prefer-template */
+        mailgun.messages().send(data, (error, body) => {
+          res.status(200).send(userResponse(resp));
+        });
+      })
+      .catch((err) => {
+        res.status(500).send({ message: err.message });
       });
-    })
-    .catch((err) => {
-      res.status(500).send({ message: err.message });
-    });
   });
 
 app.route('/api/user/:userId')
@@ -206,7 +205,7 @@ app.post('/api/reset/:token', (req, res) => {
     .then((resp) => {
       // send 'pass changed' email
       /* eslint-disable prefer-template */
-      const email = resp.email;
+      const { email } = resp;
       const data = {
         from: 'Suplmntl <no-reply@suplmntl.com>',
         to: email,
@@ -245,7 +244,13 @@ app.route('/api/collections')
 
 app.route('/api/collection')
   .put(ensureAuthenticated, (req, res) => {
-    var entry = { name: req.body.name, owner: { _id: req.user._id, username: req.user.username } };
+    const entry = {
+      name: req.body.name,
+      owner: {
+        _id: req.user._id,
+        username: req.user.username
+      }
+    };
     db.createCollection(entry)
       .then((resp) => {
         res.send(resp);

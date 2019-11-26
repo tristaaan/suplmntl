@@ -1,11 +1,11 @@
 import React from 'react';
 
-const NotFound = (props) => {
+function NotFound() {
   return (
     <div className="homeStyle">
       Page not found.
     </div>
   );
-};
+}
 
 export default NotFound;

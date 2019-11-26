@@ -1,4 +1,4 @@
-import * as Actions from '../actions/collections';
+import * as Actions from '../actions/actionTypes';
 
 const initialState = {
   list: [],
@@ -15,7 +15,7 @@ export default function authReducer(state = initialState, action) {
     case Actions.GET_COLLECTION:
     case Actions.ADD_COLLECTION: {
       const newList = state.list.concat([action.collection]).sort(sorter);
-      const newMap = Object.assign({}, state.map);
+      const newMap = { ...state.map };
       newMap[action.collection.postId] = action.collection;
       return { list: newList, map: newMap };
     }
@@ -26,7 +26,7 @@ export default function authReducer(state = initialState, action) {
           break;
         }
       }
-      const newMap = Object.assign({}, state.map);
+      const newMap = { ...state.map };
       delete newMap[state.list[i].postId];
       const newList = [].concat(state.list);
       newList.splice(i, 1);
@@ -47,12 +47,12 @@ export default function authReducer(state = initialState, action) {
     }
     case Actions.COLLECTION_ERROR: {
       if (typeof action.err === 'string') {
-        return Object.assign({}, state, { error: action.err });
+        return { ...state, error: action.err };
       }
-      return Object.assign({}, state, { error: action.err.response.data.message });
+      return { ...state, error: action.err.response.data.message };
     }
     case Actions.CLEAR_COLLECTION_ERROR: {
-      return Object.assign({}, state, { error: null });
+      return { ...state, error: null };
     }
     default:
       return state;
