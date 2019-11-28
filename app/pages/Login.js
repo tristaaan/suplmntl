@@ -13,7 +13,7 @@ class Login extends React.Component {
   sumbmitForm(e) {
     e.preventDefault();
     const user = {
-      username: e.target[0].value,
+      username: e.target[0].value.toLowerCase(),
       password: e.target[1].value
     };
     const rememberMe = e.target[2].value;

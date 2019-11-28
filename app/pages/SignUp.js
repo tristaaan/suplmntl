@@ -23,7 +23,7 @@ class SignUpForm extends React.Component {
       return;
     }
     const user = {
-      username: e.target[0].value,
+      username: e.target[0].value.toLowerCase(),
       email: e.target[1].value,
       password: e.target[2].value
     };
