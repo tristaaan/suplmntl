@@ -39,7 +39,7 @@ function Header() {
             <li>
               <Link
                 className="headerLink"
-                to="login">
+                to="/login">
                 Login
               </Link>
             </li>
@@ -57,7 +57,7 @@ function Header() {
           )
           : (
             <li>
-              <Link className="headerLink" to="sign-up">
+              <Link className="headerLink" to="/sign-up">
                 Sign Up
               </Link>
             </li>
