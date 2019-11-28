@@ -1,6 +1,6 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { BrowserRouter, Switch, Route } from 'react-router-dom';
+import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom';
 import { useCookies } from 'react-cookie';
 
 import Main from './pages/main';
@@ -38,7 +38,7 @@ function Routes() {
     dispatch(loggedIn(cookies.token));
   }
 
-  // <Route path="/login/reset/:token" component={Forgot} onEnter={skipIfAuthenticated} />
+  /* eslint-disable  react/prop-types */
   return (
     <BrowserRouter>
       <Main>
@@ -59,6 +59,18 @@ function Routes() {
             onEnter={skipIfAuthenticated}
             onLeave={resetTitle} />
           <Route
+            path="/account"
+            component={Account}
+            onEnter={ensureAuthenticated} />
+          <Route
+            path="/forgot"
+            component={Forgot}
+            onEnter={skipIfAuthenticated} />
+          <Route
+            path="/reset/:token"
+            component={Reset}
+            onEnter={skipIfAuthenticated} />
+          <Route
             path="/:user/collections"
             component={CollectionList}
             onLeave={resetTitle} />
@@ -71,17 +83,11 @@ function Routes() {
             path="/:user/:id/view"
             component={LinksView} />
           <Route
-            path="/account"
-            component={Account}
-            onEnter={ensureAuthenticated} />
-          <Route
-            path="/forgot"
-            component={Forgot}
-            onEnter={skipIfAuthenticated} />
-          <Route
-            path="/reset/:token"
-            component={Reset}
-            onEnter={skipIfAuthenticated} />
+            path="/:user"
+            render={(props) => (
+              <Redirect
+                to={`${props.match.params.user}/collections`} />
+            )} />
           <Route
             path="*"
             component={NotFound} />
