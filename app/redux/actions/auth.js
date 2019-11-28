@@ -135,11 +135,11 @@ export function logout(removeCookie, location) {
   return { type: Actions.LOGOUT };
 }
 
-export function deleteAccount(userId, cookies) {
+export function deleteAccount(userId, cookies, location) {
   return (dispatch) => {
     service.deleteAccount(userId)
       .then(() => {
-        dispatch(logout(cookies));
+        dispatch(logout(cookies, location));
       })
       .catch((err) => {
         console.log(err);
