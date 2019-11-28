@@ -96,20 +96,22 @@ export function signup(user, cookies, location) {
   };
 }
 
-// nothing to dispatch
 export function forgotPassword(email, location) {
-  service.forgotPassword(email)
-    .then(() => {
-      location.push('/login');
-    });
+  return () => {
+    service.forgotPassword(email)
+      .then(() => {
+        location.push('/login');
+      });
+  };
 }
 
-// nothing to dispatch
 export function resetPassword(newPass, token, location) {
-  service.resetPassword(newPass, token)
-    .then(() => {
-      location.push('/login');
-    });
+  return () => {
+    service.resetPassword(newPass, token)
+      .then(() => {
+        location.push('/login');
+      });
+  };
 }
 
 export function updateUserEmail(userId, newEmail) {
