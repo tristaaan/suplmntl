@@ -129,8 +129,8 @@ export function changePassword(userId, oldPass, newPass) {
     .catch((err) => dispatch(authError(err)));
 }
 
-export function logout(cookies) {
-  cookies.remove('token');
+export function logout(removeCookie, location) {
+  removeCookie('token');
   location.push('/');
   return { type: Actions.LOGOUT };
 }

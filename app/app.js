@@ -6,6 +6,7 @@ import { useCookies } from 'react-cookie';
 import Main from './pages/main';
 import Home from './pages/Home';
 import Login from './pages/Login';
+import Logout from './pages/Logout';
 import Reset from './pages/Reset';
 import Forgot from './pages/Forgot';
 import SignUp from './pages/SignUp';
@@ -53,6 +54,9 @@ function Routes() {
             component={Login}
             onEnter={skipIfAuthenticated}
             onLeave={resetTitle} />
+          <Route
+            path="/logout"
+            component={Logout} />
           <Route
             path="/sign-up"
             component={SignUp}

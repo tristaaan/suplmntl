@@ -1,12 +1,13 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { useCookies } from 'react-cookie';
 import { logout } from '../redux/actions/auth';
 
-function Header() {
+function Header(props) {
   const dispatch = useDispatch();
-  const cookies = useCookies();
+  const remove = useCookies(['token'])[2];
   const { token, user } = useSelector((state) => state.auth);
 
   return (
@@ -50,7 +51,7 @@ function Header() {
               <a
                 href="/"
                 className="headerLink"
-                onClick={() => dispatch(logout(cookies))}>
+                onClick={() => dispatch(logout(remove, props.history))}>
                 Sign Out
               </a>
             </li>
@@ -66,5 +67,9 @@ function Header() {
     </header>
   );
 }
+
+Header.propTypes = {
+  history: PropTypes.object,
+};
 
 export default Header;
