@@ -70,7 +70,7 @@ class Collections extends React.Component {
               type="button"
               className="addItemButton"
               onClick={() => this.toggleForm()}>
-              +
+              Add new collection
             </button>
           )
           : null }

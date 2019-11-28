@@ -63,7 +63,7 @@ class EditLinks extends React.Component {
   }
 
   cancel() {
-    if ((this.changes
+    if ((this.state.changes
       && window.confirm('There are unsaved changes, are you sure you want to cancel?'))
       || !this.state.changes) {
       const { collection, user } = this.props;
