@@ -1,19 +1,26 @@
-var express = require('express'),
-  path = require('path'),
-  jwt = require('jsonwebtoken'),
-  moment = require('moment'),
-  bodyParser = require('body-parser'),
-  cookieParser = require('cookie-parser'),
-  lessMiddleware = require('less-middleware'),
-  favicon = require('serve-favicon'),
-  mailgun = require('mailgun-js')({
-    apiKey: process.env.MAILGUN_API_KEY,
-    domain: process.env.MAILGUN_DOMAIN }),
-  db = require('./database');
+const express = require('express');
+const path = require('path');
+const jwt = require('jsonwebtoken');
+const moment = require('moment');
+const bodyParser = require('body-parser');
+const cookieParser = require('cookie-parser');
+const lessMiddleware = require('less-middleware');
+const favicon = require('serve-favicon');
+const mailgun = require('mailgun-js')({
+  apiKey: process.env.MAILGUN_API_KEY,
+  domain: process.env.MAILGUN_DOMAIN
+});
+const helmet = require('helmet');
+const db = require('./database');
 
-var app = express();
-var rootpath = path.join(__dirname, '../dist');
+const app = express();
+const rootpath = path.join(__dirname, '../dist');
 
+// security
+app.use(helmet());
+app.disable('x-powered-by');
+
+// middlewares
 app.use(lessMiddleware(rootpath));
 app.use('/js', express.static(path.resolve(path.join(rootpath, 'js'))));
 app.use('/css', express.static(path.resolve(path.join(rootpath, 'css'))));
@@ -25,7 +32,7 @@ app.use(cookieParser());
 
 app.use((req, res, next) => {
   req.isAuthenticated = () => {
-    var token = (req.headers.authorization && req.headers.authorization.split(' ')[1]) || req.cookies.token;
+    const token = (req.headers.authorization && req.headers.authorization.split(' ')[1]) || req.cookies.token;
     try {
       return jwt.verify(token, process.env.TOKEN_SECRET);
     } catch (err) {
