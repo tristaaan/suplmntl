@@ -80,3 +80,7 @@ export function forkCollection(id, location) {
       });
   };
 }
+
+export function clearCollections() {
+  return { type: Actions.CLEAR_COLLECTIONS };
+}

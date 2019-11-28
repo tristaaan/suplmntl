@@ -1,13 +1,8 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
-import { useCookies } from 'react-cookie';
-import { logout } from '../redux/actions/auth';
+import { useSelector } from 'react-redux';
 
-function Header(props) {
-  const dispatch = useDispatch();
-  const remove = useCookies(['token'])[2];
+function Header() {
   const { token, user } = useSelector((state) => state.auth);
 
   return (
@@ -48,12 +43,11 @@ function Header(props) {
         { token
           ? (
             <li>
-              <a
-                href="/"
+              <Link
                 className="headerLink"
-                onClick={() => dispatch(logout(remove, props.history))}>
-                Sign Out
-              </a>
+                to="/logout">
+                Logout
+              </Link>
             </li>
           )
           : (
@@ -67,9 +61,5 @@ function Header(props) {
     </header>
   );
 }
-
-Header.propTypes = {
-  history: PropTypes.object,
-};
 
 export default Header;
