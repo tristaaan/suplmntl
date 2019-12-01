@@ -59,6 +59,7 @@ Login.propTypes = {
 export default withCookies(connect(
   (state, ownProps) => ({
     error: state.auth.error,
+    history: ownProps.history,
     cookies: ownProps.cookies
   })
 )(Login));
