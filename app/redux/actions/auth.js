@@ -66,11 +66,13 @@ export function login(user, setCookie, rememberMe = false, redirect = false) {
       .then((resp) => {
         if (rememberMe) {
           setCookie('token', resp.data.token, {
-            expires: moment().add(5, 'days').toDate()
+            expires: moment().add(5, 'days').toDate(),
+            path: '/'
           });
         } else {
           setCookie('token', resp.data.token, {
-            expires: moment().add(1, 'day').toDate()
+            expires: moment().add(1, 'day').toDate(),
+            path: '/'
           });
         }
         if (redirect) {
@@ -134,13 +136,8 @@ export function changePassword(userId, oldPass, newPass) {
     .catch((err) => dispatch(authError(err)));
 }
 
-export function logout(removeCookie) {
-  removeCookie('token');
-  return (dispatch) => {
-    dispatch({ type: Actions.LOGOUT });
-    dispatch({ type: Actions.CLEAR_COLLECTIONS });
-    history.push('/');
-  };
+export function logout() {
+  return ({ type: Actions.LOGOUT });
 }
 
 export function deleteAccount(userId, cookies) {

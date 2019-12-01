@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { Route, Redirect } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { useCookies } from 'react-cookie';
+import get from './get';
 
 function SkipRoute({ children, ...rest }) {
   const auth = useSelector((state) => state.auth);
@@ -12,7 +13,7 @@ function SkipRoute({ children, ...rest }) {
 
   const render = ({ location }) => {
     if (isAuthenticated()) {
-      if (location) {
+      if (get(location, 'state.from')) {
         const newPath = location.state.from;
         return <Redirect to={newPath} />;
       }
