@@ -45,13 +45,16 @@ class Dropdown extends React.Component {
   }
 
   render() {
+    /* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
     const isHidden = !this.state.toggled ? 'hidden' : '';
     return (
       <div className="dropdown" ref={this.el}>
         <button type="button" className="dropdown-button" onClick={() => this.toggle()}>
           {this.props.buttonText}
         </button>
-        <section className={[isHidden, 'dropdown-content'].join(' ')}>
+        <section
+          className={[isHidden, 'dropdown-content'].join(' ')}
+          onMouseUp={() => this.toggle()}>
           {this.props.children}
         </section>
       </div>
