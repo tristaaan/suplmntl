@@ -63,7 +63,7 @@ class Account extends React.Component {
 
   deleteAccount() {
     if (confirm('Are you sure you want to delete your account? This cannot be undone.')) {
-      this.props.deleteAccount(this.props.user._id, this.props.history);
+      this.props.deleteAccount(this.props.user._id);
     }
   }
 
@@ -147,7 +147,6 @@ Account.propTypes = {
   deleteAccount: PropTypes.func,
   updateEmail: PropTypes.func,
   updatePassword: PropTypes.func,
-  history: PropTypes.object,
 };
 
 export default connect(

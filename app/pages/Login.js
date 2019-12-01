@@ -5,11 +5,9 @@ import { connect } from 'react-redux';
 import { withCookies } from 'react-cookie';
 import * as AuthActions from '../redux/actions/auth';
 
-class Login extends React.Component {
-  gotoSignUp() {
-    this.props.history.push('/sign-up');
-  }
+import history from '../history';
 
+class Login extends React.Component {
   sumbmitForm(e) {
     e.preventDefault();
     const user = {
@@ -20,7 +18,6 @@ class Login extends React.Component {
     this.props.dispatch(AuthActions.login(
       user,
       this.props.cookies,
-      this.props.history,
       rememberMe
     ));
   }
@@ -38,7 +35,7 @@ class Login extends React.Component {
             </span>
             <Link to="/forgot">Forgot password?</Link>
           </span>
-          <button type="button" onClick={() => this.gotoSignUp()}>Sign Up</button>
+          <button type="button" onClick={() => {history.push('/sign-up');}}>Sign Up</button>
           <button type="submit">Login</button>
         </form>
         <div className={this.props.error ? 'error-box' : 'hidden'}>
@@ -53,13 +50,11 @@ Login.propTypes = {
   dispatch: PropTypes.func,
   error: PropTypes.string,
   cookies: PropTypes.object,
-  history: PropTypes.object,
 };
 
 export default withCookies(connect(
   (state, ownProps) => ({
     error: state.auth.error,
-    history: ownProps.history,
     cookies: ownProps.cookies
   })
 )(Login));

@@ -32,8 +32,7 @@ class Reset extends React.Component {
     this.props.dispatch(
       AuthActions.resetPassword(
         this.state.newPass,
-        this.props.match.params.token,
-        this.props.history
+        this.props.match.params.token
       )
     );
   }
@@ -70,7 +69,6 @@ class Reset extends React.Component {
 Reset.propTypes = {
   match: PropTypes.object,
   error: PropTypes.string,
-  history: PropTypes.object,
   dispatch: PropTypes.func,
 };
 
