@@ -60,20 +60,24 @@ export function loggedIn(token) {
   };
 }
 
-export function login(user, cookie, rememberMe = false) {
+export function login(user, setCookie, rememberMe = false, redirect = false) {
   return (dispatch) => {
     service.login(user, rememberMe)
       .then((resp) => {
         if (rememberMe) {
-          cookie.set('token', resp.data.token, {
+          setCookie('token', resp.data.token, {
             expires: moment().add(5, 'days').toDate()
           });
         } else {
-          cookie.set('token', resp.data.token, {
+          setCookie('token', resp.data.token, {
             expires: moment().add(1, 'day').toDate()
           });
         }
-        history.push(`/${resp.data.username}/collections`);
+        if (redirect) {
+          history.push(redirect);
+        } else {
+          history.push(`/${resp.data.username}/collections`);
+        }
         dispatch(loggedIn(resp.data.token));
       })
       .catch((err) => {
@@ -132,8 +136,11 @@ export function changePassword(userId, oldPass, newPass) {
 
 export function logout(removeCookie) {
   removeCookie('token');
-  history.push('/');
-  return { type: Actions.LOGOUT };
+  return (dispatch) => {
+    dispatch({ type: Actions.LOGOUT });
+    dispatch({ type: Actions.CLEAR_COLLECTIONS });
+    history.push('/');
+  };
 }
 
 export function deleteAccount(userId, cookies) {

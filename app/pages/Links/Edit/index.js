@@ -3,6 +3,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Redirect, Prompt } from 'react-router';
+import { withRouter } from 'react-router-dom';
 
 import LinksBox from './LinkBox';
 import AddLinkForm from './AddLinkForm';
@@ -143,9 +144,9 @@ EditLinks.defaultProps = {
   collection: { links: [] },
 };
 
-export default connect(
+export default withRouter(connect(
   (state, ownProps) => {
-    const nextProp = { collections: {}, username: '' };
+    const nextProp = { collections: {}, user: {} };
     if (state.collections && state.collections.map) {
       nextProp.collection = state.collections.map[ownProps.match.params.id];
     }
@@ -159,4 +160,4 @@ export default connect(
     getCollection: (id) => dispatch(Actions.getCollection(id)),
     deleteCollection: (id, loc) => dispatch(Actions.deleteCollection(id, loc)),
   })
-)(EditLinks);
+)(EditLinks));

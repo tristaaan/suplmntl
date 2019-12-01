@@ -1,7 +1,9 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { resetTitle } from '../utils/setTitle';
 
 function Home() {
+  resetTitle();
   return (
     <div className="homeStyle">
       <p>Suplmntl is an easy way to annotate and share links.</p>

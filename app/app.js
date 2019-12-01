@@ -16,7 +16,6 @@ import LinksEdit from './pages/Links/Edit';
 import LinksView from './pages/Links/View';
 import CollectionList from './pages/Collection'; // waterfall imports!!
 
-import { resetTitle } from './utils/setTitle';
 import PrivateRoute from './utils/PrivateRoute';
 import SkipRoute from './utils/SkipRoute';
 import history from './history';
@@ -40,9 +39,7 @@ function Routes() {
           <Route
             exact
             path="/"
-            component={Home}
-            onEnter={resetTitle}
-            onLeave={resetTitle} />
+            component={Home} />
           <SkipRoute path="/login">
             <Login />
           </SkipRoute>
