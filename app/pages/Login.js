@@ -20,13 +20,16 @@ function Login() {
     };
     const rememberMe = e.target[2].value;
     const redirect = location;
-    console.log(location);
     dispatch(AuthActions.login(
       user,
       setCookie,
       rememberMe,
       redirect
     ));
+  };
+
+  const gotoSignup = () => {
+    history.push('/sign-up');
   };
 
   return (
@@ -41,7 +44,7 @@ function Login() {
           </span>
           <Link to="/forgot">Forgot password?</Link>
         </span>
-        <button type="button" onClick={() => {history.push('/sign-up');}}>Sign Up</button>
+        <button type="button" onClick={gotoSignup}>Sign Up</button>
         <button type="submit">Login</button>
       </form>
       <div className={error ? 'error-box' : 'hidden'}>
