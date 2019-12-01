@@ -36,10 +36,7 @@ class ViewLinks extends React.Component {
 
   forkList() {
     if (this.props.user) {
-      this.props.forkCollection(
-        this.props.collection._id,
-        this.props.history
-      );
+      this.props.forkCollection(this.props.collection._id);
     } else {
       this.setState({ redirect: '/login' });
     }
@@ -73,8 +70,7 @@ class ViewLinks extends React.Component {
     }
     this.props.deleteCollection(
       this.props.collection._id,
-      this.props.user.username,
-      this.props.history
+      this.props.user.username
     );
   }
 
@@ -176,7 +172,6 @@ ViewLinks.propTypes = {
   forkCollection: PropTypes.func,
   deleteCollection: PropTypes.func,
   match: PropTypes.object,
-  history: PropTypes.object,
 };
 
 export default connect(

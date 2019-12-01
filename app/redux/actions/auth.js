@@ -1,4 +1,5 @@
 import moment from 'moment';
+import history from '../../history';
 import * as service from '../../service';
 import * as Actions from './actionTypes';
 import store from '..';
@@ -59,20 +60,26 @@ export function loggedIn(token) {
   };
 }
 
-export function login(user, cookie, location, rememberMe = false) {
+export function login(user, setCookie, rememberMe = false, redirect = false) {
   return (dispatch) => {
     service.login(user, rememberMe)
       .then((resp) => {
         if (rememberMe) {
-          cookie.set('token', resp.data.token, {
-            expires: moment().add(5, 'days').toDate()
+          setCookie('token', resp.data.token, {
+            expires: moment().add(5, 'days').toDate(),
+            path: '/'
           });
         } else {
-          cookie.set('token', resp.data.token, {
-            expires: moment().add(1, 'day').toDate()
+          setCookie('token', resp.data.token, {
+            expires: moment().add(1, 'day').toDate(),
+            path: '/'
           });
         }
-        location.push(`/${resp.data.username}/collections`);
+        if (redirect) {
+          history.push(redirect);
+        } else {
+          history.push(`/${resp.data.username}/collections`);
+        }
         dispatch(loggedIn(resp.data.token));
       })
       .catch((err) => {
@@ -81,13 +88,13 @@ export function login(user, cookie, location, rememberMe = false) {
   };
 }
 
-export function signup(user, cookies, location) {
+export function signup(user, cookies) {
   return (dispatch) => {
     service.signup(user)
       .then((resp) => {
         cookies.set('token', resp.data.token, { expires: moment().add(1, 'hour').toDate() });
         dispatch(loggedIn(resp.data.token));
-        location.push('/login');
+        history.push('/login');
       })
       .catch((err) => {
         console.log(err);
@@ -96,20 +103,20 @@ export function signup(user, cookies, location) {
   };
 }
 
-export function forgotPassword(email, location) {
+export function forgotPassword(email) {
   return () => {
     service.forgotPassword(email)
       .then(() => {
-        location.push('/login');
+        history.push('/login');
       });
   };
 }
 
-export function resetPassword(newPass, token, location) {
+export function resetPassword(newPass, token) {
   return () => {
     service.resetPassword(newPass, token)
       .then(() => {
-        location.push('/login');
+        history.push('/login');
       });
   };
 }
@@ -129,17 +136,15 @@ export function changePassword(userId, oldPass, newPass) {
     .catch((err) => dispatch(authError(err)));
 }
 
-export function logout(removeCookie, location) {
-  removeCookie('token');
-  location.push('/');
-  return { type: Actions.LOGOUT };
+export function logout() {
+  return ({ type: Actions.LOGOUT });
 }
 
-export function deleteAccount(userId, cookies, location) {
+export function deleteAccount(userId, cookies) {
   return (dispatch) => {
     service.deleteAccount(userId)
       .then(() => {
-        dispatch(logout(cookies, location));
+        dispatch(logout(cookies));
       })
       .catch((err) => {
         console.log(err);

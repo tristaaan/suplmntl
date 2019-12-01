@@ -1,65 +1,57 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
-import { connect } from 'react-redux';
-import { withCookies } from 'react-cookie';
+import { useHistory, useLocation, Link } from 'react-router-dom';
+import { useCookies } from 'react-cookie';
+import { useDispatch, useSelector } from 'react-redux';
 import * as AuthActions from '../redux/actions/auth';
 
-class Login extends React.Component {
-  gotoSignUp() {
-    this.props.history.push('/sign-up');
-  }
+function Login() {
+  const setCookie = useCookies(['token'])[1];
+  const dispatch = useDispatch();
+  const location = useLocation();
+  const history = useHistory();
 
-  sumbmitForm(e) {
+  const error = useSelector((state) => state.auth.error);
+
+  const sumbmitForm = (e) => {
     e.preventDefault();
     const user = {
       username: e.target[0].value.toLowerCase(),
       password: e.target[1].value
     };
     const rememberMe = e.target[2].value;
-    this.props.dispatch(AuthActions.login(
+    const redirect = location;
+    dispatch(AuthActions.login(
       user,
-      this.props.cookies,
-      this.props.history,
-      rememberMe
+      setCookie,
+      rememberMe,
+      redirect
     ));
-  }
+  };
 
-  render() {
-    return (
-      <div className="login-form">
-        <form onSubmit={(e) => this.sumbmitForm(e)}>
-          <input type="text" placeholder="username" required />
-          <input type="password" placeholder="password" required />
+  const gotoSignup = () => {
+    history.push('/sign-up');
+  };
+
+  return (
+    <div className="login-form">
+      <form onSubmit={sumbmitForm}>
+        <input type="text" placeholder="username" required />
+        <input type="password" placeholder="password" required />
+        <span>
           <span>
-            <span>
-              Remember Me:
-              <input type="checkbox" />
-            </span>
-            <Link to="/forgot">Forgot password?</Link>
+            Remember Me:
+            <input type="checkbox" />
           </span>
-          <button type="button" onClick={() => this.gotoSignUp()}>Sign Up</button>
-          <button type="submit">Login</button>
-        </form>
-        <div className={this.props.error ? 'error-box' : 'hidden'}>
-          { this.props.error }
-        </div>
+          <Link to="/forgot">Forgot password?</Link>
+        </span>
+        <button type="button" onClick={gotoSignup}>Sign Up</button>
+        <button type="submit">Login</button>
+      </form>
+      <div className={error ? 'error-box' : 'hidden'}>
+        { error }
       </div>
-    );
-  }
+    </div>
+  );
 }
 
-Login.propTypes = {
-  dispatch: PropTypes.func,
-  error: PropTypes.string,
-  cookies: PropTypes.object,
-  history: PropTypes.object,
-};
-
-export default withCookies(connect(
-  (state, ownProps) => ({
-    error: state.auth.error,
-    history: ownProps.history,
-    cookies: ownProps.cookies
-  })
-)(Login));
+export default Login;

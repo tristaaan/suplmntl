@@ -1,6 +1,6 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom';
+import { Router, Switch, Route, Redirect } from 'react-router-dom';
 import { useCookies } from 'react-cookie';
 
 import Main from './pages/main';
@@ -16,9 +16,9 @@ import LinksEdit from './pages/Links/Edit';
 import LinksView from './pages/Links/View';
 import CollectionList from './pages/Collection'; // waterfall imports!!
 
-import { resetTitle } from './utils/setTitle';
 import PrivateRoute from './utils/PrivateRoute';
 import SkipRoute from './utils/SkipRoute';
+import history from './history';
 
 import { loggedIn } from './redux/actions/auth';
 
@@ -33,15 +33,13 @@ function Routes() {
 
   /* eslint-disable  react/prop-types */
   return (
-    <BrowserRouter>
+    <Router history={history}>
       <Main>
         <Switch>
           <Route
             exact
             path="/"
-            component={Home}
-            onEnter={resetTitle}
-            onLeave={resetTitle} />
+            component={Home} />
           <SkipRoute path="/login">
             <Login />
           </SkipRoute>
@@ -80,7 +78,7 @@ function Routes() {
             component={NotFound} />
         </Switch>
       </Main>
-    </BrowserRouter>
+    </Router>
   );
 }
 

@@ -13,7 +13,7 @@ class Forgot extends React.Component {
     e.preventDefault();
     const email = e.target[0].value;
     this.props.dispatch(
-      AuthActions.forgotPassword(email, this.props.history)
+      AuthActions.forgotPassword(email)
     );
   }
 
@@ -47,7 +47,6 @@ class Forgot extends React.Component {
 Forgot.propTypes = {
   error: PropTypes.string,
   dispatch: PropTypes.func,
-  history: PropTypes.object,
 };
 
 export default connect(

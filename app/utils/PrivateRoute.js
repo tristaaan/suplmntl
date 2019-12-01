@@ -4,15 +4,13 @@ import { Route, Redirect } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { useCookies } from 'react-cookie';
 
-function PrivateRoute(props) {
+function PrivateRoute({ children, ...rest }) {
   const auth = useSelector((state) => state.auth);
   const [cookies] = useCookies(['token']);
 
   const isAuthenticated = () => (auth.token && cookies.token);
 
-  const { children, location } = props;
-
-  const render = () => {
+  const render = ({ location }) => {
     if (isAuthenticated()) {
       return children;
     }
@@ -26,9 +24,10 @@ function PrivateRoute(props) {
       />
     );
   };
+  /* eslint-disable react/jsx-props-no-spreading */
   return (
     <Route
-      path={props.path}
+      {...rest}
       render={render}
     />
   );
