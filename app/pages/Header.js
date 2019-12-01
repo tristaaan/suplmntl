@@ -1,12 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
-import { useCookies } from 'react-cookie';
-import { logout } from '../redux/actions/auth';
+import { useSelector } from 'react-redux';
 
 function Header() {
-  const dispatch = useDispatch();
-  const cookies = useCookies();
   const { token, user } = useSelector((state) => state.auth);
 
   return (
@@ -39,7 +35,7 @@ function Header() {
             <li>
               <Link
                 className="headerLink"
-                to="login">
+                to="/login">
                 Login
               </Link>
             </li>
@@ -47,17 +43,16 @@ function Header() {
         { token
           ? (
             <li>
-              <a
-                href="/"
+              <Link
                 className="headerLink"
-                onClick={() => dispatch(logout(cookies))}>
-                Sign Out
-              </a>
+                to="/logout">
+                Logout
+              </Link>
             </li>
           )
           : (
             <li>
-              <Link className="headerLink" to="sign-up">
+              <Link className="headerLink" to="/sign-up">
                 Sign Up
               </Link>
             </li>

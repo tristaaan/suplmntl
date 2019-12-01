@@ -10,6 +10,14 @@ import get from '../../../utils/get';
 import * as Actions from '../../../redux/actions/collections';
 
 class EditLinks extends React.Component {
+  static getDerivedStateFromProps(props) {
+    const { collection } = props;
+    if (collection.links && collection.links.length) {
+      return { tmpCol: collection };
+    }
+    return null;
+  }
+
   constructor(props) {
     super(props);
     this.state = {
@@ -63,7 +71,7 @@ class EditLinks extends React.Component {
   }
 
   cancel() {
-    if ((this.changes
+    if ((this.state.changes
       && window.confirm('There are unsaved changes, are you sure you want to cancel?'))
       || !this.state.changes) {
       const { collection, user } = this.props;
@@ -136,10 +144,10 @@ EditLinks.defaultProps = {
 };
 
 export default connect(
-  (state, props) => {
+  (state, ownProps) => {
     const nextProp = { collections: {}, username: '' };
     if (state.collections && state.collections.map) {
-      nextProp.collection = state.collections.map[props.match.params.id];
+      nextProp.collection = state.collections.map[ownProps.match.params.id];
     }
     if (get(state.auth, 'user.username')) {
       nextProp.user = state.auth.user;

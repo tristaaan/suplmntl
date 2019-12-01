@@ -54,6 +54,9 @@ export default function authReducer(state = initialState, action) {
     case Actions.CLEAR_COLLECTION_ERROR: {
       return { ...state, error: null };
     }
+    case Actions.CLEAR_COLLECTIONS: {
+      return { ...initialState };
+    }
     default:
       return state;
   }

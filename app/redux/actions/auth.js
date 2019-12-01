@@ -96,20 +96,22 @@ export function signup(user, cookies, location) {
   };
 }
 
-// nothing to dispatch
 export function forgotPassword(email, location) {
-  service.forgotPassword(email)
-    .then(() => {
-      location.push('/login');
-    });
+  return () => {
+    service.forgotPassword(email)
+      .then(() => {
+        location.push('/login');
+      });
+  };
 }
 
-// nothing to dispatch
 export function resetPassword(newPass, token, location) {
-  service.resetPassword(newPass, token)
-    .then(() => {
-      location.push('/login');
-    });
+  return () => {
+    service.resetPassword(newPass, token)
+      .then(() => {
+        location.push('/login');
+      });
+  };
 }
 
 export function updateUserEmail(userId, newEmail) {
@@ -127,17 +129,17 @@ export function changePassword(userId, oldPass, newPass) {
     .catch((err) => dispatch(authError(err)));
 }
 
-export function logout(cookies) {
-  cookies.remove('token');
+export function logout(removeCookie, location) {
+  removeCookie('token');
   location.push('/');
   return { type: Actions.LOGOUT };
 }
 
-export function deleteAccount(userId, cookies) {
+export function deleteAccount(userId, cookies, location) {
   return (dispatch) => {
     service.deleteAccount(userId)
       .then(() => {
-        dispatch(logout(cookies));
+        dispatch(logout(cookies, location));
       })
       .catch((err) => {
         console.log(err);

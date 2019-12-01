@@ -41,19 +41,19 @@ class Reset extends React.Component {
   render() {
     return (
       <div className="login-form">
-        <form onSubmit={this.submitForm}>
+        <form onSubmit={(e) => this.submitForm(e)}>
           <input
             type="password"
             placeholder="new password"
             data-key="newPass"
             value={this.state.newPass}
-            onChange={this.handleChange} />
+            onChange={(e) => this.handleChange(e)} />
           <input
             type="password"
             placeholder="confirm password"
             data-key="confirmPass"
             value={this.state.confirmPass}
-            onChange={this.handleChange} />
+            onChange={(e) => this.handleChange(e)} />
           <span className="error-box" style={{ display: this.state.passwordError ? 'block' : 'none' }}>
             { this.state.passwordError }
           </span>

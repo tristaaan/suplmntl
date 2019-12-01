@@ -15,15 +15,15 @@ class Collections extends React.Component {
   }
 
   componentDidMount() {
-    const { user } = this.props.match.params;
+    const user = this.props.match.params.user.toLowerCase();
     this.props.getCollections(user);
   }
 
   componentDidUpdate(prevProps) {
-    const prevUser = prevProps.match.params.user;
-    const currUser = this.props.match.params.user;
+    const prevUser = prevProps.match.params.user.toLowerCase();
+    const currUser = this.props.match.params.user.toLowerCase();
     if (prevUser !== currUser) {
-      this.props.getCollections(this.props.match.params.user);
+      this.props.getCollections(currUser);
     }
     if (currUser) {
       setTitle(`${currUser}'s collections`);
@@ -70,7 +70,7 @@ class Collections extends React.Component {
               type="button"
               className="addItemButton"
               onClick={() => this.toggleForm()}>
-              +
+              Add new collection
             </button>
           )
           : null }
