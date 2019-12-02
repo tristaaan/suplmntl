@@ -43,7 +43,6 @@ export function authError(err) {
     }
     debounce = setTimeout(() => {
       debounce = null;
-      console.log('dispatch clear');
       store.dispatch(clearError());
     }, 3500);
   };

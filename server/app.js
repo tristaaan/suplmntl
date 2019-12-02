@@ -193,7 +193,7 @@ app.post('/api/forgot', (req, res) => {
         subject: 'Reset your password on Suplmntl',
         text: 'You are receiving this email because you (or someone else) has requested to reset the password for your account.\n\n' +
         'Please click on the following link, or paste this into your browser to complete the process:\n\n' +
-        'http://' + req.headers.host + '/#/reset/' + resp.passwordResetToken + '\n\n' +
+        'http://' + req.headers.host + '/reset/' + resp.passwordResetToken + '\n\n' +
         'If you did not request this, please ignore this email and your password will remain unchanged.\n'
       };
       /* eslint-enable prefer-template */

@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom';
 import * as AuthActions from '../redux/actions/auth';
 
 class Reset extends React.Component {
@@ -72,8 +73,8 @@ Reset.propTypes = {
   dispatch: PropTypes.func,
 };
 
-export default connect(
+export default withRouter(connect(
   (state) => ({
     error: state.auth.error,
   })
-)(Reset);
+)(Reset));
