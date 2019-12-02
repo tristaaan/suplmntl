@@ -9,7 +9,7 @@ import { clearCollections } from '../redux/actions/collections';
 function Logout() {
   // remove cookie
   const remove = useCookies(['token'])[2];
-  remove('token', { domain: document.location.hostname, path: '/' });
+  remove('token');
   // dispatch actions
   const dispatch = useDispatch();
   dispatch(clearCollections());
