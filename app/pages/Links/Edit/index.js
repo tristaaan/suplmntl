@@ -22,7 +22,6 @@ class EditLinks extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      tmpCol: props.collection,
       changes: false,
       redirect: false,
     };
@@ -98,6 +97,12 @@ class EditLinks extends React.Component {
     if (this.state.redirect) {
       return <Redirect to={this.state.redirect} />;
     }
+
+    // prevents uncontrolled component error
+    if (!this.state.tmpCol || Object.keys(this.state.tmpCol).length === 0) {
+      return <div />;
+    }
+
     return (
       <section id="linkList" ref={(c) => {this.el = c;}}>
         <Prompt
@@ -146,7 +151,7 @@ EditLinks.defaultProps = {
 
 export default withRouter(connect(
   (state, ownProps) => {
-    const nextProp = { collections: {}, user: {} };
+    const nextProp = { collection: {}, user: {} };
     if (state.collections && state.collections.map) {
       nextProp.collection = state.collections.map[ownProps.match.params.id];
     }
