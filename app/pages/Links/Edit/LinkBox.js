@@ -32,6 +32,9 @@ function LinkBox(props) {
           value={index}>
           &times;
         </button>
+        <div className="linkListHandle ">
+          &#8597;
+        </div>
       </div>
       <input
         type="text"
