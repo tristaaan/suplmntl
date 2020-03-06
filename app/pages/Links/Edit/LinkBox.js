@@ -16,6 +16,18 @@ function LinkBox(props) {
     }
   };
 
+  const moveUp = (e) => {
+    const index = parseInt(e.target.parentElement.dataset.index, 10);
+    props.moveUp(index);
+  };
+
+  const moveDown = (e) => {
+    const index = parseInt(e.target.parentElement.dataset.index, 10);
+    props.moveDown(index);
+  };
+
+  const size = props.links.length;
+
   const createItem = (item, index) => (
     <div className="editLinkItem" key={index} data-index={index}>
       <div className="titleRow" data-index={index}>
@@ -25,6 +37,28 @@ function LinkBox(props) {
           data-key="title"
           onChange={onItemChange}
           value={item.title} />
+        { index === 0
+          ? null
+          : (
+            <button
+              type="button"
+              className="linkListHandle"
+              onClick={moveUp}
+            >
+              &#8593;
+            </button>
+          )}
+        { index === size - 1
+          ? null
+          : (
+            <button
+              type="button"
+              className="linkListHandle"
+              onClick={moveDown}
+            >
+              &#8595;
+            </button>
+          )}
         <button
           className="errorButton"
           type="button"
@@ -32,9 +66,6 @@ function LinkBox(props) {
           value={index}>
           &times;
         </button>
-        <div className="linkListHandle ">
-          &#8597;
-        </div>
       </div>
       <input
         type="text"
@@ -57,6 +88,8 @@ LinkBox.propTypes = {
   links: PropTypes.array,
   deleteItem: PropTypes.func,
   onChange: PropTypes.func,
+  moveUp: PropTypes.func,
+  moveDown: PropTypes.func
 };
 
 export default LinkBox;

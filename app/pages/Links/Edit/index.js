@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { Redirect, Prompt } from 'react-router';
 import { withRouter } from 'react-router-dom';
 
-import LinksBox from './LinkBox';
+import LinkBox from './LinkBox';
 import AddLinkForm from './AddLinkForm';
 import get from '../../../utils/get';
 import * as Actions from '../../../redux/actions/collections';
@@ -93,6 +93,31 @@ class EditLinks extends React.Component {
     this.setState({ tmpCol, changes: true });
   }
 
+  moveUp(index) {
+    const { tmpCol } = this.state;
+    const links = [].concat(tmpCol.links);
+    const item = { ...links[index] };
+    const swap = { ...links[index - 1] };
+    links[index] = swap;
+    links[index - 1] = item;
+
+    links[index] = swap;
+    tmpCol.links = [].concat(links);
+    this.setState({ tmpCol, changes: true });
+  }
+
+  moveDown(index) {
+    const { tmpCol } = this.state;
+    const links = [].concat(tmpCol.links);
+    const item = { ...links[index] };
+    const swap = { ...links[index + 1] };
+    links[index] = swap;
+    links[index + 1] = item;
+
+    tmpCol.links = [].concat(links);
+    this.setState({ tmpCol, changes: true });
+  }
+
   render() {
     if (this.state.redirect) {
       return <Redirect to={this.state.redirect} />;
@@ -126,10 +151,13 @@ class EditLinks extends React.Component {
             Done
           </button>
         </div>
-        <LinksBox
+        <LinkBox
           links={this.state.tmpCol.links}
           deleteItem={(index) => this.handleDelete(index)}
-          onChange={(i, k, v) => this.updateItem(i, k, v)} />
+          onChange={(i, k, v) => this.updateItem(i, k, v)}
+          moveUp={(i) => this.moveUp(i)}
+          moveDown={(i) => this.moveDown(i)}
+        />
         <AddLinkForm onLinkSubmit={(link) => this.handleSubmit(link)} />
       </section>
     );
