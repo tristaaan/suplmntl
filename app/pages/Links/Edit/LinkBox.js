@@ -36,6 +36,7 @@ function LinkBox(props) {
       data-index={index}>
       {(provided) => (
         <div
+          className="linkListEditBox"
           ref={provided.innerRef}
           {...provided.draggableProps}
         >
@@ -81,6 +82,7 @@ function LinkBox(props) {
       <Droppable droppableId="droppable">
         {(provided) => (
           <div
+            className="linkListEditContainer"
             {...provided.droppableProps}
             ref={provided.innerRef}
           >

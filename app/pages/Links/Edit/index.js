@@ -113,7 +113,7 @@ class EditLinks extends React.Component {
     }
 
     return (
-      <section id="linkList" ref={(c) => {this.el = c;}}>
+      <section id="linkListContainer" ref={(c) => {this.el = c;}}>
         <Prompt
           when={this.state.changes}
           message="There are unsaved changes, are you sure you want to leave?"
