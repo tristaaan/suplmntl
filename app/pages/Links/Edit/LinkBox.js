@@ -1,6 +1,7 @@
 // LinkBox
 import React from 'react';
 import PropTypes from 'prop-types';
+import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 
 function LinkBox(props) {
   const onItemChange = (e) => {
@@ -16,80 +17,87 @@ function LinkBox(props) {
     }
   };
 
-  const moveUp = (e) => {
-    const index = parseInt(e.target.parentElement.dataset.index, 10);
-    props.moveUp(index);
+  const onDragEnd = (result) => {
+    // dropped outside the list
+    if (!result.destination) {
+      return;
+    }
+
+    props.moveItem(result.source.index, result.destination.index);
   };
 
-  const moveDown = (e) => {
-    const index = parseInt(e.target.parentElement.dataset.index, 10);
-    props.moveDown(index);
-  };
-
-  const size = props.links.length;
-
+  /* eslint-disable react/jsx-props-no-spreading */
   const createItem = (item, index) => (
-    <div className="editLinkItem" key={index} data-index={index}>
-      <div className="titleRow" data-index={index}>
-        <input
-          type="text"
-          placeholder="title"
-          data-key="title"
-          onChange={onItemChange}
-          value={item.title} />
-        { index === 0
-          ? <div className="linkListSpacer" />
-          : (
+    <Draggable
+      className="editLinkItem"
+      draggableId={`${index}-${item.description.length}`}
+      key={index}
+      index={index}
+      data-index={index}>
+      {(provided) => (
+        <div
+          ref={provided.innerRef}
+          {...provided.draggableProps}
+        >
+          <div className="titleRow" data-index={index}>
+            <input
+              type="text"
+              placeholder="title"
+              data-key="title"
+              onChange={onItemChange}
+              value={item.title} />
             <button
+              className="errorButton"
               type="button"
-              className="linkListHandle"
-              onClick={moveUp}
-            >
-              &#8593;
+              onClick={deleteItem}
+              value={index}>
+              &times;
             </button>
-          )}
-        { index === size - 1
-          ? <div className="linkListSpacer" />
-          : (
-            <button
-              type="button"
+            <div
               className="linkListHandle"
-              onClick={moveDown}
+              {...provided.dragHandleProps}
             >
-              &#8595;
-            </button>
-          )}
-        <button
-          className="errorButton"
-          type="button"
-          onClick={deleteItem}
-          value={index}>
-          &times;
-        </button>
-      </div>
-      <input
-        type="text"
-        placeholder="url"
-        data-key="link"
-        onChange={onItemChange}
-        value={item.link} />
-      <textarea
-        placeholder="description"
-        data-key="description"
-        onChange={onItemChange}
-        value={item.description} />
-    </div>
+              &#8597;
+            </div>
+          </div>
+          <input
+            type="text"
+            placeholder="url"
+            data-key="link"
+            onChange={onItemChange}
+            value={item.link} />
+          <textarea
+            placeholder="description"
+            data-key="description"
+            onChange={onItemChange}
+            value={item.description} />
+        </div>
+      )}
+    </Draggable>
   );
 
-  return <dl>{props.links.map(createItem)}</dl>;
+  return (
+    <DragDropContext onDragEnd={onDragEnd}>
+      <Droppable droppableId="droppable">
+        {(provided) => (
+          <div
+            {...provided.droppableProps}
+            ref={provided.innerRef}
+          >
+            {props.links.map(createItem)}
+            {provided.placeholder}
+          </div>
+        )}
+      </Droppable>
+    </DragDropContext>
+  );
 }
 
 LinkBox.propTypes = {
   links: PropTypes.array,
   deleteItem: PropTypes.func,
   onChange: PropTypes.func,
-  moveUp: PropTypes.func,
-  moveDown: PropTypes.func
+  moveItem: PropTypes.func
 };
 
 export default LinkBox;

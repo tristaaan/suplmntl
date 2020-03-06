@@ -93,29 +93,13 @@ class EditLinks extends React.Component {
     this.setState({ tmpCol, changes: true });
   }
 
-  moveUp(index) {
+  moveItem(startIndex, endIndex) {
     const { tmpCol } = this.state;
     const links = [].concat(tmpCol.links);
-    const item = { ...links[index] };
-    const swap = { ...links[index - 1] };
-    links[index] = swap;
-    links[index - 1] = item;
-
-    links[index] = swap;
-    tmpCol.links = [].concat(links);
-    this.setState({ tmpCol, changes: true });
-  }
-
-  moveDown(index) {
-    const { tmpCol } = this.state;
-    const links = [].concat(tmpCol.links);
-    const item = { ...links[index] };
-    const swap = { ...links[index + 1] };
-    links[index] = swap;
-    links[index + 1] = item;
-
-    tmpCol.links = [].concat(links);
-    this.setState({ tmpCol, changes: true });
+    const [removed] = links.splice(startIndex, 1);
+    links.splice(endIndex, 0, removed);
+    tmpCol.links = links;
+    this.setState({ tmpCol });
   }
 
   render() {
@@ -155,8 +139,7 @@ class EditLinks extends React.Component {
           links={this.state.tmpCol.links}
           deleteItem={(index) => this.handleDelete(index)}
           onChange={(i, k, v) => this.updateItem(i, k, v)}
-          moveUp={(i) => this.moveUp(i)}
-          moveDown={(i) => this.moveDown(i)}
+          moveItem={(s, e) => this.moveItem(s, e)}
         />
         <AddLinkForm onLinkSubmit={(link) => this.handleSubmit(link)} />
       </section>
