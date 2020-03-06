@@ -13,7 +13,7 @@ import * as Actions from '../../../redux/actions/collections';
 class EditLinks extends React.Component {
   static getDerivedStateFromProps(props) {
     const { collection } = props;
-    if (collection.links && collection.links.length) {
+    if (collection.name) {
       return { tmpCol: collection };
     }
     return null;
@@ -22,6 +22,7 @@ class EditLinks extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      tmpCol: props.collection,
       changes: false,
       redirect: false,
     };
@@ -107,9 +108,9 @@ class EditLinks extends React.Component {
       return <Redirect to={this.state.redirect} />;
     }
 
-    // prevents uncontrolled component error
-    if (!this.state.tmpCol || Object.keys(this.state.tmpCol).length === 0) {
-      return <div />;
+    // prevents uncontrolled component or unknown collection
+    if (!this.state.tmpCol || !this.state.tmpCol.name) {
+      return <p className="center">Collection may not exist</p>;
     }
 
     return (
