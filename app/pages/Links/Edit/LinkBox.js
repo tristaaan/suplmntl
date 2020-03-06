@@ -38,7 +38,7 @@ function LinkBox(props) {
           onChange={onItemChange}
           value={item.title} />
         { index === 0
-          ? null
+          ? <div className="linkListSpacer" />
           : (
             <button
               type="button"
@@ -49,7 +49,7 @@ function LinkBox(props) {
             </button>
           )}
         { index === size - 1
-          ? null
+          ? <div className="linkListSpacer" />
           : (
             <button
               type="button"
