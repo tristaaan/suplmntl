@@ -53,7 +53,7 @@
     "start": "node server.js",
     "build": "webpack",
     "build:prod": "NODE_ENV=production npm run build",
-    "test": "NODE_ENV=test nyc --reporter=html --reporter=text mocha tests/database.spec.js --exit",
+    "test": "NODE_ENV=test nyc --reporter=html --reporter=text mocha tests/*.spec.js --exit",
     "watch": "webpack --mode development --watch",
     "postinstall": "npm run build"
   }

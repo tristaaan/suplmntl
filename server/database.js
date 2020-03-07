@@ -33,8 +33,14 @@ const db = mongoose.connection;
 db.on('error',
   console.error.bind(console, 'connection error:')
 );
-db.once('open', function() {
+db.once('open', async function() {
   console.log('connected to database...');
+  if (process.env.NODE_ENV === 'test') {
+    console.log('dropping old entries');
+
+    await Users.deleteMany({});
+    await Collections.deleteMany({});
+  }
 });
 
 function strId() {
@@ -77,7 +83,7 @@ exports.updateCollection = (col, userId) => {
   const newCol = { ...col };
   const { _id } = newCol;
   delete newCol._id;
-  return Collections.findOne({ _id }).lean().exec()
+  return Collections.findOne({ _id }).exec()
     .then((resp) => {
       if (resp.owner._id.toString() !== userId.toString()) {
         throw new Error('unauthorized');
@@ -89,11 +95,11 @@ exports.updateCollection = (col, userId) => {
 function deleteCollection(_id, userId) {
   return Collections.findOne({ _id }).exec()
     .then((resp) => {
-      if (resp.toObject().owner._id.toString() !== userId.toString()) {
+      if (resp.owner._id.toString() !== userId.toString()) {
         throw new Error('unauthorized');
       }
       // if the collection has forks, update them, then delete the collection
-      if (resp.toObject().forks > 0) {
+      if (resp.forks > 0) {
         return Collections.find({ 'forkOf._id': _id }).exec()
           .then((forks) => {
             return Promise.all(forks.map((col) => Collections
@@ -103,8 +109,8 @@ function deleteCollection(_id, userId) {
             return resp.remove();
           });
       // if the collection is a fork, update parent
-      } else if (resp.toObject().forkOf !== null) {
-        return Collections.findOne({ '_id': forkOf._id }).lean().exec()
+      } else if (resp.forkOf !== null) {
+        return Collections.findOne({ '_id': resp.forkOf._id }).lean().exec()
           .then((col) => {
             const newCount = col.forks - 1;
             return Collections.updateOne({ _id: col._id }, { forks: newCount }).exec();
