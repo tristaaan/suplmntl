@@ -124,6 +124,7 @@ function deleteCollection(_id, userId) {
     });
 };
 
+// separate so it can be called from within this file
 exports.deleteCollection = deleteCollection;
 
 exports.forkCollection = (collectionId, newOwner) => {
@@ -161,6 +162,7 @@ function validatePassword(password, dbpass) {
   return bcrypt.compareSync(password, dbpass);
 }
 
+// separate so it can be called from within this file
 exports.validatePassword = validatePassword;
 
 exports.getUserById = (_id) => {
@@ -203,7 +205,7 @@ exports.addUser = (user) => {
 };
 
 exports.updateUserEmail = (_id, email) => {
-  return Users.findOneAndUpdate({ _id }, { email }, { new: true });
+  return Users.findOneAndUpdate({ _id }, { email }, { new: true }).exec();
 };
 
 exports.updateUserPassword = (_id, oldPass, newPass) => {
@@ -213,7 +215,7 @@ exports.updateUserPassword = (_id, oldPass, newPass) => {
         throw new Error('Incorrect password');
       }
       const hashpass = bcrypt.hashSync(newPass, bcrypt.genSaltSync(10));
-      return Users.update({ _id }, { pw: hashpass });
+      return Users.updateOne({ _id }, { pw: hashpass }).exec();
     });
 };
 
@@ -276,6 +278,6 @@ exports.resetPasswordForToken = (newPassword, passwordResetToken) => {
         pw: resp.hash,
         passwordResetToken: null,
         passwordResetExpires: null,
-      }).exec();
+      }, { new: true }).exec();
     });
 };
