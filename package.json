@@ -44,6 +44,8 @@
     "eslint-plugin-import": "2.18.2",
     "eslint-plugin-jsx-a11y": "6.2.3",
     "eslint-plugin-react": "7.16.0",
+    "mocha": "^7.1.0",
+    "nyc": "^15.0.0",
     "webpack": "4.41.2",
     "webpack-cli": "3.3.10"
   },
@@ -51,6 +53,7 @@
     "start": "node server.js",
     "build": "webpack",
     "build:prod": "NODE_ENV=production npm run build",
+    "test": "NODE_ENV=test nyc --reporter=html --reporter=text mocha tests/*.spec.js --exit",
     "watch": "webpack --mode development --watch",
     "postinstall": "npm run build"
   }

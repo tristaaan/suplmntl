@@ -17,14 +17,30 @@ const Collections = mongoose.model('Collection', require('../models/Collection')
 let mongoURI;
 if (process.env.MONGODB_URI) {
   mongoURI = process.env.MONGODB_URI;
+} else if (process.env.NODE_ENV === 'test') {
+  mongoURI = 'mongodb://localhost/suplmntl-test';
 } else {
   mongoURI = 'mongodb://localhost/suplmntl';
 }
 
 mongoose.Promise = global.Promise;
-mongoose.connect(mongoURI, (err) => {
-  if (err) { throw err; }
-  console.log('db connected...');
+mongoose.connect(mongoURI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+  useFindAndModify: false
+});
+const db = mongoose.connection;
+db.on('error',
+  console.error.bind(console, 'connection error:')
+);
+db.once('open', async function() {
+  console.log('connected to database...');
+  if (process.env.NODE_ENV === 'test') {
+    console.log('dropping old entries');
+
+    await Users.deleteMany({});
+    await Collections.deleteMany({});
+  }
 });
 
 function strId() {
@@ -67,27 +83,37 @@ exports.updateCollection = (col, userId) => {
   const newCol = { ...col };
   const { _id } = newCol;
   delete newCol._id;
-  return Collections.findOne({ _id }).lean().exec()
+  return Collections.findOne({ _id }).exec()
     .then((resp) => {
       if (resp.owner._id.toString() !== userId.toString()) {
         throw new Error('unauthorized');
       }
-      return Collections.findOneAndUpdate({ _id }, newCol).exec();
+      return Collections.findOneAndUpdate({ _id }, newCol, {new: true}).exec();
     });
 };
 
 function deleteCollection(_id, userId) {
   return Collections.findOne({ _id }).exec()
     .then((resp) => {
-      if (resp.toObject().owner._id.toString() !== userId.toString()) {
+      if (resp.owner._id.toString() !== userId.toString()) {
         throw new Error('unauthorized');
       }
       // if the collection has forks, update them, then delete the collection
-      if (resp.toObject().forks > 0) {
+      if (resp.forks > 0) {
         return Collections.find({ 'forkOf._id': _id }).exec()
           .then((forks) => {
             return Promise.all(forks.map((col) => Collections
-              .update({ _id: col._id }, { forkOf: null }).exec()));
+              .updateOne({ _id: col._id }, { forkOf: null }).exec()));
+          })
+          .then(() => {
+            return resp.remove();
+          });
+      // if the collection is a fork, update parent
+      } else if (resp.forkOf !== null) {
+        return Collections.findOne({ '_id': resp.forkOf._id }).lean().exec()
+          .then((col) => {
+            const newCount = col.forks - 1;
+            return Collections.updateOne({ _id: col._id }, { forks: newCount }).exec();
           })
           .then(() => {
             return resp.remove();
@@ -96,25 +122,33 @@ function deleteCollection(_id, userId) {
       // otherwise delete collection
       return resp.remove();
     });
-}
+};
 
+// separate so it can be called from within this file
 exports.deleteCollection = deleteCollection;
 
-exports.forkCollection = (collectionId, owner) => {
+exports.forkCollection = (collectionId, newOwner) => {
+  let foundCollection;
   return Collections.findOne({ _id: collectionId }).lean().exec()
     .then((col) => {
+      // update fork count on parent
+      const newCount = col.forks + 1;
+      foundCollection = { ...col };
+      return Collections.updateOne({ _id: col._id }, { forks: newCount }).exec();
+    })
+    .then((resp) => {
       const newCol = new Collections({
-        name: `fork of ${col.name}`,
+        name: `fork of ${foundCollection.name}`,
         postId: strId(),
-        private: col.private,
-        links: col.links,
+        private: foundCollection.private,
+        links: foundCollection.links,
         forkOf: {
-          _id: col._id,
-          postId: col.postId,
-          owner: col.owner,
-          name: col.name,
+          _id: foundCollection._id,
+          postId: foundCollection.postId,
+          owner: foundCollection.owner,
+          name: foundCollection.name,
         },
-        owner
+        owner: newOwner
       });
       return newCol.save();
     });
@@ -128,6 +162,7 @@ function validatePassword(password, dbpass) {
   return bcrypt.compareSync(password, dbpass);
 }
 
+// separate so it can be called from within this file
 exports.validatePassword = validatePassword;
 
 exports.getUserById = (_id) => {
@@ -170,7 +205,7 @@ exports.addUser = (user) => {
 };
 
 exports.updateUserEmail = (_id, email) => {
-  return Users.findOneAndUpdate({ _id }, { email }, { new: true });
+  return Users.findOneAndUpdate({ _id }, { email }, { new: true }).exec();
 };
 
 exports.updateUserPassword = (_id, oldPass, newPass) => {
@@ -180,7 +215,7 @@ exports.updateUserPassword = (_id, oldPass, newPass) => {
         throw new Error('Incorrect password');
       }
       const hashpass = bcrypt.hashSync(newPass, bcrypt.genSaltSync(10));
-      return Users.update({ _id }, { pw: hashpass });
+      return Users.updateOne({ _id }, { pw: hashpass }).exec();
     });
 };
 
@@ -243,6 +278,6 @@ exports.resetPasswordForToken = (newPassword, passwordResetToken) => {
         pw: resp.hash,
         passwordResetToken: null,
         passwordResetExpires: null,
-      }).exec();
+      }, { new: true }).exec();
     });
 };
