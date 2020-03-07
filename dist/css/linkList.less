@@ -1,15 +1,14 @@
-#linkList{
+#linkListContainer{
   text-align: center;
-  display: block;
   margin: 0px auto;
 }
 
-dl{
+dl {
   max-width: @content-width;
   margin: 0 auto;
 }
 
-dt{
+dt {
   border-width: @link-list-border-width @link-list-border-width 0;
   border-color: @link-list-border-color;
   border-style: solid;
@@ -19,7 +18,7 @@ dt{
   font-size: 1.1em;
 }
 
-dd{
+dd {
   border-width: 0 @link-list-border-width @link-list-border-width;
   border-color: @link-list-border-color;
   border-style: solid;
@@ -36,19 +35,26 @@ dd{
   }
 }
 
-.editLinkItem {
+.linkListEditContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.linkListEditBox {
+  max-width: 422px;
+  margin: 12px 0;
   border: @link-list-border-color 1px solid;
-  margin-bottom: 10px;
   input {
-    border-width: 0 0 1px 0;
-    width: 397px;
     max-width: 100vw;
+    border-width: 0 0 1px 0;
     border-color: lightgray;
   }
   textarea {
-    border-width: 0;
-    width: 397px;
     max-width: 100vw;
+    border-top: none;
+    border: 1px solid lightgrey;
+    margin-top: -1px;
     resize: vertical;
   }
 }
@@ -60,19 +66,6 @@ dd{
     margin: 2px 3px 0 4px;
     font-size: 1.15em;
     padding: 0 10px 3px;
-  }
-}
-
-.linkForm {
-  max-width: @content-width;
-  input {
-    max-width: 100vw;
-  }
-  textarea {
-    max-width: 100vw;
-    border-top: none;
-    border: 1px solid lightgrey;
-    margin-top: -1px;
   }
 }
 
@@ -104,4 +97,19 @@ dd{
 .linkListTitle a {
   cursor: pointer;
   text-decoration: underline;
+}
+
+.linkListHandle {
+  cursor: grab;
+  border: 1px solid grey;
+  border-radius: 4px;
+  padding: 6px 12px;
+  margin: 2px 3px 0 4px;
+  &:active {
+    cursor: grabbing;
+  }
+}
+
+.linkListSpacer {
+  width: 74px;
 }

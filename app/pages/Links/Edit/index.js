@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { Redirect, Prompt } from 'react-router';
 import { withRouter } from 'react-router-dom';
 
-import LinksBox from './LinkBox';
+import LinkBox from './LinkBox';
 import AddLinkForm from './AddLinkForm';
 import get from '../../../utils/get';
 import * as Actions from '../../../redux/actions/collections';
@@ -13,7 +13,7 @@ import * as Actions from '../../../redux/actions/collections';
 class EditLinks extends React.Component {
   static getDerivedStateFromProps(props) {
     const { collection } = props;
-    if (collection.links && collection.links.length) {
+    if (collection.name) {
       return { tmpCol: collection };
     }
     return null;
@@ -94,12 +94,27 @@ class EditLinks extends React.Component {
     this.setState({ tmpCol, changes: true });
   }
 
+  moveItem(startIndex, endIndex) {
+    const { tmpCol } = this.state;
+    const links = [].concat(tmpCol.links);
+    const [removed] = links.splice(startIndex, 1);
+    links.splice(endIndex, 0, removed);
+    tmpCol.links = links;
+    this.setState({ tmpCol });
+  }
+
   render() {
     if (this.state.redirect) {
       return <Redirect to={this.state.redirect} />;
     }
+
+    // prevents uncontrolled component or unknown collection
+    if (!this.state.tmpCol || !this.state.tmpCol.name) {
+      return <p className="center">Collection may not exist</p>;
+    }
+
     return (
-      <section id="linkList" ref={(c) => {this.el = c;}}>
+      <section id="linkListContainer" ref={(c) => {this.el = c;}}>
         <Prompt
           when={this.state.changes}
           message="There are unsaved changes, are you sure you want to leave?"
@@ -121,10 +136,12 @@ class EditLinks extends React.Component {
             Done
           </button>
         </div>
-        <LinksBox
+        <LinkBox
           links={this.state.tmpCol.links}
           deleteItem={(index) => this.handleDelete(index)}
-          onChange={(i, k, v) => this.updateItem(i, k, v)} />
+          onChange={(i, k, v) => this.updateItem(i, k, v)}
+          moveItem={(s, e) => this.moveItem(s, e)}
+        />
         <AddLinkForm onLinkSubmit={(link) => this.handleSubmit(link)} />
       </section>
     );
@@ -146,7 +163,7 @@ EditLinks.defaultProps = {
 
 export default withRouter(connect(
   (state, ownProps) => {
-    const nextProp = { collections: {}, user: {} };
+    const nextProp = { collection: {}, user: {} };
     if (state.collections && state.collections.map) {
       nextProp.collection = state.collections.map[ownProps.match.params.id];
     }

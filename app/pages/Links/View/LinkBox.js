@@ -8,7 +8,7 @@ import PropTypes from 'prop-types';
 
 function LinkBox({ links }) {
   if (!links || !links.length) {
-    return (<p>There are no links in this collection</p>);
+    return (<p className="center">There are no links in this collection</p>);
   }
 
   const createItem = (item, index) => (
