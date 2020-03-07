@@ -80,7 +80,7 @@ exports.updateCollection = (col, userId) => {
       if (resp.owner._id.toString() !== userId.toString()) {
         throw new Error('unauthorized');
       }
-      return Collections.findOneAndUpdate({ _id }, newCol).exec();
+      return Collections.findOneAndUpdate({ _id }, newCol, {new: true}).exec();
     });
 };
 
@@ -104,7 +104,7 @@ function deleteCollection(_id, userId) {
       // otherwise delete collection
       return resp.remove();
     });
-}
+};
 
 exports.deleteCollection = deleteCollection;
 
