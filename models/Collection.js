@@ -8,14 +8,23 @@ const linkSchema = new Schema({
   description: String
 });
 
+const ownerSchema = new Schema({
+  _id: Schema.Types.ObjectId,
+  username: String
+});
+
+const forkSchema = new Schema({
+  _id: Schema.Types.ObjectId,
+  name: String,
+  postId: String,
+  owner: ownerSchema,
+});
+
 module.exports = {
   postId: String,
   name: String,
   links: { type: [linkSchema], default: [] },
-  owner: {
-    _id: Schema.Types.ObjectId,
-    username: String,
-  },
+  owner: ownerSchema,
   forks: { type: Number, default: 0, validate: val => val >= 0 },
   forkOf: { type: Object, default: null },
   private: { type: Boolean, default: false },

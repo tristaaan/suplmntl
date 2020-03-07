@@ -17,6 +17,8 @@ const Collections = mongoose.model('Collection', require('../models/Collection')
 let mongoURI;
 if (process.env.MONGODB_URI) {
   mongoURI = process.env.MONGODB_URI;
+} else if (process.env.NODE_ENV === 'test') {
+  mongoURI = 'mongodb://localhost/suplmntl-test';
 } else {
   mongoURI = 'mongodb://localhost/suplmntl';
 }
@@ -95,7 +97,17 @@ function deleteCollection(_id, userId) {
         return Collections.find({ 'forkOf._id': _id }).exec()
           .then((forks) => {
             return Promise.all(forks.map((col) => Collections
-              .update({ _id: col._id }, { forkOf: null }).exec()));
+              .updateOne({ _id: col._id }, { forkOf: null }).exec()));
+          })
+          .then(() => {
+            return resp.remove();
+          });
+      // if the collection is a fork, update parent
+      } else if (resp.toObject().forkOf !== null) {
+        return Collections.findOne({ '_id': forkOf._id }).lean().exec()
+          .then((col) => {
+            const newCount = col.forks - 1;
+            return Collections.updateOne({ _id: col._id }, { forks: newCount }).exec();
           })
           .then(() => {
             return resp.remove();
@@ -108,21 +120,28 @@ function deleteCollection(_id, userId) {
 
 exports.deleteCollection = deleteCollection;
 
-exports.forkCollection = (collectionId, owner) => {
+exports.forkCollection = (collectionId, newOwner) => {
+  let foundCollection;
   return Collections.findOne({ _id: collectionId }).lean().exec()
     .then((col) => {
+      // update fork count on parent
+      const newCount = col.forks + 1;
+      foundCollection = { ...col };
+      return Collections.updateOne({ _id: col._id }, { forks: newCount }).exec();
+    })
+    .then((resp) => {
       const newCol = new Collections({
-        name: `fork of ${col.name}`,
+        name: `fork of ${foundCollection.name}`,
         postId: strId(),
-        private: col.private,
-        links: col.links,
+        private: foundCollection.private,
+        links: foundCollection.links,
         forkOf: {
-          _id: col._id,
-          postId: col.postId,
-          owner: col.owner,
-          name: col.name,
+          _id: foundCollection._id,
+          postId: foundCollection.postId,
+          owner: foundCollection.owner,
+          name: foundCollection.name,
         },
-        owner
+        owner: newOwner
       });
       return newCol.save();
     });
