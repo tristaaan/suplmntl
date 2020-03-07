@@ -93,9 +93,53 @@ describe('users', function() {
     });
   });
 
-  // describe('malicious calls', function() {
+  describe('malicious calls', function() {
+    before(function(done) {
+      db.addUser(user2)
+        .then((resp) => {
+          user2._id = resp._id;
+          done();
+        })
+        .catch(done);
+    });
 
-  // });
+    it('does not add users with the same name', function(done) {
+      db.addUser({ username: user2.username })
+        .then((resp) => {
+          assert(false);
+          done();
+        })
+        .catch((err) => {
+          assert.strict.equal(err.message, 'Username already exists');
+          done();
+        });
+    });
+
+    it('does not add users with the same email', function(done) {
+      db.addUser({ username: 'user3', email: user2.email })
+        .then((resp) => {
+          assert(false);
+          done();
+        })
+        .catch((err) => {
+          assert.strict.equal(err.message, 'Email is already registered');
+          done();
+        });
+    });
+
+    it('does not update password with incorrect password', function(done) {
+      const newPass = 'qwerty';
+      db.updateUserPassword(user1._id, 'wrong password', newPass)
+        .then((resp) => {
+          assert(false);
+          done();
+        })
+        .catch((err) => {
+          assert.strict.equal(err.message, 'Incorrect password');
+          done();
+        });
+    });
+  });
 
   // after all, delete both users.
   after(function(done) {

@@ -74,6 +74,15 @@ describe('collections', function() {
         .catch(done);
     });
 
+    it('gets collection by id', function(done) {
+      db.getCollectionByPostId(sampleCollection.postId)
+        .then((resp) => {
+          assert.strict.equal(resp._id.toString(), sampleCollection._id.toString());
+          done();
+        })
+        .catch(done);
+    });
+
     it('updates collections', function(done) {
       const updated = { ...sampleCollection };
       updated.name = 'new name';
