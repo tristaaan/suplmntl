@@ -22,9 +22,17 @@ if (process.env.MONGODB_URI) {
 }
 
 mongoose.Promise = global.Promise;
-mongoose.connect(mongoURI, (err) => {
-  if (err) { throw err; }
-  console.log('db connected...');
+mongoose.connect(mongoURI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+  useFindAndModify: false
+});
+const db = mongoose.connection;
+db.on('error',
+  console.error.bind(console, 'connection error:')
+);
+db.once('open', function() {
+  console.log('connected to database...');
 });
 
 function strId() {
