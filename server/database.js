@@ -100,11 +100,7 @@ function deleteCollection(_id, userId) {
       }
       // if the collection has forks, update them, then delete the collection
       if (resp.forks > 0) {
-        return Collections.find({ 'forkOf._id': _id }).exec()
-          .then((forks) => {
-            return Promise.all(forks.map((col) => Collections
-              .updateOne({ _id: col._id }, { forkOf: null }).exec()));
-          })
+        return Collections.updateMany({ 'forkOf._id': _id }, { forkOf: null })
           .then(() => {
             return resp.remove();
           });
@@ -220,11 +216,7 @@ exports.updateUserPassword = (_id, oldPass, newPass) => {
 };
 
 exports.deleteUser = (userId) => {
-  return Collections.find({ 'owner._id': userId })
-    .then((resp = []) => {
-      const promises = resp.map((col) => deleteCollection(col._id, userId));
-      return Promise.all(promises);
-    })
+  return Collections.deleteMany({ 'owner._id': userId })
     .then(() => {
       return Users.findOneAndRemove({ _id: userId }).exec();
     });
