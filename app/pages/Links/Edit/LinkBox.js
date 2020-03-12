@@ -5,6 +5,7 @@ import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 
 function LinkBox(props) {
   const onItemChange = (e) => {
+    console.log(e);
     const index = parseInt(e.target.parentElement.dataset.index, 10);
     const { key } = e.target.dataset;
     const { value } = e.target;
@@ -32,12 +33,12 @@ function LinkBox(props) {
       className="editLinkItem"
       draggableId={`${index}-${item.description.length}`}
       key={index}
-      index={index}
-      data-index={index}>
+      index={index}>
       {(provided) => (
         <div
           className="linkListEditBox"
           ref={provided.innerRef}
+          data-index={index}
           {...provided.draggableProps}
         >
           <div className="titleRow" data-index={index}>
