@@ -9,13 +9,23 @@ class CollectionBox extends React.Component {
   }
 
   render() {
-    const createItem = (col, index) => (
-      <li key={`${col.postId}_${index}`}>
-        <Link to={`/${this.props.username}/${col.postId}/view`} className="title">{col.name}</Link>
-        <span>{col.links.length === 1 ? `${col.links.length} link` : `${col.links.length} links`}</span>
-      </li>
+    const createItem = (col, index) => {
+      const date = new Date(col.createdAt);
+      return (
+        <div key={`${col.postId}_${index}`} className="collection-item">
+          <Link to={`/${this.props.username}/${col.postId}/view`} className="title">{col.name}</Link>
+          <div className="meta">
+            <span>{`Created: ${date.getFullYear()}/${date.getMonth()}/${date.getDay()} at ${date.getHours()}:${date.getMinutes()}`}</span>
+            <span>{col.links.length === 1 ? `${col.links.length} link` : `${col.links.length} links`}</span>
+          </div>
+        </div>
+      );
+    };
+    return (
+      <div className="collection-container">
+        {this.props.collections.map(createItem)}
+      </div>
     );
-    return (<ul>{this.props.collections.map(createItem)}</ul>);
   }
 }
 
