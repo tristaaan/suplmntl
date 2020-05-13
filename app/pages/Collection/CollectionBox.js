@@ -13,7 +13,10 @@ class CollectionBox extends React.Component {
       const date = new Date(col.createdAt);
       return (
         <div key={`${col.postId}_${index}`} className="collection-item">
-          <Link to={`/${this.props.username}/${col.postId}/view`} className="title">{col.name}</Link>
+          <div className="head">
+            <Link to={`/${this.props.username}/${col.postId}/view`} className="title">{col.name}</Link>
+            { col.forkOf !== null ? '(fork)' : ''}
+          </div>
           <div className="meta">
             <span>{`Created: ${date.getFullYear()}/${date.getMonth()}/${date.getDay()} at ${date.getHours()}:${date.getMinutes()}`}</span>
             <span>{col.links.length === 1 ? `${col.links.length} link` : `${col.links.length} links`}</span>

@@ -80,7 +80,7 @@ class ViewLinks extends React.Component {
     }
 
     const user = get(this.props, 'user');
-    const { name, forkOf, owner } = this.props.collection;
+    const { name, forkOf, forks, owner } = this.props.collection;
     const isOwner = user && user._id === get(this.props, 'collection.owner._id');
 
     let sub = null;
@@ -95,6 +95,17 @@ class ViewLinks extends React.Component {
             /
             {forkOf.name}
           </Link>
+        </small>
+      );
+    } else if (forks > 0) {
+      sub = (
+        <small>
+          by&nbsp;
+          <Link to={`/${owner.username}/collections`}>{ owner.username }</Link>
+          &nbsp;-&nbsp;
+          {forks}
+          &nbsp;fork
+          {forks > 1 ? 's' : ''}
         </small>
       );
     } else if (owner) {
