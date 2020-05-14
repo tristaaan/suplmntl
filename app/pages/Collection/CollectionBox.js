@@ -10,16 +10,20 @@ class CollectionBox extends React.Component {
 
   render() {
     const createItem = (col, index) => {
-      const date = new Date(col.createdAt);
+      const cDate = new Date(col.createdAt);
+      const mDate = col.updatedAt ? new Date(col.updatedAt) : cDate;
       return (
         <div key={`${col.postId}_${index}`} className="collection-item">
           <div className="head">
             <Link to={`/${this.props.username}/${col.postId}/view`} className="title">{col.name}</Link>
-            { col.forkOf !== null ? '(fork)' : ''}
+            <span>{col.links.length === 1 ? `${col.links.length} link` : `${col.links.length} links`}</span>
           </div>
           <div className="meta">
-            <span>{`Created: ${date.getFullYear()}/${date.getMonth()}/${date.getDay()} at ${date.getHours()}:${date.getMinutes()}`}</span>
-            <span>{col.links.length === 1 ? `${col.links.length} link` : `${col.links.length} links`}</span>
+            <span>{`Created: ${cDate.getFullYear()}/${cDate.getMonth()}/${cDate.getDay()} at ${cDate.getHours()}:${cDate.getMinutes()}`}</span>
+            <span>{ col.forkOf !== null ? '(fork)' : ''}</span>
+          </div>
+          <div className="meta">
+            <span>{`Modified: ${mDate.getFullYear()}/${mDate.getMonth()}/${mDate.getDay()} at ${mDate.getHours()}:${mDate.getMinutes()}`}</span>
           </div>
         </div>
       );

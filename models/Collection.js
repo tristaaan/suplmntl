@@ -1,6 +1,4 @@
-var mongoose = require('mongoose');
-
-var Schema = mongoose.Schema;
+const { Schema } = require('mongoose');
 
 const linkSchema = new Schema({
   title: String,
@@ -13,23 +11,22 @@ const ownerSchema = new Schema({
   username: String
 });
 
-const forkSchema = new Schema({
-  _id: Schema.Types.ObjectId,
-  name: String,
-  postId: String,
-  owner: ownerSchema,
-});
+// const forkSchema = new Schema({
+//   _id: Schema.Types.ObjectId,
+//   name: String,
+//   postId: String,
+//   owner: ownerSchema,
+// });
 
-module.exports = {
+module.exports = new Schema({
   postId: String,
   name: String,
   links: { type: [linkSchema], default: [] },
   owner: ownerSchema,
-  forks: { type: Number, default: 0, validate: val => val >= 0 },
+  forks: { type: Number, default: 0, validate: (val) => val >= 0 },
   forkOf: { type: Object, default: null },
   private: { type: Boolean, default: false },
-  createdAt: { type: Date, default: Date.now }, // type.date().default(r.now()),
-};
+}, { timestamps: true });
 
 // forkOf {
 //   "_id": String,

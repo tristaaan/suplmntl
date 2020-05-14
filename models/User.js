@@ -1,15 +1,12 @@
-var mongoose = require('mongoose');
-
-var Schema = mongoose.Schema;
+const { Schema } = require('mongoose');
 
 module.exports = new Schema({
   username: String,
   email: String,
   pw: String,
-  createdAt: { type: Date, default: Date.now },
   passwordResetToken: { type: String, default: null },
   passwordResetExpires: { type: Date, default: null },
-});
+}, { timestamps: true });
 
 // {
 //   id: { type: Sequelize.UUID, primaryKey: true, defaultValue: Sequelize.UUIDV4 },
