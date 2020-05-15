@@ -14,6 +14,7 @@ import Account from './pages/Account';
 import NotFound from './pages/NotFound';
 import LinksEdit from './pages/Links/Edit';
 import LinksView from './pages/Links/View';
+import ForksView from './pages/Links/Forks';
 import CollectionList from './pages/Collection'; // waterfall imports!!
 
 import PrivateRoute from './utils/PrivateRoute';
@@ -67,6 +68,9 @@ function Routes() {
           <Route
             path="/:user/:id/view"
             component={LinksView} />
+          <Route
+            path="/:user/:id/forks"
+            component={ForksView} />
           <Route
             path="/:user"
             render={(props) => (
