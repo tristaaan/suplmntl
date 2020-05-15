@@ -71,6 +71,10 @@ exports.getCollection = (_id) => {
   return Collections.findOne({ _id }).exec();
 };
 
+exports.getCollectionWithQuery = (query) => {
+  return Collections.findOne(query).exec();
+};
+
 exports.createCollection = (entry) => {
   return new Collections({
     name: entry.name,

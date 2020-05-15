@@ -104,9 +104,9 @@ class ViewLinks extends React.Component {
           by&nbsp;
           <Link to={`/${owner.username}/collections`}>{ owner.username }</Link>
           &nbsp;-&nbsp;
-          {forks}
-          &nbsp;
           <Link to={`/${owner.username}/${postId}/forks`}>
+            {forks}
+            &nbsp;
             fork
             {forks > 1 ? 's' : ''}
           </Link>

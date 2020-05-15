@@ -18,6 +18,15 @@ module.exports = function collections(app) {
     });
 
   app.route('/api/collection')
+    .get((req, res) => {
+      db.getCollectionWithQuery(req.query)
+        .then((resp) => {
+          res.send(resp);
+        })
+        .catch((err) => {
+          res.status(500).send(err);
+        });
+    })
     .put([ensureAuthenticated], (req, res) => {
       const entry = {
         name: req.body.name,
