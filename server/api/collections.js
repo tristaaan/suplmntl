@@ -49,6 +49,12 @@ module.exports = function collections(app) {
     });
 
   app.route('/api/collection/:id/fork')
+    .get((req, res) => (
+      db.getForks(req.params.id)
+        .then((resp) => {
+          res.send(resp);
+        })
+    ))
     .post(ensureAuthenticated, (req, res) => {
       db.forkCollection(req.params.id, { _id: req.user._id,
         username: req.user.username })

@@ -155,7 +155,7 @@ exports.forkCollection = (collectionId, newOwner) => {
 };
 
 exports.getForks = (id) => {
-  return Collections.find({ forkOf: id }).lean().exec();
+  return Collections.find({ 'forkOf.postId': id }).exec();
 };
 
 // ----------------------------------
