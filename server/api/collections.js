@@ -18,6 +18,30 @@ module.exports = function collections(app) {
     });
 
   app.route('/api/collection')
+    .get((req, res) => {
+      const { query } = req.query;
+      const allowedKeys = ['_id', 'postId', 'forkOf._id', 'owner._id'];
+      const keysAreValid = Object.keys(query).every((key) => allowedKeys.indexOf(key) !== -1);
+      if (!keysAreValid) {
+        res.status(500).send(new Error('forbidden query parameter'));
+        return;
+      }
+      db.getCollectionWithQuery(query)
+        .then((resp) => {
+          // if the collection is private, ensure permissions.
+          if (resp.data.private
+            && (!req.isAuthenticated()
+              || req.user._id.toString() !== resp.data.owner._id.toString())
+          ) {
+            res.status(401).send('unauthorized');
+            return;
+          }
+          res.send(resp);
+        })
+        .catch((err) => {
+          res.status(500).send(err);
+        });
+    })
     .put([ensureAuthenticated], (req, res) => {
       const entry = {
         name: req.body.name,
@@ -49,6 +73,12 @@ module.exports = function collections(app) {
     });
 
   app.route('/api/collection/:id/fork')
+    .get((req, res) => (
+      db.getForks(req.params.id)
+        .then((resp) => {
+          res.send(resp);
+        })
+    ))
     .post(ensureAuthenticated, (req, res) => {
       db.forkCollection(req.params.id, { _id: req.user._id,
         username: req.user.username })
@@ -62,7 +92,7 @@ module.exports = function collections(app) {
 
   app.route('/api/collection/:id')
     .get((req, res) => {
-      db.getCollectionByPostId(req.params.id)
+      db.getCollectionWithQuery({ postId: req.params.id })
         .then((resp) => {
           res.send(resp);
         })

@@ -15,6 +15,10 @@ export function getCollection(collectionId) {
   return axios.get(`/collection/${collectionId}`);
 }
 
+export function getCollectionByPostId(postId) {
+  return axios.get(`/collection?postId=${postId}`);
+}
+
 export function createCollection(newCollection) {
   return axios.put('/collection', newCollection);
 }
@@ -29,6 +33,10 @@ export function deleteCollection(collectionId) {
 
 export function forkCollection(id) {
   return axios.post(`/collection/${id}/fork`, { id });
+}
+
+export function getForks(id) {
+  return axios.get(`/collection/${id}/fork`, { id });
 }
 
 // Auth

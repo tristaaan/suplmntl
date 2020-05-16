@@ -3,8 +3,6 @@ const path = require('path');
 
 // server packages
 const express = require('express');
-const ReactDOMServer = require('react-dom/server');
-const StaticRouter = require('react-router-dom').StaticRouter;
 const jwt = require('jsonwebtoken');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');

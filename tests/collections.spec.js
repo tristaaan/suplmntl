@@ -74,8 +74,8 @@ describe('collections', function() {
         .catch(done);
     });
 
-    it('gets collection by id', function(done) {
-      db.getCollectionByPostId(sampleCollection.postId)
+    it('gets collection with some query', function(done) {
+      db.getCollectionWithQuery({ postId: sampleCollection.postId })
         .then((resp) => {
           assert.strict.equal(resp._id.toString(), sampleCollection._id.toString());
           done();
