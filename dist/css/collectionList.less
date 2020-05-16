@@ -19,13 +19,25 @@
     display: flex;
     flex-direction: column;
     align-items: start;
+    justify-content: space-between;
     border: @collection-list-border-width solid @collection-list-border-color;
     padding: .95em 1.5em;
     color: @title-text-color;
     margin: 5px;
 
     .head {
-      margin-bottom: 0.25em;
+      margin-bottom: 0.55em;
+      span:first-child {
+        text-align: left;
+        padding-right: 2em;
+      }
+      span:last-child {
+        text-align: right;
+      }
+    }
+
+    .meta-container {
+      width: 100%;
     }
 
     .meta {
