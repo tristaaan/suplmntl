@@ -63,10 +63,6 @@ exports.getCollections = (username) => {
     });
 };
 
-exports.getCollectionByPostId = (postId) => {
-  return Collections.findOne({ postId }).exec();
-};
-
 exports.getCollection = (_id) => {
   return Collections.findOne({ _id }).exec();
 };
