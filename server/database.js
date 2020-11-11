@@ -22,28 +22,18 @@ if (process.env.MONGODB_URI) {
 }
 
 mongoose.Promise = global.Promise;
-mongoose.connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true });
+mongoose.connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false });
 const db = mongoose.connection;
 db.on('error',
   console.error.bind(console, 'connection error:')
 );
-db.once('open', function() {
-  console.log('connected to database...');
-});
-
-mongoose.Promise = global.Promise;
-mongoose.connect(mongoURI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-  useFindAndModify: false
-});
-const db = mongoose.connection;
-db.on('error',
-  console.error.bind(console, 'connection error:'));
 
 async function connectionOpen() {
   console.log('connected to database...');
   if (process.env.NODE_ENV === 'test') {
+    if (process.env.MONGODB_URI.includes('mongodb+srv')) {
+      throw Error('You are running a test on what is likely a production database, do not do this');
+    }
     console.log('dropping old entries');
 
     await Users.deleteMany({});
