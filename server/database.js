@@ -17,11 +17,19 @@ const Collections = mongoose.model('Collection', require('../models/Collection')
 let mongoURI;
 if (process.env.MONGODB_URI) {
   mongoURI = process.env.MONGODB_URI;
-} else if (process.env.NODE_ENV === 'test') {
-  mongoURI = 'mongodb://localhost/suplmntl-test';
 } else {
   mongoURI = 'mongodb://localhost/suplmntl';
 }
+
+mongoose.Promise = global.Promise;
+mongoose.connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true });
+const db = mongoose.connection;
+db.on('error',
+  console.error.bind(console, 'connection error:')
+);
+db.once('open', function() {
+  console.log('connected to database...');
+});
 
 mongoose.Promise = global.Promise;
 mongoose.connect(mongoURI, {
