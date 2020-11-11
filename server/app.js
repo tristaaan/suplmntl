@@ -1,5 +1,8 @@
-const express = require('express');
+// native packages
 const path = require('path');
+
+// server packages
+const express = require('express');
 const jwt = require('jsonwebtoken');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
@@ -7,9 +10,11 @@ const lessMiddleware = require('less-middleware');
 const favicon = require('serve-favicon');
 const helmet = require('helmet');
 
+// local packages
 const db = require('./database');
 const api = require('./api');
 
+// init express
 const app = express();
 const rootpath = path.join(__dirname, '../dist');
 
@@ -22,7 +27,7 @@ app.use(lessMiddleware(rootpath));
 app.use('/js', express.static(path.resolve(path.join(rootpath, 'js'))));
 app.use('/css', express.static(path.resolve(path.join(rootpath, 'css'))));
 app.use(favicon(path.join(rootpath, 'favicon.png')));
-// app.use(express.static(rootpath));
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
@@ -49,6 +54,7 @@ app.use((req, res, next) => {
   }
 });
 
+// add all endpoints to express app
 api(app);
 
 // all other requests get index.html

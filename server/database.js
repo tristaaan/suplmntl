@@ -39,9 +39,9 @@ mongoose.connect(mongoURI, {
 });
 const db = mongoose.connection;
 db.on('error',
-  console.error.bind(console, 'connection error:')
-);
-db.once('open', async function() {
+  console.error.bind(console, 'connection error:'));
+
+async function connectionOpen() {
   console.log('connected to database...');
   if (process.env.NODE_ENV === 'test') {
     console.log('dropping old entries');
@@ -49,7 +49,9 @@ db.once('open', async function() {
     await Users.deleteMany({});
     await Collections.deleteMany({});
   }
-});
+}
+
+db.once('open', connectionOpen);
 
 function strId() {
   return randomString(8);
@@ -69,12 +71,12 @@ exports.getCollections = (username) => {
     });
 };
 
-exports.getCollectionByPostId = (postId) => {
-  return Collections.findOne({ postId }).exec();
-};
-
 exports.getCollection = (_id) => {
   return Collections.findOne({ _id }).exec();
+};
+
+exports.getCollectionWithQuery = (query) => {
+  return Collections.findOne(query).exec();
 };
 
 exports.createCollection = (entry) => {
@@ -96,7 +98,7 @@ exports.updateCollection = (col, userId) => {
       if (resp.owner._id.toString() !== userId.toString()) {
         throw new Error('unauthorized');
       }
-      return Collections.findOneAndUpdate({ _id }, newCol, {new: true}).exec();
+      return Collections.findOneAndUpdate({ _id }, newCol, { new: true }).exec();
     });
 };
 
@@ -113,8 +115,10 @@ function deleteCollection(_id, userId) {
             return resp.remove();
           });
       // if the collection is a fork, update parent
-      } else if (resp.forkOf !== null) {
-        return Collections.findOne({ '_id': resp.forkOf._id }).lean().exec()
+      }
+
+      if (resp.forkOf !== null) {
+        return Collections.findOne({ _id: resp.forkOf._id }).lean().exec()
           .then((col) => {
             const newCount = col.forks - 1;
             return Collections.updateOne({ _id: col._id }, { forks: newCount }).exec();
@@ -126,7 +130,7 @@ function deleteCollection(_id, userId) {
       // otherwise delete collection
       return resp.remove();
     });
-};
+}
 
 // separate so it can be called from within this file
 exports.deleteCollection = deleteCollection;
@@ -140,7 +144,7 @@ exports.forkCollection = (collectionId, newOwner) => {
       foundCollection = { ...col };
       return Collections.updateOne({ _id: col._id }, { forks: newCount }).exec();
     })
-    .then((resp) => {
+    .then(() => {
       const newCol = new Collections({
         name: `fork of ${foundCollection.name}`,
         postId: strId(),
@@ -156,6 +160,10 @@ exports.forkCollection = (collectionId, newOwner) => {
       });
       return newCol.save();
     });
+};
+
+exports.getForks = (id) => {
+  return Collections.find({ 'forkOf.postId': id }).exec();
 };
 
 // ----------------------------------
